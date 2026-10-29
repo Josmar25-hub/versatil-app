@@ -248,7 +248,7 @@
             </section>
         </div>
 
-        <!-- TAB 2: PRECIFICAÇÃO VERSÁTIL (CALCULADORA) -->
+        <!-- TAB 2: PRECIFICAÇÃO VERSÁTIL (CALCULADORA COM RATEIO DE LOTE) -->
         <div id="tab-precificacao" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
             <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 opacity-10">
@@ -256,7 +256,7 @@
                 </div>
                 <div class="relative z-10 max-w-2xl">
                     <h2 class="text-2xl sm:text-3xl font-bold mb-2">Precificação de Produtos</h2>
-                    <p class="text-indigo-100 text-sm sm:text-base">Calcule o preço de venda ideal para suas peças, garantindo a margem de lucro que você deseja e cobrindo todos os custos.</p>
+                    <p class="text-indigo-100 text-sm sm:text-base">Insira os custos globais do lote (frete e marketing) para que o app divida automaticamente o custo por unidade.</p>
                 </div>
             </div>
 
@@ -265,63 +265,68 @@
                 <!-- Inputs Calculadora -->
                 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 sm:p-8 transition-colors">
                     <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
-                        Custos e Despesas
+                        Custos e Despesas (Atacado & Lote)
                     </h3>
                     
-                    <!-- NOVO: Compra em Atacado / Lote -->
+                    <!-- Bloco de Rateio de Lote -->
                     <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl mb-6 border border-slate-200 dark:border-slate-600">
                         <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                            <i class="ph-fill ph-package"></i> Compra no Atacado / Lote (Opcional)
+                            <i class="ph-fill ph-package"></i> Dados do Lote (Atacado)
                         </h4>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4 mb-3">
                             <div>
-                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Valor Total do Lote</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold">Kz</span>
-                                    <input type="number" id="calc-lote-valor" min="0" step="0.01" placeholder="0,00" class="w-full pl-8 pr-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
-                                </div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Valor Total do Lote (Kz)</label>
+                                <input type="number" id="calc-lote-valor" min="0" step="0.01" placeholder="Ex: 60300" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm font-bold">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Qtd. de Unidades</label>
-                                <input type="number" id="calc-lote-qtd" min="1" step="1" placeholder="Ex: 12" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Qtd. de Peças</label>
+                                <input type="number" id="calc-lote-qtd" min="1" step="1" placeholder="Ex: 12" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm font-bold">
                             </div>
                         </div>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-2">*Se preenchido, calcula o Custo por Unidade automaticamente abaixo.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Frete / Combustível Total (Kz)</label>
+                                <input type="number" id="calc-frete-total" min="0" step="0.01" placeholder="Ex: 2000" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Tráfego Pago / Ads Total (Kz)</label>
+                                <input type="number" id="calc-marketing-total" min="0" step="0.01" placeholder="Ex: 8000" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm">
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-indigo-600 dark:text-indigo-400 mt-2 font-medium">✨ O app divide automaticamente estes custos totais pelo número de peças.</p>
                     </div>
 
                     <div class="space-y-5">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
-                                Custo do Produto (Unidade)
-                            </label>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Custo do Produto (Unitário)</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                <input type="number" id="calc-custo" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-lg font-medium">
+                                <input type="number" id="calc-custo" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-lg font-medium">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Embalagem (Saco, etc)</label>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Embalagem (Unitária)</label>
                                 <div class="relative">
                                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                    <input type="number" id="calc-embalagem" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                                    <input type="number" id="calc-embalagem" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Frete / Transporte</label>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Frete Rateado (Un)</label>
                                 <div class="relative">
                                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                    <input type="number" id="calc-frete" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                                    <input type="number" id="calc-frete" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 outline-none dark:text-white" readonly title="Calculado automaticamente pelo lote">
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Outros Custos (Tráfego, Taxas)</label>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tráfego / Ads Rateado (Un)</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                <input type="number" id="calc-outros" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                                <input type="number" id="calc-outros" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 outline-none dark:text-white" readonly title="Calculado automaticamente pelo lote">
                             </div>
                         </div>
 
@@ -493,33 +498,58 @@
             setTimeout(() => { toggleTutorial(); localStorage.setItem('versatil_tutorial_seen', 'true'); }, 1000);
         }
 
-        // --- CALCULADORA DE PRECIFICAÇÃO LOGIC ---
+        // --- CALCULADORA DE PRECIFICAÇÃO COM RATEIO DE LOTE ---
         const calcInputs = document.querySelectorAll('.calc-input');
         const resCustoTotal = document.getElementById('res-custo-total');
         const resLucro = document.getElementById('res-lucro');
         const resPrecoVenda = document.getElementById('res-preco-venda');
+        
         const loteValor = document.getElementById('calc-lote-valor');
         const loteQtd = document.getElementById('calc-lote-qtd');
-        const custoUnidade = document.getElementById('calc-custo');
-
-        function calcularLote() {
-            const val = parseFloat(loteValor.value);
-            const qtd = parseInt(loteQtd.value);
-            if (!isNaN(val) && !isNaN(qtd) && qtd > 0) {
-                custoUnidade.value = (val / qtd).toFixed(2);
-                calcularPrecificacao();
-            }
-        }
+        const freteTotalInput = document.getElementById('calc-frete-total');
+        const marketingTotalInput = document.getElementById('calc-marketing-total');
         
-        loteValor.addEventListener('input', calcularLote);
-        loteQtd.addEventListener('input', calcularLote);
+        const custoUnidade = document.getElementById('calc-custo');
+        const freteUnitInput = document.getElementById('calc-frete');
+        const marketingUnitInput = document.getElementById('calc-outros');
+        const embalagemInput = document.getElementById('calc-embalagem');
+        const margemInput = document.getElementById('calc-margem');
+
+        function calcularLoteRateio() {
+            const valLote = parseFloat(loteValor.value) || 0;
+            const qtd = parseInt(loteQtd.value) || 0;
+            const freteTot = parseFloat(freteTotalInput.value) || 0;
+            const mktTot = parseFloat(marketingTotalInput.value) || 0;
+
+            if (qtd > 0) {
+                if (valLote > 0) {
+                    custoUnidade.value = (valLote / qtd).toFixed(2);
+                }
+                if (freteTot > 0) {
+                    freteUnitInput.value = (freteTot / qtd).toFixed(2);
+                } else {
+                    freteUnitInput.value = '0';
+                }
+                if (mktTot > 0) {
+                    marketingUnitInput.value = (mktTot / qtd).toFixed(2);
+                } else {
+                    marketingUnitInput.value = '0';
+                }
+            }
+            calcularPrecificacao();
+        }
+
+        loteValor.addEventListener('input', calcularLoteRateio);
+        loteQtd.addEventListener('input', calcularLoteRateio);
+        freteTotalInput.addEventListener('input', calcularLoteRateio);
+        marketingTotalInput.addEventListener('input', calcularLoteRateio);
 
         function calcularPrecificacao() {
-            const custo = parseFloat(document.getElementById('calc-custo').value) || 0;
-            const embalagem = parseFloat(document.getElementById('calc-embalagem').value) || 0;
-            const frete = parseFloat(document.getElementById('calc-frete').value) || 0;
-            const outros = parseFloat(document.getElementById('calc-outros').value) || 0;
-            const margem = parseFloat(document.getElementById('calc-margem').value) || 0;
+            const custo = parseFloat(custoUnidade.value) || 0;
+            const embalagem = parseFloat(embalagemInput.value) || 0;
+            const frete = parseFloat(freteUnitInput.value) || 0;
+            const outros = parseFloat(marketingUnitInput.value) || 0;
+            const margem = parseFloat(margemInput.value) || 0;
 
             const custoTotal = custo + embalagem + frete + outros;
             const lucro = custoTotal * (margem / 100);
@@ -535,6 +565,7 @@
         window.clearCalculator = () => {
             calcInputs.forEach(input => input.value = '');
             loteValor.value = ''; loteQtd.value = '';
+            freteTotalInput.value = ''; marketingTotalInput.value = '';
             calcularPrecificacao();
             showToast("Calculadora limpa", "info");
         };
@@ -617,7 +648,6 @@
             });
         }
 
-        // Lógica de Semanas e Datas no Formulário
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
         const durationInput = document.getElementById('duration');
@@ -715,12 +745,10 @@
 
         filterStatus.addEventListener('change', updateUI);
 
-        // --- LÓGICA DE MULTA AUTOMÁTICA POR ATRASO ---
         function getDynamicAmount(rec) {
             let currentAmount = rec.amount;
             let lateInfo = { isLate: false, penalty: 0, weeksLate: 0 };
             
-            // Verifica se está pendente, se tem data de fim, e se não é uma dívida que a Versátil tem que pagar
             if (!rec.isPaid && rec.endDate && rec.type === 'receber') {
                 const [y, m, d] = rec.endDate.split('-');
                 let end = new Date(y, m - 1, d);
@@ -732,10 +760,9 @@
                     let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                     let lateWeeks = Math.floor(diffDays / 7);
                     
-                    if (lateWeeks >= 1) { // Pelo menos 1 semana de atraso
+                    if (lateWeeks >= 1) {
                         lateInfo.isLate = true;
                         lateInfo.weeksLate = lateWeeks;
-                        // 5% de multa por semana de atraso no valor base
                         lateInfo.penalty = currentAmount * (0.05 * lateWeeks); 
                         currentAmount += lateInfo.penalty;
                     }
@@ -752,7 +779,7 @@
                 if (!rec.isPaid) {
                     const { currentAmount } = getDynamicAmount(rec);
                     if (rec.type === 'receber') totalReceber += currentAmount;
-                    if (rec.type === 'pagar') totalPagar += rec.amount; // A multa é só para o que tens a receber
+                    if (rec.type === 'pagar') totalPagar += rec.amount;
                 }
             });
 
@@ -847,5 +874,3 @@
     </script>
 </body>
 </html>
-
-```
