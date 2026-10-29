@@ -439,8 +439,16 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'elo-kiriana-finances';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const appId = 'versatil-trade-app';
+        const firebaseConfig = {
+           apiKey: "AIzaSyDq53wI-1fmNUk8uQ86rmZysRYL2Ul8TGk",
+           authDomain: "versatil-trade-app.firebaseapp.com",
+           projectId: "versatil-trade-app",
+           storageBucket: "versatil-trade-app.firebasestorage.app",
+           messagingSenderId: "853767169314",
+           appId: "1:853767169314:web:727f6a5e2795478647717b",
+           measurementId: "G-P11LZ6D9CY"
+            };
         
         let app, db, auth, userId;
         let records = []; 
