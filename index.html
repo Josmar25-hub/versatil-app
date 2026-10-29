@@ -1,3 +1,20 @@
+O último bloco de código que te enviei continha apenas a **lógica (o motor)** do JavaScript para fazer a multa automática funcionar. Ou seja, não incluía a parte visual (HTML) dos campos de datas e da compra em lote que tínhamos feito no passo anterior.
+
+Para garantir que não te falta nada e que não há qualquer erro na hora de copiar e colar, juntei **absolutamente tudo num único código final**.
+
+Este ficheiro `index.html` abaixo já tem tudo incluído:
+
+1. Moeda em Kwanza.
+2. Abas, Modo Escuro e Tutorial.
+3. Calculadora de Precificação com opção de **Compra no Atacado/Lote**.
+4. Gestão de Dívidas com **Data Inicial e Data Final**.
+5. Cálculo automático de **Semanas** e Juros semanais.
+6. **Multa automática de 5%** por cada semana de atraso, aplicada apenas ao que tens a receber.
+7. Configuração pronta para PWA (instalação no telemóvel).
+
+Copia este código inteiro, substitui tudo o que tens no teu ficheiro `index.html`, guarda e envia para o GitHub:
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR" class="transition-colors duration-300">
 <head>
@@ -20,33 +37,24 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
         
-        @keyframes slideInUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
+        @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
         .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
         .toast-exit { animation: fadeOut 0.3s ease-out forwards; }
         
-        /* Hide number input arrows */
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
     </style>
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4a90e2">
-<link rel="apple-touch-icon" href="luna-icon-192.png">
+    <meta name="theme-color" content="#4a90e2">
+    <link rel="apple-touch-icon" href="luna-icon-192.png">
 </head>
 <body class="text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 antialiased min-h-screen flex flex-col transition-colors duration-300">
 
@@ -93,9 +101,7 @@
             </button>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 1: GESTÃO DE DÍVIDAS                   -->
-        <!-- ========================================== -->
+        <!-- TAB 1: GESTÃO DE DÍVIDAS -->
         <div id="tab-dividas" class="tab-content flex flex-col gap-8 animate-[fadeIn_0.3s_ease-in-out]">
             <!-- Dashboard Widgets -->
             <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -169,7 +175,7 @@
 
                         <div>
                             <label for="personName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pessoa / Fornecedor</label>
-                            <input type="text" id="personName" required placeholder="Ex: João, Internet, etc." 
+                            <input type="text" id="personName" required placeholder="Ex: João, Fornecedor X" 
                                 class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white">
                         </div>
 
@@ -184,12 +190,25 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label for="duration" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tempo (Meses)</label>
+                                <label for="startDate" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data de Início</label>
+                                <input type="date" id="startDate" required
+                                    class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
+                            </div>
+                            <div>
+                                <label for="endDate" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data Final</label>
+                                <input type="date" id="endDate" required
+                                    class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="duration" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tempo (Semanas)</label>
                                 <input type="number" id="duration" min="1" step="1" value="1" 
                                     class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
                             </div>
                             <div>
-                                <label for="interest" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Juros a.m (%)</label>
+                                <label for="interest" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Juros a.s (%)</label>
                                 <input type="number" id="interest" min="0" step="0.1" value="0" placeholder="0%"
                                     class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
                             </div>
@@ -246,9 +265,7 @@
             </section>
         </div>
 
-        <!-- ========================================== -->
         <!-- TAB 2: PRECIFICAÇÃO VERSÁTIL (CALCULADORA) -->
-        <!-- ========================================== -->
         <div id="tab-precificacao" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
             <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 opacity-10">
@@ -256,7 +273,7 @@
                 </div>
                 <div class="relative z-10 max-w-2xl">
                     <h2 class="text-2xl sm:text-3xl font-bold mb-2">Precificação de Produtos</h2>
-                    <p class="text-indigo-100 text-sm sm:text-base">Calcule o preço de venda ideal para suas peças (roupas, cosméticos) garantindo a margem de lucro que você deseja, cobrindo todos os custos.</p>
+                    <p class="text-indigo-100 text-sm sm:text-base">Calcule o preço de venda ideal para suas peças, garantindo a margem de lucro que você deseja e cobrindo todos os custos.</p>
                 </div>
             </div>
 
@@ -268,10 +285,31 @@
                         Custos e Despesas
                     </h3>
                     
+                    <!-- NOVO: Compra em Atacado / Lote -->
+                    <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl mb-6 border border-slate-200 dark:border-slate-600">
+                        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                            <i class="ph-fill ph-package"></i> Compra no Atacado / Lote (Opcional)
+                        </h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Valor Total do Lote</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold">Kz</span>
+                                    <input type="number" id="calc-lote-valor" min="0" step="0.01" placeholder="0,00" class="w-full pl-8 pr-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Qtd. de Unidades</label>
+                                <input type="number" id="calc-lote-qtd" min="1" step="1" placeholder="Ex: 12" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-2">*Se preenchido, calcula o Custo por Unidade automaticamente abaixo.</p>
+                    </div>
+
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
-                                Custo do Produto (Unidade) <i class="ph-fill ph-info text-slate-400" title="Preço pago no fornecedor"></i>
+                                Custo do Produto (Unidade)
                             </label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
@@ -412,17 +450,12 @@
     <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <style>
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-
     <!-- Firebase & App Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Variables safely initialized
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'elo-kiriana-finances';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         
@@ -431,21 +464,18 @@
         
         // --- UI & TABS LOGIC ---
         window.switchTab = (tabId) => {
-            // Hide all
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-indigo-600', 'dark:text-indigo-400', 'shadow-sm');
                 btn.classList.add('text-slate-600', 'dark:text-slate-300');
             });
             
-            // Show target
             document.getElementById(tabId).classList.remove('hidden');
             const activeBtn = document.getElementById(`btn-${tabId}`);
             activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
             activeBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-indigo-600', 'dark:text-indigo-400', 'shadow-sm');
         };
 
-        // --- DARK MODE LOGIC ---
         let isDarkMode = false;
         window.toggleTheme = () => {
             isDarkMode = !isDarkMode;
@@ -453,14 +483,11 @@
             document.getElementById('theme-icon').className = isDarkMode ? 'ph-fill ph-sun text-xl text-amber-500' : 'ph ph-moon text-xl';
         };
 
-        // --- TUTORIAL LOGIC ---
         window.toggleTutorial = () => {
             const modal = document.getElementById('tutorial-modal');
             const content = document.getElementById('tutorial-content');
-            
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
-                // Trigger reflow
                 void modal.offsetWidth;
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-95');
@@ -471,12 +498,8 @@
             }
         };
 
-        // Show tutorial on first visit (simulated)
         if (!localStorage.getItem('versatil_tutorial_seen')) {
-            setTimeout(() => {
-                toggleTutorial();
-                localStorage.setItem('versatil_tutorial_seen', 'true');
-            }, 1000);
+            setTimeout(() => { toggleTutorial(); localStorage.setItem('versatil_tutorial_seen', 'true'); }, 1000);
         }
 
         // --- CALCULADORA DE PRECIFICAÇÃO LOGIC ---
@@ -484,6 +507,21 @@
         const resCustoTotal = document.getElementById('res-custo-total');
         const resLucro = document.getElementById('res-lucro');
         const resPrecoVenda = document.getElementById('res-preco-venda');
+        const loteValor = document.getElementById('calc-lote-valor');
+        const loteQtd = document.getElementById('calc-lote-qtd');
+        const custoUnidade = document.getElementById('calc-custo');
+
+        function calcularLote() {
+            const val = parseFloat(loteValor.value);
+            const qtd = parseInt(loteQtd.value);
+            if (!isNaN(val) && !isNaN(qtd) && qtd > 0) {
+                custoUnidade.value = (val / qtd).toFixed(2);
+                calcularPrecificacao();
+            }
+        }
+        
+        loteValor.addEventListener('input', calcularLote);
+        loteQtd.addEventListener('input', calcularLote);
 
         function calcularPrecificacao() {
             const custo = parseFloat(document.getElementById('calc-custo').value) || 0;
@@ -505,11 +543,12 @@
 
         window.clearCalculator = () => {
             calcInputs.forEach(input => input.value = '');
+            loteValor.value = ''; loteQtd.value = '';
             calcularPrecificacao();
             showToast("Calculadora limpa", "info");
         };
 
-        // --- APP GESTÃO LOGIC (Firebase & DOM) ---
+        // --- APP GESTÃO LOGIC ---
         const authStatus = document.getElementById('auth-status');
         const dashReceber = document.getElementById('dash-receber');
         const dashPagar = document.getElementById('dash-pagar');
@@ -522,16 +561,17 @@
         const emptyState = document.getElementById('empty-state');
         const filterStatus = document.getElementById('filter-status');
 
-        const formatKz = (value) => {
-            return new Intl.NumberFormat('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + ' Kz';
+        const formatKz = (value) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + ' Kz';
+        const formatDateBr = (dateStr) => {
+            if (!dateStr) return '';
+            const [y, m, d] = dateStr.split('-');
+            return `${d}/${m}/${y}`;
         };
 
         window.showToast = (message, type = 'success') => {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
-            let bgClass = 'bg-emerald-500';
-            let iconClass = 'ph-check-circle';
+            let bgClass = 'bg-emerald-500'; let iconClass = 'ph-check-circle';
             
             if (type === 'error') { bgClass = 'bg-rose-500'; iconClass = 'ph-warning-circle'; }
             if (type === 'info') { bgClass = 'bg-slate-800 dark:bg-slate-700'; iconClass = 'ph-info'; }
@@ -540,7 +580,6 @@
             toast.innerHTML = `<i class="ph-bold ${iconClass} text-lg"></i> <span>${message}</span>`;
             
             container.appendChild(toast);
-            
             setTimeout(() => {
                 toast.classList.replace('toast-enter', 'toast-exit');
                 setTimeout(() => toast.remove(), 300);
@@ -553,26 +592,20 @@
                 authStatus.innerHTML = '<span class="text-rose-500"><i class="ph ph-warning-circle"></i> Erro Local</span>';
                 return;
             }
-
             try {
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
                 const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (token) {
-                    await signInWithCustomToken(auth, token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                if (token) await signInWithCustomToken(auth, token);
+                else await signInAnonymously(auth);
 
                 userId = auth.currentUser?.uid;
-                
                 if (!userId) throw new Error("ID de usuário inválido");
 
                 authStatus.innerHTML = '<span class="text-emerald-500 flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Sincronizado</span>';
                 submitBtn.disabled = false;
-
                 loadData();
             } catch (error) {
                 console.error(error);
@@ -583,7 +616,6 @@
         function loadData() {
             if (!userId) return;
             const collectionPath = collection(db, 'artifacts', appId, 'users', userId, 'debts');
-            
             onSnapshot(collectionPath, (snapshot) => {
                 records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 records.sort((a, b) => b.createdAt - a.createdAt);
@@ -594,10 +626,29 @@
             });
         }
 
-        // Auto-calculate final amount in form
+        // Lógica de Semanas e Datas no Formulário
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const durationInput = document.getElementById('duration');
+
+        function updateDurationFromDates() {
+            if (startDateInput.value && endDateInput.value) {
+                const start = new Date(startDateInput.value);
+                const end = new Date(endDateInput.value);
+                if (end >= start) {
+                    const diffTime = Math.abs(end - start);
+                    const weeks = Math.max(1, Math.round(Math.ceil(diffTime / (1000 * 60 * 60 * 24)) / 7));
+                    durationInput.value = weeks;
+                    updatePreview();
+                }
+            }
+        }
+        
+        startDateInput.addEventListener('change', updateDurationFromDates);
+        endDateInput.addEventListener('change', updateDurationFromDates);
+
         const amountInput = document.getElementById('amount');
         const interestInput = document.getElementById('interest');
-        const durationInput = document.getElementById('duration');
         const previewElement = document.getElementById('final-amount-preview');
 
         function updatePreview() {
@@ -621,11 +672,11 @@
             const baseAmount = parseFloat(amountInput.value);
             const interest = parseFloat(interestInput.value) || 0;
             const duration = parseInt(durationInput.value) || 1;
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
             const description = document.getElementById('description').value.trim();
 
-            if (!name || isNaN(baseAmount) || baseAmount <= 0) {
-                return showToast("Preencha os campos corretamente.", "error");
-            }
+            if (!name || isNaN(baseAmount) || baseAmount <= 0) return showToast("Preencha os campos corretamente.", "error");
 
             const finalAmount = baseAmount + (baseAmount * (interest / 100) * duration);
             submitBtn.disabled = true;
@@ -634,7 +685,7 @@
             try {
                 const collectionPath = collection(db, 'artifacts', appId, 'users', userId, 'debts');
                 await addDoc(collectionPath, {
-                    type, name, baseAmount, interest, duration,
+                    type, name, baseAmount, interest, duration, startDate, endDate,
                     amount: finalAmount, description, isPaid: false, createdAt: Date.now()
                 });
                 form.reset();
@@ -673,14 +724,44 @@
 
         filterStatus.addEventListener('change', updateUI);
 
+        // --- LÓGICA DE MULTA AUTOMÁTICA POR ATRASO ---
+        function getDynamicAmount(rec) {
+            let currentAmount = rec.amount;
+            let lateInfo = { isLate: false, penalty: 0, weeksLate: 0 };
+            
+            // Verifica se está pendente, se tem data de fim, e se não é uma dívida que a Versátil tem que pagar
+            if (!rec.isPaid && rec.endDate && rec.type === 'receber') {
+                const [y, m, d] = rec.endDate.split('-');
+                let end = new Date(y, m - 1, d);
+                let today = new Date();
+                today.setHours(0,0,0,0);
+                
+                if (today > end) {
+                    let diffTime = today.getTime() - end.getTime();
+                    let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    let lateWeeks = Math.floor(diffDays / 7);
+                    
+                    if (lateWeeks >= 1) { // Pelo menos 1 semana de atraso
+                        lateInfo.isLate = true;
+                        lateInfo.weeksLate = lateWeeks;
+                        // 5% de multa por semana de atraso no valor base
+                        lateInfo.penalty = currentAmount * (0.05 * lateWeeks); 
+                        currentAmount += lateInfo.penalty;
+                    }
+                }
+            }
+            return { currentAmount, lateInfo };
+        }
+
         function updateUI() {
             let totalReceber = 0;
             let totalPagar = 0;
 
             records.forEach(rec => {
                 if (!rec.isPaid) {
-                    if (rec.type === 'receber') totalReceber += rec.amount;
-                    if (rec.type === 'pagar') totalPagar += rec.amount;
+                    const { currentAmount } = getDynamicAmount(rec);
+                    if (rec.type === 'receber') totalReceber += currentAmount;
+                    if (rec.type === 'pagar') totalPagar += rec.amount; // A multa é só para o que tens a receber
                 }
             });
 
@@ -690,14 +771,9 @@
             const saldo = totalReceber - totalPagar;
             dashSaldo.textContent = formatKz(saldo);
 
-            // Dashboard Colors based on Balance
-            if (saldo > 0) {
-                dashSaldoContainer.className = "bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 flex items-center gap-4 text-white transition-all";
-            } else if (saldo < 0) {
-                dashSaldoContainer.className = "bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl p-5 shadow-lg shadow-rose-500/20 flex items-center gap-4 text-white transition-all";
-            } else {
-                dashSaldoContainer.className = "bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-lg shadow-indigo-500/20 flex items-center gap-4 text-white transition-all";
-            }
+            if (saldo > 0) dashSaldoContainer.className = "bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 flex items-center gap-4 text-white transition-all";
+            else if (saldo < 0) dashSaldoContainer.className = "bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl p-5 shadow-lg shadow-rose-500/20 flex items-center gap-4 text-white transition-all";
+            else dashSaldoContainer.className = "bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-lg shadow-indigo-500/20 flex items-center gap-4 text-white transition-all";
 
             const currentFilter = filterStatus.value;
             const filteredRecords = records.filter(rec => {
@@ -713,13 +789,26 @@
                 emptyState.classList.add('hidden');
                 recordsList.innerHTML = filteredRecords.map(rec => {
                     const isReceber = rec.type === 'receber';
+                    const { currentAmount, lateInfo } = getDynamicAmount(rec);
+                    
                     const amountColor = rec.isPaid ? 'text-slate-400 dark:text-slate-500 line-through' : (isReceber ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
                     const badgeBg = isReceber ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400' : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400';
                     const badgeIcon = isReceber ? 'ph-arrow-down-left' : 'ph-arrow-up-right';
                     const badgeText = isReceber ? 'A Receber' : 'A Pagar';
                     
+                    const atrasoBadge = lateInfo.isLate 
+                        ? `<span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800 flex items-center gap-1 animate-pulse">
+                            <i class="ph-fill ph-warning"></i> Atraso: +${lateInfo.weeksLate * 5}%
+                           </span>` 
+                        : '';
+                    
+                    const dateInfo = (rec.startDate && rec.endDate) ? 
+                        `<p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 mt-1 mb-1">
+                            <i class="ph-fill ph-calendar text-slate-400"></i> ${formatDateBr(rec.startDate)} até ${formatDateBr(rec.endDate)}
+                        </p>` : '';
+                    
                     return `
-                        <div class="bg-white dark:bg-slate-800 border ${rec.isPaid ? 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-75' : 'border-slate-100 dark:border-slate-700 shadow-sm'} rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
+                        <div class="bg-white dark:bg-slate-800 border ${rec.isPaid ? 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-75' : (lateInfo.isLate ? 'border-rose-300 dark:border-rose-700 shadow-sm' : 'border-slate-100 dark:border-slate-700 shadow-sm')} rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
                             
                             <div class="flex items-start gap-4">
                                 <button onclick="togglePaid('${rec.id}', ${rec.isPaid})" class="mt-1 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${rec.isPaid ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 text-transparent hover:border-emerald-500 dark:hover:border-emerald-500'}">
@@ -727,23 +816,26 @@
                                 </button>
                                 
                                 <div>
-                                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <div class="flex flex-wrap items-center gap-2 mb-0.5">
                                         <h4 class="font-bold text-slate-800 dark:text-white text-base ${rec.isPaid ? 'line-through text-slate-500 dark:text-slate-400' : ''}">${rec.name}</h4>
                                         <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border flex items-center gap-1 ${rec.isPaid ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-600' : badgeBg}">
                                             <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
                                         </span>
+                                        ${atrasoBadge}
                                     </div>
+                                    ${dateInfo}
                                     ${rec.description ? `<p class="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[200px] sm:max-w-sm mb-1">${rec.description}</p>` : ''}
-                                    ${rec.interest > 0 ? `<p class="text-xs text-indigo-500 dark:text-indigo-400 font-medium flex items-center gap-2"><i class="ph-fill ph-clock"></i> ${rec.duration} ${rec.duration > 1 ? 'meses' : 'mês'} <span class="text-slate-300 dark:text-slate-600">|</span> <i class="ph-fill ph-percent"></i> ${rec.interest}% a.m</p>` : ''}
+                                    ${rec.interest > 0 ? `<p class="text-xs text-indigo-500 dark:text-indigo-400 font-medium flex items-center gap-2"><i class="ph-fill ph-clock"></i> Acordado: ${rec.duration} sem <span class="text-slate-300 dark:text-slate-600">|</span> <i class="ph-fill ph-percent"></i> ${rec.interest}% a.s</p>` : ''}
                                 </div>
                             </div>
 
                             <div class="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pl-11 sm:pl-0">
                                 <div class="text-right flex flex-col items-end">
                                     <span class="font-bold text-lg sm:text-xl tracking-tight ${amountColor}">
-                                        ${isReceber ? '+' : '-'}${formatKz(rec.amount)}
+                                        ${isReceber ? '+' : '-'}${formatKz(rec.isPaid ? rec.amount : (isReceber ? currentAmount : rec.amount))}
                                     </span>
-                                    ${rec.interest > 0 ? `<span class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-700 pt-0.5 mt-0.5">Base: ${formatKz(rec.baseAmount || rec.amount)}</span>` : ''}
+                                    ${(rec.interest > 0 || lateInfo.isLate) ? `<span class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-700 pt-0.5 mt-0.5">Base: ${formatKz(rec.baseAmount || rec.amount)}</span>` : ''}
+                                    ${lateInfo.isLate ? `<span class="text-[11px] text-rose-500 dark:text-rose-400 font-bold">Multa gerada: ${formatKz(lateInfo.penalty)}</span>` : ''}
                                 </div>
                                 <button onclick="deleteRecord('${rec.id}')" class="w-9 h-9 rounded-xl text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 flex items-center justify-center transition-colors" title="Excluir Registro">
                                     <i class="ph-fill ph-trash text-xl"></i>
@@ -755,14 +847,14 @@
             }
         }
 
-        // Boot
         initApp();
     </script>
     <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
-  }
-</script>
-
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js');
+      }
+    </script>
 </body>
 </html>
+
+```
