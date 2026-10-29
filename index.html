@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="transition-colors duration-300">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Versátil Trade App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        @keyframes slideInUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
+        .toast-exit { animation: fadeOut 0.3s ease-out forwards; }
+        
+        /* Hide number input arrows */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+    </style>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4a90e2">
+<link rel="apple-touch-icon" href="luna-icon-192.png">
+</head>
+<body class="text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Navbar -->
+    <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-indigo-500/30 shadow-lg">
+                    <i class="ph-fill ph-bird text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-400 leading-tight">
+                        Versátil Trade
+                    </h1>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider hidden sm:block">Josemar & Kiriana</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <div id="auth-status" class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">
+                    <i class="ph ph-spinner-gap animate-spin"></i> <span class="hidden sm:inline">Conectando...</span>
+                </div>
+                
+                <button onclick="toggleTutorial()" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Ajuda / Tutorial">
+                    <i class="ph ph-question text-xl"></i>
+                </button>
+
+                <button onclick="toggleTheme()" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Modo Escuro">
+                    <i id="theme-icon" class="ph ph-moon text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+        
+        <!-- Tab Navigation -->
+        <div class="flex space-x-2 p-1.5 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto mx-auto max-w-fit shadow-inner">
+            <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn active px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm flex items-center gap-2">
+                <i class="ph-bold ph-wallet"></i> Gestão de Dívidas
+            </button>
+            <button onclick="switchTab('tab-precificacao')" id="btn-tab-precificacao" class="tab-btn px-6 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-2">
+                <i class="ph-bold ph-calculator"></i> Precificação Versátil
+            </button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 1: GESTÃO DE DÍVIDAS                   -->
+        <!-- ========================================== -->
+        <div id="tab-dividas" class="tab-content flex flex-col gap-8 animate-[fadeIn_0.3s_ease-in-out]">
+            <!-- Dashboard Widgets -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Total a Receber -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 relative overflow-hidden transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i class="ph-fill ph-trend-up text-6xl text-emerald-500"></i>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 relative z-10">
+                        <i class="ph-bold ph-arrow-down-left text-2xl"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Total a Receber</p>
+                        <h2 id="dash-receber" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">0,00 Kz</h2>
+                    </div>
+                </div>
+
+                <!-- Total a Pagar -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 relative overflow-hidden transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i class="ph-fill ph-trend-down text-6xl text-rose-500"></i>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0 relative z-10">
+                        <i class="ph-bold ph-arrow-up-right text-2xl"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Total a Pagar</p>
+                        <h2 id="dash-pagar" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">0,00 Kz</h2>
+                    </div>
+                </div>
+
+                <!-- Saldo -->
+                <div id="dash-saldo-container" class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-md shadow-indigo-500/20 flex items-center gap-4 text-white transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-scales text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-indigo-100 mb-1">Saldo Líquido</p>
+                        <h2 id="dash-saldo" class="text-xl sm:text-2xl font-bold">0,00 Kz</h2>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form and List Layout -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                
+                <!-- Left Column: Add New Form -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 lg:col-span-1 sticky top-24 transition-colors">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
+                        <i class="ph-fill ph-plus-circle text-indigo-500"></i> Novo Registro
+                    </h3>
+                    
+                    <form id="record-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tipo de Movimentação</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="type" value="receber" class="peer sr-only" checked>
+                                    <div class="text-center px-3 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 text-sm font-bold text-slate-500 dark:text-slate-400 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-600 dark:peer-checked:text-emerald-400 transition-all">
+                                        <i class="ph-bold ph-arrow-down-left mr-1"></i> A Receber
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="type" value="pagar" class="peer sr-only">
+                                    <div class="text-center px-3 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 text-sm font-bold text-slate-500 dark:text-slate-400 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 dark:peer-checked:text-rose-400 transition-all">
+                                        <i class="ph-bold ph-arrow-up-right mr-1"></i> A Pagar
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="personName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pessoa / Fornecedor</label>
+                            <input type="text" id="personName" required placeholder="Ex: João, Internet, etc." 
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:text-white">
+                        </div>
+
+                        <div>
+                            <label for="amount" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor Base</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
+                                <input type="number" id="amount" required min="0.01" step="0.01" placeholder="0,00" 
+                                    class="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="duration" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tempo (Meses)</label>
+                                <input type="number" id="duration" min="1" step="1" value="1" 
+                                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                            </div>
+                            <div>
+                                <label for="interest" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Juros a.m (%)</label>
+                                <input type="number" id="interest" min="0" step="0.1" value="0" placeholder="0%"
+                                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                            </div>
+                        </div>
+                        
+                        <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center">
+                            <span class="text-sm text-indigo-800 dark:text-indigo-300 font-medium">Valor Final (C/ Juros):</span>
+                            <span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span>
+                        </div>
+
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição (Opcional)</label>
+                            <input type="text" id="description" placeholder="Ex: Empréstimo, Conta de luz" 
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white">
+                        </div>
+
+                        <button type="submit" id="submit-btn" disabled
+                            class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-400 disabled:to-slate-400 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-[0.98]">
+                            <i class="ph-bold ph-plus"></i> Registrar Movimentação
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Column: List of Records -->
+                <div class="lg:col-span-2 flex flex-col h-full min-h-[500px]">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                            <i class="ph-fill ph-list-dashes text-indigo-500"></i> Histórico
+                        </h3>
+                        
+                        <div class="flex gap-2">
+                            <select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors shadow-sm">
+                                <option value="active">Pendentes</option>
+                                <option value="paid">Liquidados (Pagos)</option>
+                                <option value="all">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="hidden flex-1 flex flex-col items-center justify-center p-10 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700 border-dashed transition-colors">
+                        <div class="w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-400 dark:text-slate-500 mb-3">
+                            <i class="ph ph-ghost text-3xl"></i>
+                        </div>
+                        <h4 class="text-slate-800 dark:text-white font-bold mb-1">Tudo limpo por aqui</h4>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm text-center max-w-sm">Não há registros para este filtro. Adicione novas contas ou dívidas usando o formulário.</p>
+                    </div>
+
+                    <!-- List Container -->
+                    <div id="records-list" class="flex-1 space-y-3 custom-scrollbar overflow-y-auto pr-2 pb-10">
+                        <!-- Cards injected via JS -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: PRECIFICAÇÃO VERSÁTIL (CALCULADORA) -->
+        <!-- ========================================== -->
+        <div id="tab-precificacao" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 opacity-10">
+                    <i class="ph-fill ph-calculator text-[15rem]"></i>
+                </div>
+                <div class="relative z-10 max-w-2xl">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">Precificação de Produtos</h2>
+                    <p class="text-indigo-100 text-sm sm:text-base">Calcule o preço de venda ideal para suas peças (roupas, cosméticos) garantindo a margem de lucro que você deseja, cobrindo todos os custos.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <!-- Inputs Calculadora -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 sm:p-8 transition-colors">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        Custos e Despesas
+                    </h3>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                                Custo do Produto (Unidade) <i class="ph-fill ph-info text-slate-400" title="Preço pago no fornecedor"></i>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
+                                <input type="number" id="calc-custo" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-lg font-medium">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Embalagem (Saco, etc)</label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
+                                    <input type="number" id="calc-embalagem" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Frete / Transporte</label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
+                                    <input type="number" id="calc-frete" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Outros Custos (Tráfego, Taxas)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
+                                <input type="number" id="calc-outros" min="0" step="0.01" placeholder="0,00" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-700 mt-2">
+                            <label class="block text-sm font-bold text-slate-800 dark:text-white mb-2">Margem de Lucro Desejada (%)</label>
+                            <div class="relative">
+                                <input type="number" id="calc-margem" min="0" step="1" placeholder="Ex: 50" class="calc-input w-full px-4 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border-2 border-indigo-200 dark:border-indigo-800 focus:border-indigo-500 text-indigo-700 dark:text-indigo-300 font-bold text-lg outline-none transition-all">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-500 font-bold">%</span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">*A margem é calculada sobre o custo total (Markup).</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="clearCalculator()" class="mt-6 w-full py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors font-medium text-sm flex items-center justify-center gap-2">
+                        <i class="ph ph-eraser"></i> Limpar Calculadora
+                    </button>
+                </div>
+
+                <!-- Resultados Calculadora -->
+                <div class="space-y-4 sticky top-24">
+                    <!-- Resumo Custos -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex items-center justify-between transition-colors">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Custo Total da Peça</p>
+                            <h3 id="res-custo-total" class="text-xl font-bold text-slate-800 dark:text-white mt-1">0,00 Kz</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                            <i class="ph-bold ph-shopping-cart text-xl"></i>
+                        </div>
+                    </div>
+
+                    <!-- Lucro -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex items-center justify-between transition-colors border-l-4 border-l-emerald-500">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Lucro Líquido</p>
+                            <h3 id="res-lucro" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">0,00 Kz</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-500">
+                            <i class="ph-bold ph-money text-xl"></i>
+                        </div>
+                    </div>
+
+                    <!-- Preço de Venda -->
+                    <div class="bg-indigo-600 dark:bg-indigo-500 rounded-2xl shadow-lg shadow-indigo-500/30 p-8 text-center text-white mt-4 transform hover:scale-[1.02] transition-transform duration-300">
+                        <p class="text-indigo-100 font-medium mb-2 uppercase tracking-widest text-xs">Preço Sugerido de Venda</p>
+                        <h2 id="res-preco-venda" class="text-4xl sm:text-5xl font-bold break-words">0,00 Kz</h2>
+                        <div class="mt-6 bg-white/20 rounded-xl p-3 text-sm flex items-center justify-center gap-2">
+                            <i class="ph-fill ph-check-circle"></i> Cobre todos os custos e garante a margem.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Tutorial Modal -->
+    <div id="tutorial-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="tutorial-content">
+            <div class="bg-indigo-600 p-6 text-center text-white relative">
+                <button onclick="toggleTutorial()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors">
+                    <i class="ph ph-x"></i>
+                </button>
+                <div class="w-16 h-16 bg-white rounded-full mx-auto flex items-center justify-center text-indigo-600 mb-3 shadow-lg">
+                    <i class="ph-fill ph-bird text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold">Bem-vindos!</h2>
+                <p class="text-indigo-100 text-sm mt-1">Conheça o Versátil Trade App</p>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <div class="flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                        <i class="ph-bold ph-wallet text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 dark:text-white">Gestão de Dívidas</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Anote o que os clientes devem e o que precisam pagar aos fornecedores. Calcula juros automaticamente.</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
+                        <i class="ph-bold ph-calculator text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 dark:text-white">Precificação Versátil</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Nunca mais venda com prejuízo. Coloque seus custos e descubra o preço exato de venda para o lucro desejado.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0">
+                        <i class="ph-bold ph-moon text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 dark:text-white">Modo Noturno</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Trabalhe confortavelmente à noite clicando na lua no topo da tela.</p>
+                    </div>
+                </div>
+
+                <button onclick="toggleTutorial()" class="w-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">
+                    Começar a Usar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+
+    <!-- Firebase & App Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Variables safely initialized
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'elo-kiriana-finances';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        
+        let app, db, auth, userId;
+        let records = []; 
+        
+        // --- UI & TABS LOGIC ---
+        window.switchTab = (tabId) => {
+            // Hide all
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-indigo-600', 'dark:text-indigo-400', 'shadow-sm');
+                btn.classList.add('text-slate-600', 'dark:text-slate-300');
+            });
+            
+            // Show target
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+            activeBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-indigo-600', 'dark:text-indigo-400', 'shadow-sm');
+        };
+
+        // --- DARK MODE LOGIC ---
+        let isDarkMode = false;
+        window.toggleTheme = () => {
+            isDarkMode = !isDarkMode;
+            document.documentElement.classList.toggle('dark', isDarkMode);
+            document.getElementById('theme-icon').className = isDarkMode ? 'ph-fill ph-sun text-xl text-amber-500' : 'ph ph-moon text-xl';
+        };
+
+        // --- TUTORIAL LOGIC ---
+        window.toggleTutorial = () => {
+            const modal = document.getElementById('tutorial-modal');
+            const content = document.getElementById('tutorial-content');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                // Trigger reflow
+                void modal.offsetWidth;
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            } else {
+                modal.classList.add('opacity-0');
+                content.classList.add('scale-95');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        };
+
+        // Show tutorial on first visit (simulated)
+        if (!localStorage.getItem('versatil_tutorial_seen')) {
+            setTimeout(() => {
+                toggleTutorial();
+                localStorage.setItem('versatil_tutorial_seen', 'true');
+            }, 1000);
+        }
+
+        // --- CALCULADORA DE PRECIFICAÇÃO LOGIC ---
+        const calcInputs = document.querySelectorAll('.calc-input');
+        const resCustoTotal = document.getElementById('res-custo-total');
+        const resLucro = document.getElementById('res-lucro');
+        const resPrecoVenda = document.getElementById('res-preco-venda');
+
+        function calcularPrecificacao() {
+            const custo = parseFloat(document.getElementById('calc-custo').value) || 0;
+            const embalagem = parseFloat(document.getElementById('calc-embalagem').value) || 0;
+            const frete = parseFloat(document.getElementById('calc-frete').value) || 0;
+            const outros = parseFloat(document.getElementById('calc-outros').value) || 0;
+            const margem = parseFloat(document.getElementById('calc-margem').value) || 0;
+
+            const custoTotal = custo + embalagem + frete + outros;
+            const lucro = custoTotal * (margem / 100);
+            const precoVenda = custoTotal + lucro;
+
+            resCustoTotal.textContent = formatKz(custoTotal);
+            resLucro.textContent = formatKz(lucro);
+            resPrecoVenda.textContent = formatKz(precoVenda);
+        }
+
+        calcInputs.forEach(input => input.addEventListener('input', calcularPrecificacao));
+
+        window.clearCalculator = () => {
+            calcInputs.forEach(input => input.value = '');
+            calcularPrecificacao();
+            showToast("Calculadora limpa", "info");
+        };
+
+        // --- APP GESTÃO LOGIC (Firebase & DOM) ---
+        const authStatus = document.getElementById('auth-status');
+        const dashReceber = document.getElementById('dash-receber');
+        const dashPagar = document.getElementById('dash-pagar');
+        const dashSaldo = document.getElementById('dash-saldo');
+        const dashSaldoContainer = document.getElementById('dash-saldo-container');
+        
+        const form = document.getElementById('record-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const recordsList = document.getElementById('records-list');
+        const emptyState = document.getElementById('empty-state');
+        const filterStatus = document.getElementById('filter-status');
+
+        const formatKz = (value) => {
+            return new Intl.NumberFormat('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + ' Kz';
+        };
+
+        window.showToast = (message, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-emerald-500';
+            let iconClass = 'ph-check-circle';
+            
+            if (type === 'error') { bgClass = 'bg-rose-500'; iconClass = 'ph-warning-circle'; }
+            if (type === 'info') { bgClass = 'bg-slate-800 dark:bg-slate-700'; iconClass = 'ph-info'; }
+            
+            toast.className = `toast-enter ${bgClass} text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-medium min-w-[250px] max-w-sm pointer-events-auto`;
+            toast.innerHTML = `<i class="ph-bold ${iconClass} text-lg"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        async function initApp() {
+            if (!firebaseConfig) {
+                showToast("Erro: Sem config do BD.", "error");
+                authStatus.innerHTML = '<span class="text-rose-500"><i class="ph ph-warning-circle"></i> Erro Local</span>';
+                return;
+            }
+
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (token) {
+                    await signInWithCustomToken(auth, token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                userId = auth.currentUser?.uid;
+                
+                if (!userId) throw new Error("ID de usuário inválido");
+
+                authStatus.innerHTML = '<span class="text-emerald-500 flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Sincronizado</span>';
+                submitBtn.disabled = false;
+
+                loadData();
+            } catch (error) {
+                console.error(error);
+                authStatus.innerHTML = '<span class="text-rose-500 flex items-center gap-1"><i class="ph ph-warning-circle"></i> Erro</span>';
+            }
+        }
+
+        function loadData() {
+            if (!userId) return;
+            const collectionPath = collection(db, 'artifacts', appId, 'users', userId, 'debts');
+            
+            onSnapshot(collectionPath, (snapshot) => {
+                records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                records.sort((a, b) => b.createdAt - a.createdAt);
+                updateUI();
+            }, (error) => {
+                console.error(error);
+                showToast("Erro ao ler dados.", "error");
+            });
+        }
+
+        // Auto-calculate final amount in form
+        const amountInput = document.getElementById('amount');
+        const interestInput = document.getElementById('interest');
+        const durationInput = document.getElementById('duration');
+        const previewElement = document.getElementById('final-amount-preview');
+
+        function updatePreview() {
+            const amt = parseFloat(amountInput.value) || 0;
+            const interest = parseFloat(interestInput.value) || 0;
+            const duration = parseInt(durationInput.value) || 1;
+            const finalAmt = amt + (amt * (interest / 100) * duration);
+            previewElement.textContent = formatKz(finalAmt);
+        }
+
+        amountInput.addEventListener('input', updatePreview);
+        interestInput.addEventListener('input', updatePreview);
+        durationInput.addEventListener('input', updatePreview);
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!userId) return showToast("Aguarde a conexão...", "error");
+
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const name = document.getElementById('personName').value.trim();
+            const baseAmount = parseFloat(amountInput.value);
+            const interest = parseFloat(interestInput.value) || 0;
+            const duration = parseInt(durationInput.value) || 1;
+            const description = document.getElementById('description').value.trim();
+
+            if (!name || isNaN(baseAmount) || baseAmount <= 0) {
+                return showToast("Preencha os campos corretamente.", "error");
+            }
+
+            const finalAmount = baseAmount + (baseAmount * (interest / 100) * duration);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> Salvando...';
+
+            try {
+                const collectionPath = collection(db, 'artifacts', appId, 'users', userId, 'debts');
+                await addDoc(collectionPath, {
+                    type, name, baseAmount, interest, duration,
+                    amount: finalAmount, description, isPaid: false, createdAt: Date.now()
+                });
+                form.reset();
+                updatePreview();
+                document.querySelector('input[name="type"][value="receber"]').checked = true;
+                showToast("Registro adicionado com sucesso!");
+            } catch (error) {
+                showToast("Erro ao salvar.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="ph-bold ph-plus"></i> Registrar Movimentação';
+            }
+        });
+
+        window.togglePaid = async (id, currentStatus) => {
+            if (!userId) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'debts', id);
+                await updateDoc(docRef, { isPaid: !currentStatus });
+                showToast(!currentStatus ? "Marcado como pago!" : "Marcado como pendente.");
+            } catch (error) {
+                showToast("Erro ao atualizar.", "error");
+            }
+        };
+
+        window.deleteRecord = async (id) => {
+            if (!userId) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'debts', id);
+                await deleteDoc(docRef);
+                showToast("Registro excluído.");
+            } catch (error) {
+                showToast("Erro ao excluir.", "error");
+            }
+        };
+
+        filterStatus.addEventListener('change', updateUI);
+
+        function updateUI() {
+            let totalReceber = 0;
+            let totalPagar = 0;
+
+            records.forEach(rec => {
+                if (!rec.isPaid) {
+                    if (rec.type === 'receber') totalReceber += rec.amount;
+                    if (rec.type === 'pagar') totalPagar += rec.amount;
+                }
+            });
+
+            dashReceber.textContent = formatKz(totalReceber);
+            dashPagar.textContent = formatKz(totalPagar);
+            
+            const saldo = totalReceber - totalPagar;
+            dashSaldo.textContent = formatKz(saldo);
+
+            // Dashboard Colors based on Balance
+            if (saldo > 0) {
+                dashSaldoContainer.className = "bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 flex items-center gap-4 text-white transition-all";
+            } else if (saldo < 0) {
+                dashSaldoContainer.className = "bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl p-5 shadow-lg shadow-rose-500/20 flex items-center gap-4 text-white transition-all";
+            } else {
+                dashSaldoContainer.className = "bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-lg shadow-indigo-500/20 flex items-center gap-4 text-white transition-all";
+            }
+
+            const currentFilter = filterStatus.value;
+            const filteredRecords = records.filter(rec => {
+                if (currentFilter === 'active') return !rec.isPaid;
+                if (currentFilter === 'paid') return rec.isPaid;
+                return true;
+            });
+
+            if (filteredRecords.length === 0) {
+                recordsList.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                recordsList.innerHTML = filteredRecords.map(rec => {
+                    const isReceber = rec.type === 'receber';
+                    const amountColor = rec.isPaid ? 'text-slate-400 dark:text-slate-500 line-through' : (isReceber ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+                    const badgeBg = isReceber ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400' : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400';
+                    const badgeIcon = isReceber ? 'ph-arrow-down-left' : 'ph-arrow-up-right';
+                    const badgeText = isReceber ? 'A Receber' : 'A Pagar';
+                    
+                    return `
+                        <div class="bg-white dark:bg-slate-800 border ${rec.isPaid ? 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-75' : 'border-slate-100 dark:border-slate-700 shadow-sm'} rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
+                            
+                            <div class="flex items-start gap-4">
+                                <button onclick="togglePaid('${rec.id}', ${rec.isPaid})" class="mt-1 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${rec.isPaid ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 text-transparent hover:border-emerald-500 dark:hover:border-emerald-500'}">
+                                    <i class="ph-bold ph-check text-sm"></i>
+                                </button>
+                                
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                                        <h4 class="font-bold text-slate-800 dark:text-white text-base ${rec.isPaid ? 'line-through text-slate-500 dark:text-slate-400' : ''}">${rec.name}</h4>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border flex items-center gap-1 ${rec.isPaid ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-600' : badgeBg}">
+                                            <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
+                                        </span>
+                                    </div>
+                                    ${rec.description ? `<p class="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[200px] sm:max-w-sm mb-1">${rec.description}</p>` : ''}
+                                    ${rec.interest > 0 ? `<p class="text-xs text-indigo-500 dark:text-indigo-400 font-medium flex items-center gap-2"><i class="ph-fill ph-clock"></i> ${rec.duration} ${rec.duration > 1 ? 'meses' : 'mês'} <span class="text-slate-300 dark:text-slate-600">|</span> <i class="ph-fill ph-percent"></i> ${rec.interest}% a.m</p>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pl-11 sm:pl-0">
+                                <div class="text-right flex flex-col items-end">
+                                    <span class="font-bold text-lg sm:text-xl tracking-tight ${amountColor}">
+                                        ${isReceber ? '+' : '-'}${formatKz(rec.amount)}
+                                    </span>
+                                    ${rec.interest > 0 ? `<span class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-700 pt-0.5 mt-0.5">Base: ${formatKz(rec.baseAmount || rec.amount)}</span>` : ''}
+                                </div>
+                                <button onclick="deleteRecord('${rec.id}')" class="w-9 h-9 rounded-xl text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 flex items-center justify-center transition-colors" title="Excluir Registro">
+                                    <i class="ph-fill ph-trash text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Boot
+        initApp();
+    </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+
+</body>
+</html>
