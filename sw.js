@@ -1,14 +1,28 @@
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open('versatil-store').then((cache) => cache.addAll([
-      './index.html',
-      './manifest.json'
-    ]))
+const CACHE_NAME = 'versatil-cache-v1';
+const urlsToCache = [
+  './',
+  './index.html',
+  './manifest.json',
+  './luna-icon-192.png'
+];
+
+// Instala o Service Worker e guarda os ficheiros base
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
+// Responde aos pedidos da rede
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Devolve do cache se encontrar, senão vai à internet
+        return response || fetch(event.request);
+      })
   );
 });
