@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
-    <!-- SCRIPT DE MEMÓRIA DO TEMA -->
     <script>
         if (localStorage.getItem('versatil_theme') === 'dark' || (!('versatil_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -21,9 +20,7 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
@@ -31,10 +28,9 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        /* Oculta a seta padrão do HTML <details> para usarmos a nossa do Phosphor Icons */
+        details > summary::-webkit-details-marker { display: none; }
         
         @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -45,6 +41,7 @@
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"], input[type="date"] { -moz-appearance: textfield; }
     </style>
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4a90e2">
     <link rel="icon" href="logo.png">
@@ -55,9 +52,9 @@
     <!-- Ecrã de Login -->
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl w-full max-w-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center transform transition-all">
-           <div class="mb-4">
-             <img src="logo.png" alt="Logo Versátil Trade" class="w-24 h-24 rounded-2xl shadow-lg object-cover">
-               </div>
+            <div class="mb-4">
+                <img src="logo.png" alt="Logo Versátil Trade" class="w-24 h-24 rounded-2xl shadow-lg object-cover bg-indigo-600">
+            </div>
             <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-1">Versátil Trade</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-8 font-medium uppercase tracking-wider">Josemar & Kiriana</p>
             
@@ -77,13 +74,13 @@
         </div>
     </div>
 
-    <!-- App Container (Visível apenas após login) -->
+    <!-- App Container -->
     <div id="app-container" class="hidden flex-col min-h-screen w-full">
         <!-- Navbar -->
         <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 transition-colors">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <<img src="logo.png" alt="Luna Logo" class="w-10 h-10 rounded-xl shadow-md object-cover">
+                    <img src="logo.png" alt="Luna Logo" class="w-10 h-10 rounded-xl shadow-md object-cover bg-indigo-600">
                     <div>
                         <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-400 leading-tight">
                             Versátil Trade
@@ -95,15 +92,12 @@
                     <div id="auth-status" class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">
                         <i class="ph ph-spinner-gap animate-spin"></i> <span class="hidden sm:inline">Conectando...</span>
                     </div>
-                    
-                    <button onclick="toggleTutorial()" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Ajuda / Tutorial">
+                    <button onclick="toggleTutorial()" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Ajuda">
                         <i class="ph ph-question text-xl"></i>
                     </button>
-
                     <button onclick="toggleTheme()" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Modo Escuro">
                         <i id="theme-icon" class="ph ph-moon text-xl"></i>
                     </button>
-
                     <button onclick="logoutApp()" class="p-2 rounded-full text-rose-500 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-900/20 transition-colors" title="Sair da Conta">
                         <i class="ph ph-sign-out text-xl"></i>
                     </button>
@@ -111,7 +105,6 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
         <main class="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
             
             <!-- Tab Navigation -->
@@ -127,86 +120,82 @@
                 </button>
             </div>
 
-            <!-- TAB 1: METAS DIÁRIAS -->
+            <!-- TAB: METAS DIÁRIAS (COM EFEITO CORTINA/ACORDEÃO) -->
             <div id="tab-metas" class="tab-content flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <!-- Filtro Calendário -->
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                     <div>
                         <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
                             <i class="ph-fill ph-calendar text-indigo-500"></i> Calendário de Metas
                         </h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">As metas apagam-se automaticamente após 30 dias para otimizar o sistema.</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">As metas apagam-se após 30 dias. Clica nas secções abaixo para abrir/fechar.</p>
                     </div>
                     <input type="date" id="goal-date-filter" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Coluna Josemar -->
-                    <div class="bg-indigo-50/50 dark:bg-indigo-900/20 p-5 sm:p-6 rounded-2xl border border-indigo-100 dark:border-indigo-800/30 flex flex-col h-full">
-                        <h4 class="font-bold text-indigo-800 dark:text-indigo-300 mb-5 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-indigo-200 dark:bg-indigo-800 flex items-center justify-center text-xl shadow-inner">👨🏽‍💻</div>
-                            Metas do Josemar
-                        </h4>
-                        <form onsubmit="addGoal(event, 'josemar')" class="flex gap-2 mb-6">
-                            <input type="text" id="goal-input-josemar" required placeholder="Adicionar meta para este dia..." class="flex-1 px-4 py-2.5 rounded-xl border border-indigo-200 dark:border-indigo-700/50 bg-white dark:bg-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm">
-                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95">
-                                <i class="ph-bold ph-plus"></i>
-                            </button>
-                        </form>
-                        <div id="goals-list-josemar" class="space-y-3 flex-1"></div>
-                    </div>
+                <div class="flex flex-col gap-4">
+                    <!-- Cortina Josemar -->
+                    <details class="group bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 rounded-2xl transition-all duration-300" open>
+                        <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer list-none outline-none">
+                            <h4 class="font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-indigo-200 dark:bg-indigo-800 flex items-center justify-center text-xl shadow-inner">👨🏽‍💻</div>
+                                Metas do Josemar
+                            </h4>
+                            <div class="w-8 h-8 rounded-full bg-indigo-200/50 dark:bg-indigo-800/50 flex items-center justify-center text-indigo-700 dark:text-indigo-300 transition-transform duration-300 group-open:-rotate-180">
+                                <i class="ph-bold ph-caret-down text-lg"></i>
+                            </div>
+                        </summary>
+                        <div class="px-5 sm:px-6 pb-5 sm:pb-6 flex flex-col border-t border-indigo-100/50 dark:border-indigo-800/30 pt-5">
+                            <form onsubmit="addGoal(event, 'josemar')" class="flex gap-2 mb-6">
+                                <input type="text" id="goal-input-josemar" required placeholder="Adicionar nova meta..." class="flex-1 px-4 py-2.5 rounded-xl border border-indigo-200 dark:border-indigo-700/50 bg-white dark:bg-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm">
+                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm active:scale-95"><i class="ph-bold ph-plus"></i></button>
+                            </form>
+                            <div id="goals-list-josemar" class="space-y-3 flex-1"></div>
+                        </div>
+                    </details>
 
-                    <!-- Coluna Kiriana -->
-                    <div class="bg-rose-50/50 dark:bg-rose-900/20 p-5 sm:p-6 rounded-2xl border border-rose-100 dark:border-rose-800/30 flex flex-col h-full">
-                        <h4 class="font-bold text-rose-800 dark:text-rose-300 mb-5 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-rose-200 dark:bg-rose-800 flex items-center justify-center text-xl shadow-inner">👩🏾‍✈️</div>
-                            Metas da Kiriana
-                        </h4>
-                        <form onsubmit="addGoal(event, 'kiriana')" class="flex gap-2 mb-6">
-                            <input type="text" id="goal-input-kiriana" required placeholder="Adicionar meta para este dia..." class="flex-1 px-4 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700/50 bg-white dark:bg-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-rose-500 transition-all text-sm">
-                            <button type="submit" class="bg-rose-600 text-white px-4 py-2.5 rounded-xl hover:bg-rose-700 transition-colors shadow-sm active:scale-95">
-                                <i class="ph-bold ph-plus"></i>
-                            </button>
-                        </form>
-                        <div id="goals-list-kiriana" class="space-y-3 flex-1"></div>
-                    </div>
+                    <!-- Cortina Kiriana -->
+                    <details class="group bg-rose-50/50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800/30 rounded-2xl transition-all duration-300" open>
+                        <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer list-none outline-none">
+                            <h4 class="font-bold text-rose-800 dark:text-rose-300 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-rose-200 dark:bg-rose-800 flex items-center justify-center text-xl shadow-inner">👩🏾‍✈️</div>
+                                Metas da Kiriana
+                            </h4>
+                            <div class="w-8 h-8 rounded-full bg-rose-200/50 dark:bg-rose-800/50 flex items-center justify-center text-rose-700 dark:text-rose-300 transition-transform duration-300 group-open:-rotate-180">
+                                <i class="ph-bold ph-caret-down text-lg"></i>
+                            </div>
+                        </summary>
+                        <div class="px-5 sm:px-6 pb-5 sm:pb-6 flex flex-col border-t border-rose-100/50 dark:border-rose-800/30 pt-5">
+                            <form onsubmit="addGoal(event, 'kiriana')" class="flex gap-2 mb-6">
+                                <input type="text" id="goal-input-kiriana" required placeholder="Adicionar nova meta..." class="flex-1 px-4 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700/50 bg-white dark:bg-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-rose-500 transition-all text-sm">
+                                <button type="submit" class="bg-rose-600 text-white px-4 py-2.5 rounded-xl hover:bg-rose-700 transition-colors shadow-sm active:scale-95"><i class="ph-bold ph-plus"></i></button>
+                            </form>
+                            <div id="goals-list-kiriana" class="space-y-3 flex-1"></div>
+                        </div>
+                    </details>
                 </div>
             </div>
 
-            <!-- TAB 2: GESTÃO DE DÍVIDAS -->
+            <!-- TAB: GESTÃO DE DÍVIDAS -->
             <div id="tab-dividas" class="tab-content hidden flex flex-col gap-8 animate-[fadeIn_0.3s_ease-in-out]">
-                <!-- Dashboard Widgets -->
                 <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 relative overflow-hidden transition-colors">
-                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                            <i class="ph-fill ph-trend-up text-6xl text-emerald-500"></i>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 relative z-10">
-                            <i class="ph-bold ph-arrow-down-left text-2xl"></i>
-                        </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10"><i class="ph-fill ph-trend-up text-6xl text-emerald-500"></i></div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 relative z-10"><i class="ph-bold ph-arrow-down-left text-2xl"></i></div>
                         <div class="relative z-10">
                             <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Total a Receber</p>
                             <h2 id="dash-receber" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">0,00 Kz</h2>
                         </div>
                     </div>
-
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 relative overflow-hidden transition-colors">
-                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                            <i class="ph-fill ph-trend-down text-6xl text-rose-500"></i>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0 relative z-10">
-                            <i class="ph-bold ph-arrow-up-right text-2xl"></i>
-                        </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10"><i class="ph-fill ph-trend-down text-6xl text-rose-500"></i></div>
+                        <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0 relative z-10"><i class="ph-bold ph-arrow-up-right text-2xl"></i></div>
                         <div class="relative z-10">
                             <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Total a Pagar</p>
                             <h2 id="dash-pagar" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white">0,00 Kz</h2>
                         </div>
                     </div>
-
-                    <div id="dash-saldo-container" class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-md shadow-indigo-500/20 flex items-center gap-4 text-white transition-all">
-                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                            <i class="ph-bold ph-scales text-2xl"></i>
-                        </div>
+                    <div id="dash-saldo-container" class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-md flex items-center gap-4 text-white">
+                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0"><i class="ph-bold ph-scales text-2xl"></i></div>
                         <div>
                             <p class="text-sm font-medium text-indigo-100 mb-1">Saldo Líquido</p>
                             <h2 id="dash-saldo" class="text-xl sm:text-2xl font-bold">0,00 Kz</h2>
@@ -214,292 +203,117 @@
                     </div>
                 </section>
 
-                <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                    <!-- Left Column: Add New Form -->
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 lg:col-span-1 sticky top-24 transition-colors">
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
-                            <i class="ph-fill ph-plus-circle text-indigo-500"></i> Novo Registro
-                        </h3>
-                        
+                <!-- CORREÇÃO DO LAYOUT MOBILE PARA O HISTÓRICO ROLAR NATURALMENTE -->
+                <section class="flex flex-col lg:grid lg:grid-cols-3 gap-8 items-start">
+                    <div class="w-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 lg:sticky lg:top-24">
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2"><i class="ph-fill ph-plus-circle text-indigo-500"></i> Novo Registro</h3>
                         <form id="record-form" class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tipo de Movimentação</label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <label class="cursor-pointer">
                                         <input type="radio" name="type" value="receber" class="peer sr-only" checked>
-                                        <div class="text-center px-3 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 text-sm font-bold text-slate-500 dark:text-slate-400 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-600 dark:peer-checked:text-emerald-400 transition-all">
-                                            <i class="ph-bold ph-arrow-down-left mr-1"></i> A Receber
-                                        </div>
+                                        <div class="text-center px-3 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 text-sm font-bold text-slate-500 dark:text-slate-400 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-600 transition-all"><i class="ph-bold ph-arrow-down-left mr-1"></i> A Receber</div>
                                     </label>
                                     <label class="cursor-pointer">
                                         <input type="radio" name="type" value="pagar" class="peer sr-only">
-                                        <div class="text-center px-3 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 text-sm font-bold text-slate-500 dark:text-slate-400 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 dark:peer-checked:text-rose-400 transition-all">
-                                            <i class="ph-bold ph-arrow-up-right mr-1"></i> A Pagar
-                                        </div>
+                                        <div class="text-center px-3 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-600 text-sm font-bold text-slate-500 dark:text-slate-400 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 transition-all"><i class="ph-bold ph-arrow-up-right mr-1"></i> A Pagar</div>
                                     </label>
                                 </div>
                             </div>
-
                             <div>
                                 <label for="personName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pessoa / Fornecedor</label>
-                                <input type="text" id="personName" required placeholder="Ex: João, Fornecedor X" 
-                                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white">
+                                <input type="text" id="personName" required placeholder="Ex: João" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white">
                             </div>
-
                             <div>
                                 <label for="amount" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor Base</label>
-                                <div class="relative">
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                    <input type="number" id="amount" required min="0.01" step="0.01" placeholder="0,00" 
-                                        class="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
-                                </div>
+                                <div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span><input type="number" id="amount" required min="0.01" step="0.01" placeholder="0,00" class="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white"></div>
                             </div>
-
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label for="startDate" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data de Início</label>
-                                    <input type="date" id="startDate" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-sm">
-                                </div>
-                                <div>
-                                    <label for="duration" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tempo (Semanas)</label>
-                                    <input type="number" id="duration" min="1" step="1" value="1" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
-                                </div>
+                                <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data Início</label><input type="date" id="startDate" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm"></div>
+                                <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Semanas</label><input type="number" id="duration" min="1" step="1" value="1" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white"></div>
                             </div>
-
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label for="endDate" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data Final <span class="text-[10px] text-indigo-500">(Automático)</span></label>
-                                    <input type="date" id="endDate" required class="w-full px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm" readonly>
-                                </div>
-                                <div>
-                                    <label for="interest" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Juros a.s (%)</label>
-                                    <input type="number" id="interest" min="0" step="0.1" value="0" placeholder="0%" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white">
-                                </div>
+                                <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data Final <span class="text-[10px] text-indigo-500">(Auto)</span></label><input type="date" id="endDate" required class="w-full px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm" readonly></div>
+                                <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Juros a.s (%)</label><input type="number" id="interest" min="0" step="0.1" value="0" placeholder="0%" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white"></div>
                             </div>
-                            
-                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center">
-                                <span class="text-sm text-indigo-800 dark:text-indigo-300 font-medium">Valor Final:</span>
-                                <span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span>
-                            </div>
-
-                            <div>
-                                <label for="description" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição (Opcional)</label>
-                                <input type="text" id="description" placeholder="Ex: Empréstimo, Conta de luz" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:text-white">
-                            </div>
-
-                            <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-400 disabled:to-slate-400 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-[0.98]">
-                                <i class="ph-bold ph-plus"></i> Registrar Movimentação
-                            </button>
+                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center"><span class="text-sm text-indigo-800 dark:text-indigo-300 font-medium">Valor Final:</span><span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span></div>
+                            <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição</label><input type="text" id="description" placeholder="Ex: Empréstimo, Conta de luz" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white"></div>
+                            <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-plus"></i> Registrar Movimentação</button>
                         </form>
                     </div>
 
-                    <!-- Right Column: List of Records -->
-                    <div class="lg:col-span-2 flex flex-col h-full min-h-[500px]">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                            <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="ph-fill ph-list-dashes text-indigo-500"></i> Histórico
-                            </h3>
-                            <div class="flex gap-2">
-                                <select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors shadow-sm">
-                                    <option value="active">Pendentes</option>
-                                    <option value="paid">Liquidados (Pagos)</option>
-                                    <option value="all">Todos</option>
-                                </select>
-                            </div>
+                    <div class="w-full lg:col-span-2 flex flex-col gap-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-list-dashes text-indigo-500"></i> Histórico</h3>
+                            <select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl px-4 py-2 outline-none">
+                                <option value="active">Pendentes</option>
+                                <option value="paid">Liquidados</option>
+                                <option value="all">Todos</option>
+                            </select>
                         </div>
-
-                        <div id="empty-state" class="hidden flex-1 flex flex-col items-center justify-center p-10 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700 border-dashed transition-colors">
-                            <div class="w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-400 dark:text-slate-500 mb-3">
-                                <i class="ph ph-ghost text-3xl"></i>
-                            </div>
+                        <div id="empty-state" class="hidden w-full flex flex-col items-center justify-center p-10 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700 border-dashed">
+                            <div class="w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-400 mb-3"><i class="ph ph-ghost text-3xl"></i></div>
                             <h4 class="text-slate-800 dark:text-white font-bold mb-1">Tudo limpo por aqui</h4>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm text-center max-w-sm">Não há registros para este filtro.</p>
                         </div>
-
-                        <div id="records-list" class="flex-1 space-y-3 custom-scrollbar overflow-y-auto pr-2 pb-10"></div>
+                        <div id="records-list" class="w-full flex flex-col gap-3 pb-10"></div>
                     </div>
                 </section>
             </div>
 
-            <!-- TAB 3: PRECIFICAÇÃO VERSÁTIL -->
+            <!-- TAB: PRECIFICAÇÃO -->
             <div id="tab-precificacao" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 opacity-10">
-                        <i class="ph-fill ph-calculator text-[15rem]"></i>
-                    </div>
-                    <div class="relative z-10 max-w-2xl">
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-2">Precificação de Produtos</h2>
-                        <p class="text-indigo-100 text-sm sm:text-base">Insira os custos globais do lote (frete e marketing) para que o app divida automaticamente o custo por unidade.</p>
-                    </div>
+                    <div class="absolute -right-10 -top-10 opacity-10"><i class="ph-fill ph-calculator text-[15rem]"></i></div>
+                    <div class="relative z-10 max-w-2xl"><h2 class="text-2xl sm:text-3xl font-bold mb-2">Precificação de Produtos</h2><p class="text-indigo-100 text-sm sm:text-base">Insira os custos globais do lote (frete e marketing) para que o app divida automaticamente o custo por unidade.</p></div>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 sm:p-8 transition-colors">
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
-                            Custos e Despesas (Atacado & Lote)
-                        </h3>
-                        
-                        <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl mb-6 border border-slate-200 dark:border-slate-600">
-                            <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                                <i class="ph-fill ph-package"></i> Dados do Lote (Atacado)
-                            </h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Valor Total (Kz)</label>
-                                    <input type="number" id="calc-lote-valor" min="0" step="0.01" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm font-bold">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Qtd. de Peças</label>
-                                    <input type="number" id="calc-lote-qtd" min="1" step="1" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm font-bold">
-                                </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 sm:p-8">
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">Custos e Despesas</h3>
+                        <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl mb-6 border"><h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2"><i class="ph-fill ph-package"></i> Dados do Lote (Atacado)</h4>
+                            <div class="grid grid-cols-2 gap-4 mb-3">
+                                <div><label class="block text-xs font-medium text-slate-500 mb-1">Valor Total</label><input type="number" id="calc-lote-valor" min="0" step="0.01" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border outline-none dark:text-white text-sm"></div>
+                                <div><label class="block text-xs font-medium text-slate-500 mb-1">Qtd. Peças</label><input type="number" id="calc-lote-qtd" min="1" step="1" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border outline-none dark:text-white text-sm"></div>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Frete Total (Kz)</label>
-                                    <input type="number" id="calc-frete-total" min="0" step="0.01" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Ads Total (Kz)</label>
-                                    <input type="number" id="calc-marketing-total" min="0" step="0.01" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-sm">
-                                </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-xs font-medium text-slate-500 mb-1">Frete Total</label><input type="number" id="calc-frete-total" min="0" step="0.01" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border outline-none dark:text-white text-sm"></div>
+                                <div><label class="block text-xs font-medium text-slate-500 mb-1">Ads Total</label><input type="number" id="calc-marketing-total" min="0" step="0.01" class="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-slate-800 border outline-none dark:text-white text-sm"></div>
                             </div>
-                            <p class="text-[10px] text-indigo-600 dark:text-indigo-400 mt-2 font-medium">✨ O app divide automaticamente estes custos totais pelo número de peças.</p>
                         </div>
-
                         <div class="space-y-5">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Custo do Produto (Unitário)</label>
-                                <div class="relative">
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                    <input type="number" id="calc-custo" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white text-lg font-medium">
-                                </div>
+                            <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Custo Base (Un)</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span><input type="number" id="calc-custo" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white text-lg"></div></div>
+                            <div class="grid grid-cols-2 gap-5">
+                                <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Embalagem</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span><input type="number" id="calc-embalagem" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white"></div></div>
+                                <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Frete (Un)</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span><input type="number" id="calc-frete" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/50 border outline-none dark:text-white" readonly></div></div>
                             </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Embalagem (Unitária)</label>
-                                    <div class="relative">
-                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                        <input type="number" id="calc-embalagem" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 outline-none dark:text-white">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Frete Rateado (Un)</label>
-                                    <div class="relative">
-                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                        <input type="number" id="calc-frete" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 outline-none dark:text-white" readonly>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tráfego Rateado (Un)</label>
-                                <div class="relative">
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span>
-                                    <input type="number" id="calc-outros" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 outline-none dark:text-white" readonly>
-                                </div>
-                            </div>
-
-                            <div class="pt-4 border-t border-slate-100 dark:border-slate-700 mt-2">
-                                <label class="block text-sm font-bold text-slate-800 dark:text-white mb-2">Margem de Lucro Desejada (%)</label>
-                                <div class="relative">
-                                    <input type="number" id="calc-margem" min="0" step="1" class="calc-input w-full pl-4 pr-12 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border-2 border-indigo-200 dark:border-indigo-800 focus:border-indigo-500 text-indigo-700 dark:text-indigo-300 font-bold text-lg outline-none transition-all">
-                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-500 font-bold">%</span>
-                                </div>
-                            </div>
+                            <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Ads (Un)</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Kz</span><input type="number" id="calc-outros" min="0" step="0.01" class="calc-input w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/50 border outline-none dark:text-white" readonly></div></div>
+                            <div class="pt-4 border-t mt-2"><label class="block text-sm font-bold text-slate-800 dark:text-white mb-2">Margem de Lucro (%)</label><div class="relative"><input type="number" id="calc-margem" min="0" step="1" class="calc-input w-full pl-4 pr-12 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border-2 border-indigo-200 outline-none text-indigo-700 font-bold text-lg"><span class="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-500 font-bold">%</span></div></div>
                         </div>
-                        
-                        <button onclick="clearCalculator()" class="mt-6 w-full py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors font-medium text-sm flex items-center justify-center gap-2">
-                            <i class="ph ph-eraser"></i> Limpar Calculadora
-                        </button>
+                        <button onclick="clearCalculator()" class="mt-6 w-full py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center gap-2"><i class="ph ph-eraser"></i> Limpar Calculadora</button>
                     </div>
-
                     <div class="space-y-4 sticky top-24">
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex items-center justify-between transition-colors">
-                            <div>
-                                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Custo Total da Peça</p>
-                                <h3 id="res-custo-total" class="text-xl font-bold text-slate-800 dark:text-white mt-1">0,00 Kz</h3>
-                            </div>
-                            <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
-                                <i class="ph-bold ph-shopping-cart text-xl"></i>
-                            </div>
-                        </div>
-
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex items-center justify-between transition-colors border-l-4 border-l-emerald-500">
-                            <div>
-                                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Lucro Líquido</p>
-                                <h3 id="res-lucro" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">0,00 Kz</h3>
-                            </div>
-                            <div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-500">
-                                <i class="ph-bold ph-money text-xl"></i>
-                            </div>
-                        </div>
-
-                        <div class="bg-indigo-600 dark:bg-indigo-500 rounded-2xl shadow-lg shadow-indigo-500/30 p-8 text-center text-white mt-4 transform hover:scale-[1.02] transition-transform duration-300">
-                            <p class="text-indigo-100 font-medium mb-2 uppercase tracking-widest text-xs">Preço Sugerido de Venda</p>
-                            <h2 id="res-preco-venda" class="text-4xl sm:text-5xl font-bold break-words">0,00 Kz</h2>
-                        </div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border p-6 flex items-center justify-between"><div class="text-sm text-slate-500">Custo Total<h3 id="res-custo-total" class="text-xl font-bold text-slate-800 dark:text-white mt-1">0,00 Kz</h3></div><div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center"><i class="ph-bold ph-shopping-cart text-xl"></i></div></div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-l-4 border-l-emerald-500 p-6 flex items-center justify-between"><div class="text-sm text-slate-500">Lucro Líquido<h3 id="res-lucro" class="text-2xl font-bold text-emerald-600 mt-1">0,00 Kz</h3></div><div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500"><i class="ph-bold ph-money text-xl"></i></div></div>
+                        <div class="bg-indigo-600 rounded-2xl shadow-lg p-8 text-center text-white mt-4"><p class="font-medium mb-2 uppercase text-xs">Preço de Venda</p><h2 id="res-preco-venda" class="text-4xl font-bold">0,00 Kz</h2></div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Tutorial Modal -->
-    <div id="tutorial-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="tutorial-content">
-            <div class="bg-indigo-600 p-6 text-center text-white relative">
-                <button onclick="toggleTutorial()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors">
-                    <i class="ph ph-x"></i>
-                </button>
-                <div class="w-16 h-16 bg-white rounded-full mx-auto flex items-center justify-center text-indigo-600 mb-3 shadow-lg">
-                    <i class="ph-fill ph-bird text-3xl"></i>
-                </div>
-                <h2 class="text-2xl font-bold">Bem-vindos!</h2>
-                <p class="text-indigo-100 text-sm mt-1">Conheça o Versátil Trade App</p>
-            </div>
-            
+    <!-- Tutorial & Toasts -->
+    <div id="tutorial-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform scale-95" id="tutorial-content">
+            <div class="bg-indigo-600 p-6 text-center text-white relative"><button onclick="toggleTutorial()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30"><i class="ph ph-x"></i></button><div class="w-16 h-16 bg-white rounded-full mx-auto flex items-center justify-center mb-3"><img src="logo.png" class="w-10 h-10"></div><h2 class="text-2xl font-bold">Bem-vindos!</h2></div>
             <div class="p-6 space-y-6">
-                <div class="flex gap-4 items-start">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                        <i class="ph-bold ph-target text-xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 dark:text-white">Metas Diárias</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Acompanhem o vosso progresso todos os dias de forma sincronizada.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-4 items-start">
-                    <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
-                        <i class="ph-bold ph-wallet text-xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 dark:text-white">Gestão de Dívidas</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Anote o que os clientes devem e calcule juros automaticamente.</p>
-                    </div>
-                </div>
-                
-                <div class="flex gap-4 items-start">
-                    <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
-                        <i class="ph-bold ph-calculator text-xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 dark:text-white">Precificação Versátil</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Nunca mais venda com prejuízo. Descubra o preço exato para o lucro desejado.</p>
-                    </div>
-                </div>
-
-                <button onclick="toggleTutorial()" class="w-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">
-                    Começar a Usar
-                </button>
+                <div class="flex gap-4"><div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="ph-bold ph-target"></i></div><div><h4 class="font-bold dark:text-white">Metas Diárias</h4><p class="text-sm text-slate-500">Acompanhem o progresso juntos.</p></div></div>
+                <div class="flex gap-4"><div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><i class="ph-bold ph-wallet"></i></div><div><h4 class="font-bold dark:text-white">Dívidas</h4><p class="text-sm text-slate-500">Calcula juros automaticamente.</p></div></div>
+                <button onclick="toggleTutorial()" class="w-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold py-3 rounded-xl">Começar a Usar</button>
             </div>
         </div>
     </div>
-
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Firebase & App Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -519,8 +333,7 @@
         let app, db, auth, userId;
         let records = []; 
         let goals = [];
-        let unsubDebts = null;
-        let unsubGoals = null;
+        let unsubDebts = null, unsubGoals = null;
         
         window.switchTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -528,7 +341,6 @@
                 btn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-indigo-600', 'dark:text-indigo-400', 'shadow-sm');
                 btn.classList.add('text-slate-600', 'dark:text-slate-300');
             });
-            
             document.getElementById(tabId).classList.remove('hidden');
             const activeBtn = document.getElementById(`btn-${tabId}`);
             activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
@@ -538,563 +350,220 @@
         window.toggleTheme = () => {
             const html = document.documentElement;
             html.classList.toggle('dark');
-            const isDark = html.classList.contains('dark');
-            localStorage.setItem('versatil_theme', isDark ? 'dark' : 'light');
-            document.getElementById('theme-icon').className = isDark ? 'ph-fill ph-sun text-xl text-amber-500' : 'ph ph-moon text-xl';
+            localStorage.setItem('versatil_theme', html.classList.contains('dark') ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = html.classList.contains('dark') ? 'ph-fill ph-sun text-xl text-amber-500' : 'ph ph-moon text-xl';
         };
 
         window.toggleTutorial = () => {
             const modal = document.getElementById('tutorial-modal');
             const content = document.getElementById('tutorial-content');
             if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                void modal.offsetWidth;
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
+                modal.classList.remove('hidden'); void modal.offsetWidth;
+                modal.classList.remove('opacity-0'); content.classList.remove('scale-95');
             } else {
-                modal.classList.add('opacity-0');
-                content.classList.add('scale-95');
+                modal.classList.add('opacity-0'); content.classList.add('scale-95');
                 setTimeout(() => modal.classList.add('hidden'), 300);
             }
         };
 
-        window.showToast = (message, type = 'success') => {
+        window.showToast = (msg, type = 'success') => {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            let bgClass = 'bg-emerald-500'; let iconClass = 'ph-check-circle';
-            
-            if (type === 'error') { bgClass = 'bg-rose-500'; iconClass = 'ph-warning-circle'; }
-            if (type === 'info') { bgClass = 'bg-slate-800 dark:bg-slate-700'; iconClass = 'ph-info'; }
-            
-            toast.className = `toast-enter ${bgClass} text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-medium min-w-[250px] max-w-sm pointer-events-auto`;
-            toast.innerHTML = `<i class="ph-bold ${iconClass} text-lg"></i> <span>${message}</span>`;
-            
+            let bg = type === 'error' ? 'bg-rose-500' : (type === 'info' ? 'bg-slate-800' : 'bg-emerald-500');
+            let icon = type === 'error' ? 'ph-warning-circle' : (type === 'info' ? 'ph-info' : 'ph-check-circle');
+            toast.className = `toast-enter ${bg} text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-medium min-w-[250px] max-w-sm pointer-events-auto`;
+            toast.innerHTML = `<i class="ph-bold ${icon} text-lg"></i> <span>${msg}</span>`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.replace('toast-enter', 'toast-exit');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 3000);
         };
 
-        // --- SISTEMA DE LOGIN E INICIALIZAÇÃO ---
         async function initApp() {
-            if (!firebaseConfig) return showToast("Erro: Sem config do BD.", "error");
-
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            // Iniciar com data de hoje no calendário de metas
+            app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
             document.getElementById('goal-date-filter').value = new Date().toISOString().split('T')[0];
-
-            const loginScreen = document.getElementById('login-screen');
-            const appContainer = document.getElementById('app-container');
-            const authStatus = document.getElementById('auth-status');
-            const submitBtn = document.getElementById('submit-btn');
-            const loginBtn = document.getElementById('login-btn');
-
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     userId = user.uid;
-                    loginScreen.classList.add('hidden');
-                    appContainer.classList.remove('hidden');
-                    appContainer.classList.add('flex');
-                    authStatus.innerHTML = '<span class="text-emerald-500 flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Conta Versátil</span>';
-                    if(submitBtn) submitBtn.disabled = false;
-                    
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('flex');
+                    document.getElementById('auth-status').innerHTML = '<span class="text-emerald-500 flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Conta Versátil</span>';
                     loadData();
-
-                    if (!localStorage.getItem('versatil_tutorial_seen')) {
-                        setTimeout(() => { toggleTutorial(); localStorage.setItem('versatil_tutorial_seen', 'true'); }, 1500);
-                    }
+                    if (!localStorage.getItem('versatil_tutorial_seen')) { setTimeout(() => { toggleTutorial(); localStorage.setItem('versatil_tutorial_seen', 'true'); }, 1500); }
                 } else {
                     userId = null;
-                    loginScreen.classList.remove('hidden');
-                    appContainer.classList.add('hidden');
-                    appContainer.classList.remove('flex');
-                    if(submitBtn) submitBtn.disabled = true;
-                    
-                    if (unsubDebts) unsubDebts();
-                    if (unsubGoals) unsubGoals();
-                    
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = 'Aceder ao Painel';
+                    document.getElementById('login-screen').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('hidden');
+                    if (unsubDebts) unsubDebts(); if (unsubGoals) unsubGoals();
                 }
             });
         }
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const loginBtn = document.getElementById('login-btn');
-            
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<i class="ph ph-spinner-gap animate-spin text-xl"></i> A verificar...';
-            
+            const btn = document.getElementById('login-btn'); btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> A verificar...';
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value);
                 showToast("Bem-vindos à Versátil Trade!", "success");
-            } catch (error) {
-                showToast("Email ou senha incorretos.", "error");
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = 'Aceder ao Painel';
-            }
+            } catch (error) { showToast("Email ou senha incorretos.", "error"); btn.disabled = false; btn.innerHTML = 'Aceder ao Painel'; }
         });
 
-        window.logoutApp = async () => {
-            try {
-                await signOut(auth);
-                records = [];
-                goals = [];
-                updateUIDebts();
-                renderGoals();
-                showToast("Sessão terminada.", "info");
-                document.getElementById('login-password').value = '';
-            } catch (error) {
-                showToast("Erro ao sair.", "error");
-            }
-        };
+        window.logoutApp = async () => { try { await signOut(auth); records = []; goals = []; updateUIDebts(); renderGoals(); showToast("Sessão terminada.", "info"); } catch (error) {} };
 
         function loadData() {
             if (!userId) return;
-            
-            // Carregar Dívidas
-            const debtsPath = collection(db, 'artifacts', appId, 'users', userId, 'debts');
-            unsubDebts = onSnapshot(debtsPath, (snapshot) => {
-                records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                records.sort((a, b) => b.createdAt - a.createdAt);
-                updateUIDebts();
-            }, (error) => { showToast("Erro ao ler dívidas.", "error"); });
-
-            // Carregar Metas
-            const goalsPath = collection(db, 'artifacts', appId, 'users', userId, 'goals');
-            unsubGoals = onSnapshot(goalsPath, (snapshot) => {
-                goals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                cleanupOldGoals();
-                renderGoals();
-            }, (error) => { showToast("Erro ao ler metas.", "error"); });
+            unsubDebts = onSnapshot(collection(db, 'artifacts', appId, 'users', userId, 'debts'), (snapshot) => {
+                records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => b.createdAt - a.createdAt); updateUIDebts();
+            });
+            unsubGoals = onSnapshot(collection(db, 'artifacts', appId, 'users', userId, 'goals'), (snapshot) => {
+                goals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); cleanupOldGoals(); renderGoals();
+            });
         }
 
-        // --- LÓGICA DE METAS DIÁRIAS ---
         const goalDateFilter = document.getElementById('goal-date-filter');
         goalDateFilter.addEventListener('change', renderGoals);
 
         window.addGoal = async (e, owner) => {
             e.preventDefault();
-            const input = document.getElementById(`goal-input-${owner}`);
-            const text = input.value.trim();
+            const input = document.getElementById(`goal-input-${owner}`); const text = input.value.trim();
             if (!text || !userId) return;
-            
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'users', userId, 'goals'), { 
-                    owner: owner, 
-                    text: text, 
-                    date: goalDateFilter.value, 
-                    completed: false, 
-                    createdAt: Date.now() 
-                });
-                input.value = '';
-            } catch (err) { 
-                showToast("Erro ao adicionar meta.", "error"); 
-            }
+            try { await addDoc(collection(db, 'artifacts', appId, 'users', userId, 'goals'), { owner, text, date: goalDateFilter.value, completed: false, createdAt: Date.now() }); input.value = ''; } catch (err) { showToast("Erro.", "error"); }
         };
 
-        window.toggleGoal = async (id, currentStatus) => {
-            if (!userId) return;
-            try { 
-                await updateDoc(doc(db, 'artifacts', appId, 'users', userId, 'goals', id), { 
-                    completed: !currentStatus 
-                }); 
-            } catch(e) {
-                showToast("Erro ao atualizar meta.", "error"); 
-            }
-        };
-
-        window.deleteGoal = async (id) => {
-            if (!userId) return;
-            try { 
-                await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'goals', id)); 
-            } catch(e) {
-                showToast("Erro ao excluir meta.", "error");
-            }
-        };
+        window.toggleGoal = async (id, current) => { if (userId) try { await updateDoc(doc(db, 'artifacts', appId, 'users', userId, 'goals', id), { completed: !current }); } catch(e) {} };
+        window.deleteGoal = async (id) => { if (userId) try { await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'goals', id)); } catch(e) {} };
 
         function renderGoals() {
             const currentDate = goalDateFilter.value;
-            const dailyGoals = goals.filter(g => g.date === currentDate);
-            const jGoals = dailyGoals.filter(g => g.owner === 'josemar');
-            const kGoals = dailyGoals.filter(g => g.owner === 'kiriana');
-            
             const createHtml = (list) => list.map(g => `
-                <div class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm transition-all ${g.completed ? 'opacity-60' : ''}">
+                <div class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm ${g.completed ? 'opacity-60' : ''}">
                     <div class="flex items-center gap-3">
-                        <button onclick="toggleGoal('${g.id}', ${g.completed})" class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${g.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 text-transparent hover:border-emerald-500'}">
-                            <i class="ph-bold ph-check text-xs"></i>
-                        </button>
+                        <button onclick="toggleGoal('${g.id}', ${g.completed})" class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${g.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 text-transparent hover:border-emerald-500'}"><i class="ph-bold ph-check text-xs"></i></button>
                         <span class="text-sm font-medium ${g.completed ? 'line-through text-slate-500' : 'text-slate-700 dark:text-slate-200'}">${g.text}</span>
                     </div>
-                    <button onclick="deleteGoal('${g.id}')" class="text-slate-400 hover:text-rose-500 transition-colors">
-                        <i class="ph-bold ph-trash"></i>
-                    </button>
-                </div>
-            `).join('') || '<p class="text-xs text-slate-500 dark:text-slate-400 text-center py-4">Nenhuma meta para este dia.</p>';
+                    <button onclick="deleteGoal('${g.id}')" class="text-slate-400 hover:text-rose-500"><i class="ph-bold ph-trash"></i></button>
+                </div>`).join('') || '<p class="text-xs text-slate-500 text-center py-4">Nenhuma meta adicionada.</p>';
             
-            document.getElementById('goals-list-josemar').innerHTML = createHtml(jGoals);
-            document.getElementById('goals-list-kiriana').innerHTML = createHtml(kGoals);
+            document.getElementById('goals-list-josemar').innerHTML = createHtml(goals.filter(g => g.date === currentDate && g.owner === 'josemar'));
+            document.getElementById('goals-list-kiriana').innerHTML = createHtml(goals.filter(g => g.date === currentDate && g.owner === 'kiriana'));
         }
 
-        // LIMPEZA AUTOMÁTICA DE 30 DIAS
         function cleanupOldGoals() {
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            
-            goals.forEach(g => {
-                const gDate = new Date(g.date);
-                if (gDate < thirtyDaysAgo) {
-                    deleteGoal(g.id);
-                }
-            });
+            const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            goals.forEach(g => { if (new Date(g.date) < thirtyDaysAgo) deleteGoal(g.id); });
         }
 
-        // --- CALCULADORA ---
         const calcInputs = document.querySelectorAll('.calc-input');
-        const resCustoTotal = document.getElementById('res-custo-total');
-        const resLucro = document.getElementById('res-lucro');
-        const resPrecoVenda = document.getElementById('res-preco-venda');
-        
-        const loteValor = document.getElementById('calc-lote-valor');
-        const loteQtd = document.getElementById('calc-lote-qtd');
-        const freteTotalInput = document.getElementById('calc-frete-total');
-        const marketingTotalInput = document.getElementById('calc-marketing-total');
-        
-        const custoUnidade = document.getElementById('calc-custo');
-        const freteUnitInput = document.getElementById('calc-frete');
-        const marketingUnitInput = document.getElementById('calc-outros');
-        const embalagemInput = document.getElementById('calc-embalagem');
-        const margemInput = document.getElementById('calc-margem');
-
-        function saveCalcState() {
-            const state = {
-                loteValor: loteValor.value, loteQtd: loteQtd.value,
-                freteTotal: freteTotalInput.value, marketingTotal: marketingTotalInput.value,
-                custo: custoUnidade.value, embalagem: embalagemInput.value,
-                freteUnit: freteUnitInput.value, marketingUnit: marketingUnitInput.value,
-                margem: margemInput.value
-            };
-            localStorage.setItem('versatil_calc_state', JSON.stringify(state));
-        }
+        const [loteValor, loteQtd, freteTotalInput, marketingTotalInput, custoUnidade, freteUnitInput, marketingUnitInput, embalagemInput, margemInput] = 
+              ['calc-lote-valor','calc-lote-qtd','calc-frete-total','calc-marketing-total','calc-custo','calc-frete','calc-outros','calc-embalagem','calc-margem'].map(id => document.getElementById(id));
 
         function loadCalcState() {
             const stateStr = localStorage.getItem('versatil_calc_state');
             if (stateStr) {
-                const state = JSON.parse(stateStr);
-                loteValor.value = state.loteValor || ''; loteQtd.value = state.loteQtd || '';
-                freteTotalInput.value = state.freteTotal || ''; marketingTotalInput.value = state.marketingTotal || '';
-                custoUnidade.value = state.custo || ''; embalagemInput.value = state.embalagem || '';
-                freteUnitInput.value = state.freteUnit || ''; marketingUnitInput.value = state.marketingUnit || '';
-                margemInput.value = state.margem || '';
+                const s = JSON.parse(stateStr);
+                loteValor.value = s.loteValor||''; loteQtd.value = s.loteQtd||''; freteTotalInput.value = s.freteTotal||''; marketingTotalInput.value = s.marketingTotal||'';
+                custoUnidade.value = s.custo||''; embalagemInput.value = s.embalagem||''; freteUnitInput.value = s.freteUnit||''; marketingUnitInput.value = s.marketingUnit||''; margemInput.value = s.margem||'';
                 calcularPrecificacao(); 
             }
         }
-
         function calcularLoteRateio() {
-            const valLote = parseFloat(loteValor.value) || 0;
-            const qtd = parseInt(loteQtd.value) || 0;
-            const freteTot = parseFloat(freteTotalInput.value) || 0;
-            const mktTot = parseFloat(marketingTotalInput.value) || 0;
-
+            const val = parseFloat(loteValor.value)||0, qtd = parseInt(loteQtd.value)||0, frete = parseFloat(freteTotalInput.value)||0, mkt = parseFloat(marketingTotalInput.value)||0;
             if (qtd > 0) {
-                if (valLote > 0) custoUnidade.value = (valLote / qtd).toFixed(2);
-                freteUnitInput.value = freteTot > 0 ? (freteTot / qtd).toFixed(2) : '0';
-                marketingUnitInput.value = mktTot > 0 ? (mktTot / qtd).toFixed(2) : '0';
+                if (val > 0) custoUnidade.value = (val / qtd).toFixed(2);
+                freteUnitInput.value = frete > 0 ? (frete / qtd).toFixed(2) : '0';
+                marketingUnitInput.value = mkt > 0 ? (mkt / qtd).toFixed(2) : '0';
             }
             calcularPrecificacao();
         }
-
-        loteValor.addEventListener('input', calcularLoteRateio);
-        loteQtd.addEventListener('input', calcularLoteRateio);
-        freteTotalInput.addEventListener('input', calcularLoteRateio);
-        marketingTotalInput.addEventListener('input', calcularLoteRateio);
-
         function calcularPrecificacao() {
-            const custo = parseFloat(custoUnidade.value) || 0;
-            const embalagem = parseFloat(embalagemInput.value) || 0;
-            const frete = parseFloat(freteUnitInput.value) || 0;
-            const outros = parseFloat(marketingUnitInput.value) || 0;
-            const margem = parseFloat(margemInput.value) || 0;
-
-            const custoTotal = custo + embalagem + frete + outros;
-            const lucro = custoTotal * (margem / 100);
-            const precoVenda = custoTotal + lucro;
-
-            resCustoTotal.textContent = formatKz(custoTotal);
-            resLucro.textContent = formatKz(lucro);
-            resPrecoVenda.textContent = formatKz(precoVenda);
-
-            saveCalcState(); 
+            const custoTotal = (parseFloat(custoUnidade.value)||0) + (parseFloat(embalagemInput.value)||0) + (parseFloat(freteUnitInput.value)||0) + (parseFloat(marketingUnitInput.value)||0);
+            const lucro = custoTotal * ((parseFloat(margemInput.value)||0) / 100);
+            document.getElementById('res-custo-total').textContent = formatKz(custoTotal); document.getElementById('res-lucro').textContent = formatKz(lucro); document.getElementById('res-preco-venda').textContent = formatKz(custoTotal + lucro);
+            localStorage.setItem('versatil_calc_state', JSON.stringify({loteValor: loteValor.value, loteQtd: loteQtd.value, freteTotal: freteTotalInput.value, marketingTotal: marketingTotalInput.value, custo: custoUnidade.value, embalagem: embalagemInput.value, freteUnit: freteUnitInput.value, marketingUnit: marketingUnitInput.value, margem: margemInput.value}));
         }
 
+        [loteValor, loteQtd, freteTotalInput, marketingTotalInput].forEach(el => el.addEventListener('input', calcularLoteRateio));
         calcInputs.forEach(input => input.addEventListener('input', calcularPrecificacao));
-
-        window.clearCalculator = () => {
-            calcInputs.forEach(input => input.value = '');
-            loteValor.value = ''; loteQtd.value = '';
-            freteTotalInput.value = ''; marketingTotalInput.value = '';
-            calcularPrecificacao();
-            localStorage.removeItem('versatil_calc_state');
-            showToast("Calculadora limpa", "info");
-        };
-
-        // --- GESTÃO DE DÍVIDAS ---
-        const dashReceber = document.getElementById('dash-receber');
-        const dashPagar = document.getElementById('dash-pagar');
-        const dashSaldo = document.getElementById('dash-saldo');
-        const dashSaldoContainer = document.getElementById('dash-saldo-container');
-        
-        const form = document.getElementById('record-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const recordsList = document.getElementById('records-list');
-        const emptyState = document.getElementById('empty-state');
-        const filterStatus = document.getElementById('filter-status');
+        window.clearCalculator = () => { calcInputs.forEach(input => input.value = ''); [loteValor, loteQtd, freteTotalInput, marketingTotalInput].forEach(el => el.value = ''); calcularPrecificacao(); localStorage.removeItem('versatil_calc_state'); showToast("Limpo!", "info"); };
 
         const formatKz = (value) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + ' Kz';
-        const formatDateBr = (dateStr) => {
-            if (!dateStr) return '';
-            const [y, m, d] = dateStr.split('-');
-            return `${d}/${m}/${y}`;
-        };
+        const formatDateBr = (dateStr) => { if (!dateStr) return ''; const [y, m, d] = dateStr.split('-'); return `${d}/${m}/${y}`; };
 
-        const startDateInput = document.getElementById('startDate');
-        const endDateInput = document.getElementById('endDate');
-        const durationInput = document.getElementById('duration');
-        const amountInput = document.getElementById('amount');
-        const interestInput = document.getElementById('interest');
-        const previewElement = document.getElementById('final-amount-preview');
-
-        // NOVA FUNÇÃO: Auto-calcular Data Final baseado na Duração (Semanas)
+        const startDateInput = document.getElementById('startDate'), endDateInput = document.getElementById('endDate'), durationInput = document.getElementById('duration'), amountInput = document.getElementById('amount'), interestInput = document.getElementById('interest'), previewElement = document.getElementById('final-amount-preview');
         const updateEndDateFromDuration = () => {
             if (startDateInput.value && durationInput.value) {
-                const start = new Date(startDateInput.value);
-                const weeks = parseInt(durationInput.value) || 1;
-                // Adiciona as semanas em milissegundos
-                const end = new Date(start.getTime() + (weeks * 7 * 24 * 60 * 60 * 1000));
-                endDateInput.value = end.toISOString().split('T')[0];
-                updatePreview();
+                const start = new Date(startDateInput.value), weeks = parseInt(durationInput.value) || 1, end = new Date(start.getTime() + (weeks * 7 * 24 * 60 * 60 * 1000));
+                endDateInput.value = end.toISOString().split('T')[0]; updatePreview();
             }
         };
-        
-        startDateInput.addEventListener('change', updateEndDateFromDuration);
-        durationInput.addEventListener('input', updateEndDateFromDuration);
+        startDateInput.addEventListener('change', updateEndDateFromDuration); durationInput.addEventListener('input', updateEndDateFromDuration);
 
-        function updatePreview() {
-            const amt = parseFloat(amountInput.value) || 0;
-            const interest = parseFloat(interestInput.value) || 0;
-            const duration = parseInt(durationInput.value) || 1;
-            const finalAmt = amt + (amt * (interest / 100) * duration);
-            previewElement.textContent = formatKz(finalAmt);
-        }
+        function updatePreview() { const amt = parseFloat(amountInput.value) || 0, interest = parseFloat(interestInput.value) || 0, duration = parseInt(durationInput.value) || 1; previewElement.textContent = formatKz(amt + (amt * (interest / 100) * duration)); }
+        amountInput.addEventListener('input', updatePreview); interestInput.addEventListener('input', updatePreview);
 
-        amountInput.addEventListener('input', updatePreview);
-        interestInput.addEventListener('input', updatePreview);
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!userId) return showToast("Aguarde a conexão...", "error");
-
-            const type = document.querySelector('input[name="type"]:checked').value;
-            const name = document.getElementById('personName').value.trim();
-            const baseAmount = parseFloat(amountInput.value);
-            const interest = parseFloat(interestInput.value) || 0;
-            const duration = parseInt(durationInput.value) || 1;
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-            const description = document.getElementById('description').value.trim();
-
-            if (!name || isNaN(baseAmount) || baseAmount <= 0) return showToast("Preencha os campos corretamente.", "error");
-
-            const finalAmount = baseAmount + (baseAmount * (interest / 100) * duration);
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> Salvando...';
-
+        document.getElementById('record-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); if (!userId) return showToast("Aguarde...", "error");
+            const type = document.querySelector('input[name="type"]:checked').value, name = document.getElementById('personName').value.trim(), baseAmount = parseFloat(amountInput.value), interest = parseFloat(interestInput.value) || 0, duration = parseInt(durationInput.value) || 1;
+            if (!name || isNaN(baseAmount) || baseAmount <= 0) return showToast("Erro.", "error");
+            const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i>';
             try {
-                const collectionPath = collection(db, 'artifacts', appId, 'users', userId, 'debts');
-                await addDoc(collectionPath, {
-                    type, name, baseAmount, interest, duration, startDate, endDate,
-                    amount: finalAmount, description, isPaid: false, createdAt: Date.now()
-                });
-                form.reset();
-                updatePreview();
-                document.querySelector('input[name="type"][value="receber"]').checked = true;
-                showToast("Registro adicionado com sucesso!");
-            } catch (error) {
-                showToast("Erro ao salvar.", "error");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="ph-bold ph-plus"></i> Registrar Movimentação';
-            }
+                await addDoc(collection(db, 'artifacts', appId, 'users', userId, 'debts'), { type, name, baseAmount, interest, duration, startDate: startDateInput.value, endDate: endDateInput.value, amount: baseAmount + (baseAmount * (interest / 100) * duration), description: document.getElementById('description').value.trim(), isPaid: false, createdAt: Date.now() });
+                document.getElementById('record-form').reset(); updatePreview(); document.querySelector('input[name="type"][value="receber"]').checked = true; showToast("Salvo!");
+            } catch (error) {} finally { btn.disabled = false; btn.innerHTML = '<i class="ph-bold ph-plus"></i> Registrar Movimentação'; }
         });
 
-        window.togglePaid = async (id, currentStatus) => {
-            if (!userId) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'debts', id);
-                await updateDoc(docRef, { isPaid: !currentStatus });
-                showToast(!currentStatus ? "Marcado como pago!" : "Marcado como pendente.");
-            } catch (error) {
-                showToast("Erro ao atualizar.", "error");
-            }
-        };
-
-        window.deleteRecord = async (id) => {
-            if (!userId) return;
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'debts', id);
-                await deleteDoc(docRef);
-                showToast("Registro excluído.");
-            } catch (error) {
-                showToast("Erro ao excluir.", "error");
-            }
-        };
-
-        filterStatus.addEventListener('change', updateUIDebts);
-
-        function getDynamicAmount(rec) {
-            let currentAmount = rec.amount;
-            let lateInfo = { isLate: false, penalty: 0, weeksLate: 0 };
-            
-            if (!rec.isPaid && rec.endDate && rec.type === 'receber') {
-                const [y, m, d] = rec.endDate.split('-');
-                let end = new Date(y, m - 1, d);
-                let today = new Date();
-                today.setHours(0,0,0,0);
-                
-                if (today > end) {
-                    let diffTime = today.getTime() - end.getTime();
-                    let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                    let lateWeeks = Math.floor(diffDays / 7);
-                    
-                    if (lateWeeks >= 1) {
-                        lateInfo.isLate = true;
-                        lateInfo.weeksLate = lateWeeks;
-                        lateInfo.penalty = currentAmount * (0.05 * lateWeeks); 
-                        currentAmount += lateInfo.penalty;
-                    }
-                }
-            }
-            return { currentAmount, lateInfo };
-        }
+        window.togglePaid = async (id, status) => { if (userId) try { await updateDoc(doc(db, 'artifacts', appId, 'users', userId, 'debts', id), { isPaid: !status }); } catch (e) {} };
+        window.deleteRecord = async (id) => { if (userId) try { await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'debts', id)); } catch (e) {} };
+        document.getElementById('filter-status').addEventListener('change', updateUIDebts);
 
         function updateUIDebts() {
-            let totalReceber = 0;
-            let totalPagar = 0;
-
+            let totalReceber = 0, totalPagar = 0;
             records.forEach(rec => {
                 if (!rec.isPaid) {
-                    const { currentAmount } = getDynamicAmount(rec);
-                    if (rec.type === 'receber') totalReceber += currentAmount;
-                    if (rec.type === 'pagar') totalPagar += rec.amount;
+                    let currentAmount = rec.amount;
+                    if (rec.endDate && rec.type === 'receber') {
+                        let end = new Date(rec.endDate.split('-').join('/')), today = new Date(); today.setHours(0,0,0,0);
+                        if (today > end) { let lateWeeks = Math.floor(Math.floor((today.getTime() - end.getTime()) / (1000 * 60 * 60 * 24)) / 7); if (lateWeeks >= 1) currentAmount += (currentAmount * (0.05 * lateWeeks)); }
+                    }
+                    if (rec.type === 'receber') totalReceber += currentAmount; else totalPagar += rec.amount;
                 }
             });
 
-            dashReceber.textContent = formatKz(totalReceber);
-            dashPagar.textContent = formatKz(totalPagar);
-            
-            const saldo = totalReceber - totalPagar;
-            dashSaldo.textContent = formatKz(saldo);
+            document.getElementById('dash-receber').textContent = formatKz(totalReceber); document.getElementById('dash-pagar').textContent = formatKz(totalPagar);
+            const saldo = totalReceber - totalPagar; document.getElementById('dash-saldo').textContent = formatKz(saldo);
+            document.getElementById('dash-saldo-container').className = `rounded-2xl p-5 shadow-md flex items-center gap-4 text-white transition-all ${saldo > 0 ? 'bg-gradient-to-br from-emerald-500 to-emerald-600' : (saldo < 0 ? 'bg-gradient-to-br from-rose-500 to-rose-600' : 'bg-gradient-to-br from-indigo-600 to-violet-700')}`;
 
-            if (saldo > 0) {
-                dashSaldoContainer.className = "bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 flex items-center gap-4 text-white transition-all";
-            } else if (saldo < 0) {
-                dashSaldoContainer.className = "bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl p-5 shadow-lg shadow-rose-500/20 flex items-center gap-4 text-white transition-all";
-            } else {
-                dashSaldoContainer.className = "bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-lg shadow-indigo-500/20 flex items-center gap-4 text-white transition-all";
-            }
-
-            const currentFilter = filterStatus.value;
-            const filteredRecords = records.filter(rec => {
-                if (currentFilter === 'active') return !rec.isPaid;
-                if (currentFilter === 'paid') return rec.isPaid;
-                return true;
-            });
-
-            if (filteredRecords.length === 0) {
-                recordsList.innerHTML = '';
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                recordsList.innerHTML = filteredRecords.map(rec => {
-                    const isReceber = rec.type === 'receber';
-                    const { currentAmount, lateInfo } = getDynamicAmount(rec);
-                    
-                    const amountColor = rec.isPaid ? 'text-slate-400 dark:text-slate-500 line-through' : (isReceber ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
-                    const badgeBg = isReceber ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400' : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400';
-                    const badgeIcon = isReceber ? 'ph-arrow-down-left' : 'ph-arrow-up-right';
-                    const badgeText = isReceber ? 'A Receber' : 'A Pagar';
-                    
-                    const atrasoBadge = lateInfo.isLate 
-                        ? `<span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800 flex items-center gap-1 animate-pulse">
-                            <i class="ph-fill ph-warning"></i> Atraso: +${lateInfo.weeksLate * 5}%
-                           </span>` 
-                        : '';
-                    
-                    const dateInfo = (rec.startDate && rec.endDate) ? 
-                        `<p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1 mt-1 mb-1">
-                            <i class="ph-fill ph-calendar text-slate-400"></i> ${formatDateBr(rec.startDate)} até ${formatDateBr(rec.endDate)}
-                        </p>` : '';
-                    
+            const filter = document.getElementById('filter-status').value, filtered = records.filter(rec => filter === 'all' ? true : (filter === 'active' ? !rec.isPaid : rec.isPaid));
+            if (filtered.length === 0) { document.getElementById('records-list').innerHTML = ''; document.getElementById('empty-state').classList.remove('hidden'); }
+            else {
+                document.getElementById('empty-state').classList.add('hidden');
+                document.getElementById('records-list').innerHTML = filtered.map(rec => {
+                    const isRec = rec.type === 'receber'; let currentAmount = rec.amount, lateInfo = { isLate: false, penalty: 0, weeksLate: 0 };
+                    if (!rec.isPaid && rec.endDate && isRec) {
+                        let end = new Date(rec.endDate.split('-').join('/')), today = new Date(); today.setHours(0,0,0,0);
+                        if (today > end) { let w = Math.floor(Math.floor((today.getTime() - end.getTime()) / (1000 * 60 * 60 * 24)) / 7); if (w >= 1) { lateInfo = { isLate: true, weeksLate: w, penalty: currentAmount * (0.05 * w) }; currentAmount += lateInfo.penalty; } }
+                    }
                     return `
-                        <div class="bg-white dark:bg-slate-800 border ${rec.isPaid ? 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-75' : (lateInfo.isLate ? 'border-rose-300 dark:border-rose-700 shadow-sm' : 'border-slate-100 dark:border-slate-700 shadow-sm')} rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
-                            
+                        <div class="bg-white dark:bg-slate-800 border ${rec.isPaid ? 'opacity-75 bg-slate-50' : (lateInfo.isLate ? 'border-rose-300' : 'border-slate-100 dark:border-slate-700')} rounded-2xl p-4 flex flex-col sm:flex-row justify-between gap-4 transition-all w-full">
                             <div class="flex items-start gap-4">
-                                <button onclick="togglePaid('${rec.id}', ${rec.isPaid})" class="mt-1 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${rec.isPaid ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 text-transparent hover:border-emerald-500 dark:hover:border-emerald-500'}">
-                                    <i class="ph-bold ph-check text-sm"></i>
-                                </button>
-                                
+                                <button onclick="togglePaid('${rec.id}', ${rec.isPaid})" class="mt-1 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 ${rec.isPaid ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-300 text-transparent hover:border-emerald-500'}"><i class="ph-bold ph-check text-sm"></i></button>
                                 <div>
-                                    <div class="flex flex-wrap items-center gap-2 mb-0.5">
-                                        <h4 class="font-bold text-slate-800 dark:text-white text-base ${rec.isPaid ? 'line-through text-slate-500 dark:text-slate-400' : ''}">${rec.name}</h4>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border flex items-center gap-1 ${rec.isPaid ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-600' : badgeBg}">
-                                            <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
-                                        </span>
-                                        ${atrasoBadge}
-                                    </div>
-                                    ${dateInfo}
-                                    ${rec.description ? `<p class="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[200px] sm:max-w-sm mb-1">${rec.description}</p>` : ''}
-                                    ${rec.interest > 0 ? `<p class="text-xs text-indigo-500 dark:text-indigo-400 font-medium flex items-center gap-2"><i class="ph-fill ph-clock"></i> Acordado: ${rec.duration} sem <span class="text-slate-300 dark:text-slate-600">|</span> <i class="ph-fill ph-percent"></i> ${rec.interest}% a.s</p>` : ''}
+                                    <div class="flex items-center gap-2 mb-0.5"><h4 class="font-bold dark:text-white ${rec.isPaid ? 'line-through text-slate-500' : ''}">${rec.name}</h4><span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${isRec ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}">${isRec ? 'A Receber' : 'A Pagar'}</span>${lateInfo.isLate ? `<span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md bg-rose-100 text-rose-700 animate-pulse">Atraso: +${lateInfo.weeksLate*5}%</span>` : ''}</div>
+                                    ${rec.startDate ? `<p class="text-[11px] text-slate-500 font-medium mb-1"><i class="ph-fill ph-calendar"></i> ${formatDateBr(rec.startDate)} até ${formatDateBr(rec.endDate)}</p>` : ''}
+                                    ${rec.interest > 0 ? `<p class="text-xs text-indigo-500 font-medium"><i class="ph-fill ph-clock"></i> ${rec.duration} sem | <i class="ph-fill ph-percent"></i> ${rec.interest}% a.s</p>` : ''}
                                 </div>
                             </div>
-
                             <div class="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pl-11 sm:pl-0">
-                                <div class="text-right flex flex-col items-end">
-                                    <span class="font-bold text-lg sm:text-xl tracking-tight ${amountColor}">
-                                        ${isReceber ? '+' : '-'}${formatKz(rec.isPaid ? rec.amount : (isReceber ? currentAmount : rec.amount))}
-                                    </span>
-                                    ${(rec.interest > 0 || lateInfo.isLate) ? `<span class="text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-700 pt-0.5 mt-0.5">Base: ${formatKz(rec.baseAmount || rec.amount)}</span>` : ''}
-                                    ${lateInfo.isLate ? `<span class="text-[11px] text-rose-500 dark:text-rose-400 font-bold">Multa gerada: ${formatKz(lateInfo.penalty)}</span>` : ''}
-                                </div>
-                                <button onclick="deleteRecord('${rec.id}')" class="w-9 h-9 rounded-xl text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 flex items-center justify-center transition-colors" title="Excluir Registro">
-                                    <i class="ph-fill ph-trash text-xl"></i>
-                                </button>
+                                <div class="text-right flex flex-col items-end"><span class="font-bold text-lg ${rec.isPaid ? 'text-slate-400 line-through' : (isRec ? 'text-emerald-600' : 'text-rose-600')}">${isRec ? '+' : '-'}${formatKz(rec.isPaid ? rec.amount : (isRec ? currentAmount : rec.amount))}</span></div>
+                                <button onclick="deleteRecord('${rec.id}')" class="text-slate-400 hover:text-rose-500"><i class="ph-fill ph-trash text-xl"></i></button>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }).join('');
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('theme-icon').className = isDark ? 'ph-fill ph-sun text-xl text-amber-500' : 'ph ph-moon text-xl';
-            loadCalcState();
-        });
-
+        window.addEventListener('DOMContentLoaded', () => { document.getElementById('theme-icon').className = document.documentElement.classList.contains('dark') ? 'ph-fill ph-sun text-xl text-amber-500' : 'ph ph-moon text-xl'; loadCalcState(); });
         initApp();
     </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
-      }
-    </script>
+    <script> if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js'); </script>
 </body>
 </html>
