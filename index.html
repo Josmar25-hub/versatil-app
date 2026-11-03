@@ -53,7 +53,7 @@
 </head>
 <body class="text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 antialiased h-[100dvh] w-screen overflow-hidden flex flex-col transition-colors duration-300">
 
-    <!-- Tutorial Overlay Base (Aparece dinamicamente) -->
+    <!-- Tutorial Overlay -->
     <div id="tutorial-modal" class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-2xl z-[105] hidden flex-col transition-all duration-300 border border-indigo-100 dark:border-indigo-900/50">
         <div class="flex items-center gap-3 mb-2">
             <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600"><i class="ph-fill ph-lightbulb text-lg"></i></div>
@@ -118,111 +118,114 @@
             <div id="tab-cofre" class="tab-content flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <section class="grid grid-cols-1 md:grid-cols-3 gap-4" id="tut-saldo">
                     <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-lg text-white relative overflow-hidden"><div class="absolute top-0 right-0 p-4 opacity-10"><i class="ph-fill ph-vault text-6xl"></i></div><p class="text-sm font-medium text-indigo-100 mb-1">Saldo em Caixa</p><h2 id="cofre-saldo-real" class="text-3xl font-bold">0,00 Kz</h2></div>
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border relative overflow-hidden"><p class="text-sm font-medium text-slate-500 mb-1">Saldo Contabilístico</p><h2 id="cofre-saldo-contabilistico" class="text-3xl font-bold dark:text-white">0,00 Kz</h2></div>
-                    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-5 shadow-sm border border-amber-100"><p class="text-sm font-bold text-amber-700 mb-1">Dízimo Acumulado</p><h2 id="cofre-dizimo" class="text-2xl font-bold text-amber-600">0,00 Kz</h2></div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden"><p class="text-sm font-medium text-slate-500 mb-1">Saldo Contabilístico</p><h2 id="cofre-saldo-contabilistico" class="text-3xl font-bold dark:text-white">0,00 Kz</h2></div>
+                    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-5 shadow-sm border border-amber-100 dark:border-amber-800/30"><p class="text-sm font-bold text-amber-700 dark:text-amber-400 mb-1">Dízimo Acumulado</p><h2 id="cofre-dizimo" class="text-2xl font-bold text-amber-600 dark:text-amber-500">0,00 Kz</h2></div>
                 </section>
                 <section class="flex flex-col lg:grid lg:grid-cols-3 gap-6 items-start">
-                    <div class="w-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border p-6 lg:sticky lg:top-24" id="tut-nova-mov">
+                    <div class="w-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 lg:sticky lg:top-24" id="tut-nova-mov">
                         <h3 class="text-lg font-bold dark:text-white mb-5">Nova Movimentação</h3>
                         <form id="cofre-form" class="space-y-4">
                             <div class="grid grid-cols-2 gap-3">
-                                <label class="cursor-pointer w-full"><input type="radio" name="cofre-type" value="entrada" class="peer sr-only" checked onchange="toggleDizimoOption(true)"><div class="text-center px-2 py-2.5 rounded-xl border-2 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-600 text-sm font-bold text-slate-500 w-full transition-all">Entrada</div></label>
-                                <label class="cursor-pointer w-full"><input type="radio" name="cofre-type" value="saida" class="peer sr-only" onchange="toggleDizimoOption(false)"><div class="text-center px-2 py-2.5 rounded-xl border-2 peer-checked:bg-rose-50 peer-checked:border-rose-500 peer-checked:text-rose-600 text-sm font-bold text-slate-500 w-full transition-all">Saída</div></label>
+                                <label class="cursor-pointer w-full"><input type="radio" name="cofre-type" value="entrada" class="peer sr-only" checked onchange="toggleDizimoOption(true)"><div class="text-center px-2 py-2.5 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-600 text-sm font-bold text-slate-500 w-full transition-all">Entrada</div></label>
+                                <label class="cursor-pointer w-full"><input type="radio" name="cofre-type" value="saida" class="peer sr-only" onchange="toggleDizimoOption(false)"><div class="text-center px-2 py-2.5 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 text-sm font-bold text-slate-500 w-full transition-all">Saída</div></label>
                             </div>
-                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Valor</label><input type="number" id="cofre-amount" required min="0.01" step="0.01" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white"></div>
-                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Descrição</label><input type="text" id="cofre-desc" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white"></div>
-                            <div id="dizimo-checkbox-container" class="flex items-center gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100"><input type="checkbox" id="cofre-dizimo-check" checked class="w-4 h-4"><label for="cofre-dizimo-check" class="text-sm font-bold text-amber-700">10% Dízimo?</label></div>
+                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Valor</label><input type="number" id="cofre-amount" required min="0.01" step="0.01" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
+                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Descrição</label><input type="text" id="cofre-desc" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
+                            <div id="dizimo-checkbox-container" class="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800/50"><input type="checkbox" id="cofre-dizimo-check" checked class="w-4 h-4"><label for="cofre-dizimo-check" class="text-sm font-bold text-amber-700 dark:text-amber-400">10% Dízimo?</label></div>
                             <button type="submit" class="w-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold py-3.5 rounded-xl shadow-md">Registrar</button>
                         </form>
                     </div>
-                    <div class="w-full lg:col-span-2"><div id="cofre-empty" class="hidden text-center p-10 border-2 border-dashed rounded-2xl">Cofre Vazio</div><div id="cofre-list" class="space-y-3"></div></div>
+                    <div class="w-full lg:col-span-2"><div id="cofre-empty" class="hidden text-center p-10 border-2 border-dashed dark:border-slate-700 rounded-2xl dark:text-slate-400">Cofre Vazio</div><div id="cofre-list" class="space-y-3"></div></div>
                 </section>
             </div>
 
-            <!-- FASE 2: PEDIDOS (Alinhamento Mobile Otimizado) -->
+            <!-- FASE 2: PEDIDOS -->
             <div id="tab-pedidos" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border p-6 flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
                     <div><h3 class="text-lg font-bold dark:text-white"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3></div>
                     <form id="pedido-form" class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full sm:w-48 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white">
-                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full sm:w-48 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white">
-                        <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Criar</button>
+                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full sm:w-48 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white">
+                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full sm:w-48 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white">
+                        <button type="submit" class="shrink-0 w-full sm:w-auto bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Criar</button>
                     </form>
                 </div>
                 <div class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x">
-                    <div class="min-w-[85vw] sm:min-w-[280px] flex-1 bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl p-4 border snap-center"><div class="flex items-center justify-between mb-4"><h4 class="font-bold">Pendentes</h4><span id="count-pendente" class="bg-slate-200 px-2 rounded-full font-bold">0</span></div><div id="col-pendente" class="space-y-3"></div></div>
-                    <div class="min-w-[85vw] sm:min-w-[280px] flex-1 bg-amber-50/50 rounded-2xl p-4 border snap-center"><div class="flex items-center justify-between mb-4"><h4 class="font-bold text-amber-700">Em Preparação</h4><span id="count-preparacao" class="bg-amber-200 px-2 rounded-full font-bold">0</span></div><div id="col-preparacao" class="space-y-3"></div></div>
-                    <div class="min-w-[85vw] sm:min-w-[280px] flex-1 bg-emerald-50/50 rounded-2xl p-4 border snap-center"><div class="flex items-center justify-between mb-4"><h4 class="font-bold text-emerald-700">Entregues</h4><span id="count-entregue" class="bg-emerald-200 px-2 rounded-full font-bold">0</span></div><div id="col-entregue" class="space-y-3"></div></div>
+                    <div class="min-w-[85vw] sm:min-w-[280px] flex-1 bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 snap-center"><div class="flex items-center justify-between mb-4"><h4 class="font-bold dark:text-slate-200">Pendentes</h4><span id="count-pendente" class="bg-slate-200 dark:bg-slate-700 px-2 rounded-full font-bold dark:text-white">0</span></div><div id="col-pendente" class="space-y-3"></div></div>
+                    <div class="min-w-[85vw] sm:min-w-[280px] flex-1 bg-amber-50/50 dark:bg-amber-900/20 rounded-2xl p-4 border border-amber-100 dark:border-amber-800/30 snap-center"><div class="flex items-center justify-between mb-4"><h4 class="font-bold text-amber-700 dark:text-amber-400">Em Preparação</h4><span id="count-preparacao" class="bg-amber-200 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 px-2 rounded-full font-bold">0</span></div><div id="col-preparacao" class="space-y-3"></div></div>
+                    <div class="min-w-[85vw] sm:min-w-[280px] flex-1 bg-emerald-50/50 dark:bg-emerald-900/20 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-800/30 snap-center"><div class="flex items-center justify-between mb-4"><h4 class="font-bold text-emerald-700 dark:text-emerald-400">Entregues</h4><span id="count-entregue" class="bg-emerald-200 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 px-2 rounded-full font-bold">0</span></div><div id="col-entregue" class="space-y-3"></div></div>
                 </div>
             </div>
 
             <!-- FASE 1.5: DÍVIDAS -->
             <div id="tab-dividas" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600"><i class="ph-bold ph-arrow-down-left text-2xl"></i></div><div><p class="text-sm font-medium text-slate-500">A Receber</p><h2 id="dash-receber" class="text-2xl font-bold dark:text-white">0,00 Kz</h2></div></div>
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600"><i class="ph-bold ph-arrow-up-right text-2xl"></i></div><div><p class="text-sm font-medium text-slate-500">A Pagar</p><h2 id="dash-pagar" class="text-2xl font-bold dark:text-white">0,00 Kz</h2></div></div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600"><i class="ph-bold ph-arrow-down-left text-2xl"></i></div><div><p class="text-sm font-medium text-slate-500">A Receber</p><h2 id="dash-receber" class="text-2xl font-bold dark:text-white">0,00 Kz</h2></div></div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600"><i class="ph-bold ph-arrow-up-right text-2xl"></i></div><div><p class="text-sm font-medium text-slate-500">A Pagar</p><h2 id="dash-pagar" class="text-2xl font-bold dark:text-white">0,00 Kz</h2></div></div>
                 </section>
                 <section class="flex flex-col lg:grid lg:grid-cols-3 gap-6 items-start">
-                    <div class="w-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border p-6 lg:sticky lg:top-24">
+                    <div class="w-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 lg:sticky lg:top-24">
                         <h3 class="text-lg font-bold dark:text-white mb-5"><i class="ph-fill ph-handshake text-indigo-500"></i> Empréstimo</h3>
                         <form id="record-form" class="space-y-4">
                             <div class="flex gap-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl mb-4 w-full">
-                                <label class="flex-1 text-center cursor-pointer w-full"><input type="radio" name="debt-category" value="negocio" class="peer sr-only" checked onchange="toggleAmigo(false)"><div class="py-2.5 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white peer-checked:text-indigo-600 w-full transition-all shadow-sm">💼 Negócio</div></label>
-                                <label class="flex-1 text-center cursor-pointer w-full"><input type="radio" name="debt-category" value="amigo" class="peer sr-only" onchange="toggleAmigo(true)"><div class="py-2.5 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white peer-checked:text-blue-500 w-full transition-all shadow-sm">🤝 Amigo</div></label>
+                                <label class="flex-1 text-center cursor-pointer w-full"><input type="radio" name="debt-category" value="negocio" class="peer sr-only" checked onchange="toggleAmigo(false)"><div class="py-2.5 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-indigo-600 w-full transition-all shadow-sm">💼 Negócio</div></label>
+                                <label class="flex-1 text-center cursor-pointer w-full"><input type="radio" name="debt-category" value="amigo" class="peer sr-only" onchange="toggleAmigo(true)"><div class="py-2.5 rounded-lg text-xs font-bold text-slate-500 peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-blue-500 w-full transition-all shadow-sm">🤝 Amigo</div></label>
                             </div>
                             <div class="grid grid-cols-2 gap-3 w-full">
-                                <label class="cursor-pointer w-full"><input type="radio" name="type" value="receber" class="peer sr-only" checked><div class="text-center px-2 py-2.5 rounded-xl border-2 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-600 text-sm font-bold text-slate-500 w-full transition-all">A Receber</div></label>
-                                <label class="cursor-pointer w-full"><input type="radio" name="type" value="pagar" class="peer sr-only"><div class="text-center px-2 py-2.5 rounded-xl border-2 peer-checked:bg-rose-50 peer-checked:border-rose-500 peer-checked:text-rose-600 text-sm font-bold text-slate-500 w-full transition-all">A Pagar</div></label>
+                                <label class="cursor-pointer w-full"><input type="radio" name="type" value="receber" class="peer sr-only" checked><div class="text-center px-2 py-2.5 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-600 text-sm font-bold text-slate-500 w-full transition-all">A Receber</div></label>
+                                <label class="cursor-pointer w-full"><input type="radio" name="type" value="pagar" class="peer sr-only"><div class="text-center px-2 py-2.5 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 text-sm font-bold text-slate-500 w-full transition-all">A Pagar</div></label>
                             </div>
-                            <div><label class="block text-sm font-medium mb-1">Nome</label><input type="text" id="personName" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white"></div>
-                            <div><label class="block text-sm font-medium mb-1">Valor Base</label><input type="number" id="amount" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none dark:text-white"></div>
+                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Nome</label><input type="text" id="personName" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
+                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Valor Base</label><input type="number" id="amount" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
                             <div class="grid grid-cols-2 gap-3">
-                                <div><label class="block text-sm font-medium mb-1">Início</label><input type="date" id="startDate" required class="w-full px-3 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border outline-none text-sm dark:text-white"></div>
-                                <div><label class="block text-sm font-medium mb-1">Semanas</label><input type="number" id="duration" min="1" value="1" class="w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none dark:text-white"></div>
+                                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Início</label><input type="date" id="startDate" required class="w-full px-3 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none text-sm dark:text-white"></div>
+                                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Semanas</label><input type="number" id="duration" min="1" value="1" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
-                                <div><label class="block text-sm font-medium mb-1">Final</label><input type="date" id="endDate" required class="w-full px-3 py-3 rounded-xl bg-slate-100 border text-sm dark:text-slate-400" readonly></div>
-                                <div><label class="block text-sm font-medium mb-1">Juros (%)</label><input type="number" id="interest" min="0" step="0.1" value="0" class="w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none dark:text-white"></div>
+                                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Final</label><input type="date" id="endDate" required class="w-full px-3 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-slate-400" readonly></div>
+                                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Juros (%)</label><input type="number" id="interest" min="0" step="0.1" value="0" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
                             </div>
-                            <div class="bg-indigo-50 p-4 rounded-xl border flex justify-between items-center"><span class="text-sm font-medium text-indigo-800">Retorno:</span><span id="final-amount-preview" class="font-bold text-indigo-700 text-lg">0,00 Kz</span></div>
+                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center"><span class="text-sm font-medium text-indigo-800 dark:text-indigo-300">Retorno:</span><span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span></div>
                             <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-3.5 rounded-xl shadow-md w-full">Registrar Dívida</button>
                         </form>
                     </div>
                     <div class="w-full lg:col-span-2">
-                        <div class="flex justify-between mb-4"><h3 class="text-lg font-bold dark:text-white">Histórico</h3><select id="filter-status" class="bg-white border rounded-xl px-4 py-2 outline-none dark:text-slate-800"><option value="active">Pendentes</option><option value="paid">Liquidados</option></select></div>
+                        <div class="flex justify-between mb-4"><h3 class="text-lg font-bold dark:text-white">Histórico</h3><select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 outline-none dark:text-white"><option value="active">Pendentes</option><option value="paid">Liquidados</option></select></div>
                         <div id="records-list" class="space-y-3 pb-10"></div>
                     </div>
                 </section>
             </div>
 
-            <!-- METAS DIÁRIAS (Alinhamento Mobile) -->
+            <!-- METAS DIÁRIAS (Cores e Botões Corrigidos) -->
             <div id="tab-metas" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border w-full">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 w-full">
                     <div><h3 class="font-bold text-lg dark:text-white">Calendário de Metas</h3></div>
-                    <input type="date" id="goal-date-filter" class="w-full sm:w-auto px-4 py-3 rounded-xl bg-slate-50 border dark:text-slate-800 font-medium w-full">
+                    <input type="date" id="goal-date-filter" class="w-full sm:w-auto px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:text-white font-medium">
                 </div>
                 <div class="flex flex-col gap-4">
-                    <details class="group bg-indigo-50/50 rounded-2xl border" open>
-                        <summary class="flex justify-between p-5 cursor-pointer outline-none"><h4 class="font-bold text-indigo-800 flex items-center gap-3">👨🏽‍💻 Metas do Josemar</h4></summary>
-                        <div class="px-5 pb-5 flex flex-col border-t pt-5">
+                    <!-- Metas Josemar -->
+                    <details class="group bg-indigo-50/50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/30" open>
+                        <summary class="flex justify-between p-5 cursor-pointer outline-none"><h4 class="font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-3">👨🏽‍💻 Metas do Josemar</h4></summary>
+                        <div class="px-5 pb-5 flex flex-col border-t border-indigo-100/50 dark:border-indigo-800/30 pt-5">
                             <form onsubmit="addGoal(event, 'josemar')" class="flex flex-col sm:flex-row gap-3 mb-4 w-full">
-                                <input type="text" id="goal-input-josemar" required placeholder="Nova meta..." class="w-full sm:flex-1 px-4 py-3 rounded-xl border bg-white dark:bg-slate-800 outline-none text-sm dark:text-white">
-                                <div class="flex gap-2 w-full sm:w-auto">
-                                    <button type="button" onclick="loadFavorites('josemar')" class="flex-1 sm:flex-none bg-amber-100 text-amber-600 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 w-full"><i class="ph-fill ph-star text-lg"></i> Fixas</button>
-                                    <button type="submit" class="flex-1 sm:flex-none bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 w-full"><i class="ph-bold ph-plus"></i> Add</button>
+                                <input type="text" id="goal-input-josemar" required placeholder="Nova meta..." class="w-full sm:flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 outline-none text-sm dark:text-white">
+                                <div class="flex gap-2 w-full sm:w-auto shrink-0">
+                                    <button type="button" onclick="loadFavorites('josemar')" class="flex-1 sm:flex-none shrink-0 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="ph-fill ph-star text-lg"></i> Fixas</button>
+                                    <button type="submit" class="flex-1 sm:flex-none shrink-0 bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="ph-bold ph-plus"></i> Add</button>
                                 </div>
                             </form>
                             <div id="goals-list-josemar" class="space-y-3"></div>
                         </div>
                     </details>
-                    <details class="group bg-rose-50/50 rounded-2xl border" open>
-                        <summary class="flex justify-between p-5 cursor-pointer outline-none"><h4 class="font-bold text-rose-800 flex items-center gap-3">👩🏾‍✈️ Metas da Kiriana</h4></summary>
-                        <div class="px-5 pb-5 flex flex-col border-t pt-5">
+                    
+                    <!-- Metas Kiriana -->
+                    <details class="group bg-rose-50/50 dark:bg-rose-900/20 rounded-2xl border border-rose-100 dark:border-rose-800/30" open>
+                        <summary class="flex justify-between p-5 cursor-pointer outline-none"><h4 class="font-bold text-rose-800 dark:text-rose-300 flex items-center gap-3">👩🏾‍✈️ Metas da Kiriana</h4></summary>
+                        <div class="px-5 pb-5 flex flex-col border-t border-rose-100/50 dark:border-rose-800/30 pt-5">
                             <form onsubmit="addGoal(event, 'kiriana')" class="flex flex-col sm:flex-row gap-3 mb-4 w-full">
-                                <input type="text" id="goal-input-kiriana" required placeholder="Nova meta..." class="w-full sm:flex-1 px-4 py-3 rounded-xl border bg-white dark:bg-slate-800 outline-none text-sm dark:text-white">
-                                <div class="flex gap-2 w-full sm:w-auto">
-                                    <button type="button" onclick="loadFavorites('kiriana')" class="flex-1 sm:flex-none bg-amber-100 text-amber-600 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 w-full"><i class="ph-fill ph-star text-lg"></i> Fixas</button>
-                                    <button type="submit" class="flex-1 sm:flex-none bg-rose-600 text-white px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 w-full"><i class="ph-bold ph-plus"></i> Add</button>
+                                <input type="text" id="goal-input-kiriana" required placeholder="Nova meta..." class="w-full sm:flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 outline-none text-sm dark:text-white">
+                                <div class="flex gap-2 w-full sm:w-auto shrink-0">
+                                    <button type="button" onclick="loadFavorites('kiriana')" class="flex-1 sm:flex-none shrink-0 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="ph-fill ph-star text-lg"></i> Fixas</button>
+                                    <button type="submit" class="flex-1 sm:flex-none shrink-0 bg-rose-600 text-white px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="ph-bold ph-plus"></i> Add</button>
                                 </div>
                             </form>
                             <div id="goals-list-kiriana" class="space-y-3"></div>
@@ -231,45 +234,55 @@
                 </div>
             </div>
 
-            <!-- FASE 3: MARKETING -->
+            <!-- FASE 3: MARKETING (Cores Corrigidas) -->
             <div id="tab-redes" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-pink-500 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden"><h2 class="text-2xl font-bold relative z-10">Marketing</h2></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border p-6">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
                         <h3 class="font-bold mb-4 flex items-center gap-2 dark:text-white"><i class="ph-fill ph-lightbulb text-amber-500"></i> Ideias de Posts</h3>
                         <form id="post-form" class="flex flex-col sm:flex-row gap-3 mb-4 w-full">
-                            <input type="text" id="post-input" required placeholder="Ex: Reel de galettes..." class="w-full sm:flex-1 px-4 py-3 rounded-xl border outline-none text-sm dark:text-slate-800">
-                            <button type="submit" class="w-full sm:w-auto bg-violet-600 text-white px-6 py-3 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Add</button>
+                            <input type="text" id="post-input" required placeholder="Ex: Reel de galettes..." class="w-full sm:flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-sm dark:text-white">
+                            <button type="submit" class="shrink-0 w-full sm:w-auto bg-violet-600 text-white px-6 py-3 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Add</button>
                         </form>
                         <div id="posts-list" class="space-y-3"></div>
                     </div>
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border p-6">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
                         <h3 class="font-bold mb-4 dark:text-white">Links Rápidos</h3>
                         <div class="grid grid-cols-2 gap-3">
-                            <a href="https://www.instagram.com" target="_blank" class="p-4 bg-slate-50 rounded-xl border flex flex-col items-center gap-2 font-bold text-pink-600"><i class="ph-fill ph-instagram-logo text-3xl"></i>Insta</a>
-                            <a href="https://www.tiktok.com" target="_blank" class="p-4 bg-slate-50 rounded-xl border flex flex-col items-center gap-2 font-bold"><i class="ph-fill ph-tiktok-logo text-3xl"></i>TikTok</a>
+                            <a href="https://www.instagram.com" target="_blank" class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col items-center gap-2 font-bold text-pink-600 dark:text-pink-400"><i class="ph-fill ph-instagram-logo text-3xl"></i>Insta</a>
+                            <a href="https://www.tiktok.com" target="_blank" class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col items-center gap-2 font-bold text-slate-800 dark:text-slate-200"><i class="ph-fill ph-tiktok-logo text-3xl"></i>TikTok</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CALCULADORA RESTAURADA -->
+            <!-- CALCULADORA RESTAURADA (Cores e Lucro Corrigidos) -->
             <div id="tab-precificacao" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg"><h2 class="text-2xl font-bold">Calculadora</h2></div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl border p-6 sm:p-8">
-                        <div class="bg-slate-100 p-4 rounded-xl mb-6"><h4 class="text-sm font-bold text-slate-700 mb-3">Dados do Lote (Atacado)</h4>
-                            <div class="grid grid-cols-2 gap-4 mb-3"><div><label class="block text-xs font-medium text-slate-500 mb-1">Valor Total</label><input type="number" id="calc-lote-valor" class="w-full px-3 py-3 rounded-lg border dark:text-slate-800"></div><div><label class="block text-xs font-medium text-slate-500 mb-1">Qtd. Peças</label><input type="number" id="calc-lote-qtd" class="w-full px-3 py-3 rounded-lg border dark:text-slate-800"></div></div>
-                            <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-medium text-slate-500 mb-1">Frete Total</label><input type="number" id="calc-frete-total" class="w-full px-3 py-3 rounded-lg border dark:text-slate-800"></div><div><label class="block text-xs font-medium text-slate-500 mb-1">Ads Total</label><input type="number" id="calc-marketing-total" class="w-full px-3 py-3 rounded-lg border dark:text-slate-800"></div></div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6 sm:p-8">
+                        <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl mb-6"><h4 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">Dados do Lote (Atacado)</h4>
+                            <div class="grid grid-cols-2 gap-4 mb-3">
+                                <div><label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Valor Total</label><input type="number" id="calc-lote-valor" class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white outline-none"></div>
+                                <div><label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Qtd. Peças</label><input type="number" id="calc-lote-qtd" class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white outline-none"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Frete Total</label><input type="number" id="calc-frete-total" class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white outline-none"></div>
+                                <div><label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Ads Total</label><input type="number" id="calc-marketing-total" class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white outline-none"></div>
+                            </div>
                         </div>
                         <div class="space-y-4">
-                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Custo Base (Un)</label><input type="number" id="calc-custo" class="calc-input w-full px-4 py-3 rounded-xl border dark:text-slate-800 text-lg"></div>
-                            <div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Embalagem</label><input type="number" id="calc-embalagem" class="calc-input w-full px-4 py-3 rounded-xl border dark:text-slate-800"></div><div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Frete (Un)</label><input type="number" id="calc-frete" class="calc-input w-full px-4 py-3 rounded-xl border bg-slate-100 dark:text-slate-800" readonly></div></div>
-                            <div class="pt-4 border-t mt-2"><label class="block text-sm font-bold mb-2 dark:text-white">Margem Lucro (%)</label><input type="number" id="calc-margem" class="calc-input w-full px-4 py-3 rounded-xl border-2 border-indigo-200 text-indigo-700 font-bold text-lg bg-indigo-50"></div>
+                            <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Custo Base (Un)</label><input type="number" id="calc-custo" class="calc-input w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white outline-none text-lg"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Embalagem</label><input type="number" id="calc-embalagem" class="calc-input w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 dark:text-white outline-none"></div>
+                                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Frete (Un)</label><input type="number" id="calc-frete" class="calc-input w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900/50 dark:text-white outline-none" readonly></div>
+                            </div>
+                            <div class="pt-4 border-t dark:border-slate-700 mt-2"><label class="block text-sm font-bold mb-2 dark:text-white">Margem Lucro (%)</label><input type="number" id="calc-margem" class="calc-input w-full px-4 py-3 rounded-xl border-2 border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-bold text-lg outline-none"></div>
                         </div>
                     </div>
                     <div class="space-y-4 lg:sticky lg:top-24">
-                        <div class="bg-white rounded-2xl border p-6 flex justify-between"><div class="text-sm">Custo Total<h3 id="res-custo-total" class="text-xl font-bold mt-1">0,00 Kz</h3></div></div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6 flex justify-between"><div class="text-sm dark:text-slate-400">Custo Total<h3 id="res-custo-total" class="text-xl font-bold mt-1 dark:text-white">0,00 Kz</h3></div></div>
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 border-l-4 border-l-emerald-500 p-6 flex justify-between"><div class="text-sm text-emerald-600 dark:text-emerald-400">Lucro Líquido<h3 id="res-lucro" class="text-2xl font-bold mt-1">0,00 Kz</h3></div><div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-500"><i class="ph-bold ph-money text-xl"></i></div></div>
                         <div class="bg-indigo-600 rounded-2xl shadow-lg p-8 text-center text-white"><p class="font-medium mb-2 uppercase text-xs">Preço de Venda</p><h2 id="res-preco-venda" class="text-4xl font-bold">0,00 Kz</h2></div>
                     </div>
                 </div>
@@ -323,19 +336,18 @@
             unsubFavs = onSnapshot(collection(db,'artifacts',appId,'users',userId,'favorites'),(s)=>{favoriteGoals=s.docs.map(d=>({id:d.id,...d.data()}));});
         }
 
-        /* --- CÓDIGO FUNCIONAL RESUMIDO (Idêntico ao anterior para Poupar Espaço visual) --- */
-        window.toggleAmigo=(isAmigo)=>{ const i = document.getElementById('interest'); if(isAmigo){ i.value=0; i.readOnly=true; i.classList.add('bg-slate-200','opacity-50'); } else { i.readOnly=false; i.classList.remove('bg-slate-200','opacity-50'); } updatePrev(); };
+        window.toggleAmigo=(isAmigo)=>{ const i = document.getElementById('interest'); if(isAmigo){ i.value=0; i.readOnly=true; i.classList.add('bg-slate-200','dark:bg-slate-800','opacity-50'); } else { i.readOnly=false; i.classList.remove('bg-slate-200','dark:bg-slate-800','opacity-50'); } updatePrev(); };
         document.getElementById('pedido-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { cliente: document.getElementById('pedido-cliente').value, produto: document.getElementById('pedido-produto').value, status: 'pendente', createdAt: Date.now() }); e.target.reset(); showToast("Adicionado!"); } catch(er) {} }); window.updatePedidoStatus = async(id, s) => { await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), {status: s}); }; window.deletePedido = async(id) => { await deleteDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id)); };
-        function renderPedidos() { const cols = { pendente: [], preparacao: [], entregue: [] }; pedidos.forEach(p => { if(cols[p.status]) cols[p.status].push(p); }); document.getElementById('count-pendente').textContent = cols.pendente.length; document.getElementById('count-preparacao').textContent = cols.preparacao.length; document.getElementById('count-entregue').textContent = cols.entregue.length; const mc = (p) => `<div class="bg-white border p-4 rounded-xl shadow-sm"><p class="font-bold">${p.cliente}</p><p class="text-xs text-slate-500">${p.produto}</p><div class="flex justify-between mt-3 pt-2 border-t"><div class="flex gap-2">${p.status !== 'pendente' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='entregue'?'preparacao':'pendente'}')" class="px-2 py-1 bg-slate-100 rounded text-xs">⬅️</button>` : ''} ${p.status !== 'entregue' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='pendente'?'preparacao':'entregue'}')" class="px-2 py-1 bg-indigo-100 text-indigo-600 rounded text-xs">➡️ Mover</button>` : ''}</div><button onclick="deletePedido('${p.id}')" class="text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`; document.getElementById('col-pendente').innerHTML = cols.pendente.map(mc).join(''); document.getElementById('col-preparacao').innerHTML = cols.preparacao.map(mc).join(''); document.getElementById('col-entregue').innerHTML = cols.entregue.map(mc).join(''); }
+        function renderPedidos() { const cols = { pendente: [], preparacao: [], entregue: [] }; pedidos.forEach(p => { if(cols[p.status]) cols[p.status].push(p); }); document.getElementById('count-pendente').textContent = cols.pendente.length; document.getElementById('count-preparacao').textContent = cols.preparacao.length; document.getElementById('count-entregue').textContent = cols.entregue.length; const mc = (p) => `<div class="bg-white dark:bg-slate-800 border dark:border-slate-700 p-4 rounded-xl shadow-sm"><p class="font-bold dark:text-white">${p.cliente}</p><p class="text-xs text-slate-500">${p.produto}</p><div class="flex justify-between mt-3 pt-2 border-t dark:border-slate-700"><div class="flex gap-2">${p.status !== 'pendente' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='entregue'?'preparacao':'pendente'}')" class="px-2 py-1 bg-slate-100 dark:bg-slate-700 dark:text-slate-300 rounded text-xs">⬅️</button>` : ''} ${p.status !== 'entregue' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='pendente'?'preparacao':'entregue'}')" class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 rounded text-xs">➡️ Mover</button>` : ''}</div><button onclick="deletePedido('${p.id}')" class="text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`; document.getElementById('col-pendente').innerHTML = cols.pendente.map(mc).join(''); document.getElementById('col-preparacao').innerHTML = cols.preparacao.map(mc).join(''); document.getElementById('col-entregue').innerHTML = cols.entregue.map(mc).join(''); }
         
         const calcInputs = document.querySelectorAll('.calc-input'); const [loteValor, loteQtd, freteTotalInput, marketingTotalInput, custoUnidade, freteUnitInput, marketingUnitInput, embalagemInput, margemInput] = ['calc-lote-valor','calc-lote-qtd','calc-frete-total','calc-marketing-total','calc-custo','calc-frete','calc-outros','calc-embalagem','calc-margem'].map(id => document.getElementById(id));
         function loadCalcState() { const stateStr = localStorage.getItem('versatil_calc_state'); if (stateStr) { const s = JSON.parse(stateStr); loteValor.value = s.loteValor||''; loteQtd.value = s.loteQtd||''; freteTotalInput.value = s.freteTotal||''; marketingTotalInput.value = s.marketingTotal||''; custoUnidade.value = s.custo||''; embalagemInput.value = s.embalagem||''; freteUnitInput.value = s.freteUnit||''; marketingUnitInput.value = s.marketingUnit||''; margemInput.value = s.margem||''; calcularPrecificacao(); } }
         function calcularLoteRateio() { const val = parseFloat(loteValor.value)||0, qtd = parseInt(loteQtd.value)||0, frete = parseFloat(freteTotalInput.value)||0, mkt = parseFloat(marketingTotalInput.value)||0; if (qtd > 0) { if (val > 0) custoUnidade.value = (val / qtd).toFixed(2); freteUnitInput.value = frete > 0 ? (frete / qtd).toFixed(2) : '0'; marketingUnitInput.value = mkt > 0 ? (mkt / qtd).toFixed(2) : '0'; } calcularPrecificacao(); }
-        function calcularPrecificacao() { const custoTotal = (parseFloat(custoUnidade.value)||0) + (parseFloat(embalagemInput.value)||0) + (parseFloat(freteUnitInput.value)||0) + (parseFloat(marketingUnitInput.value)||0); const lucro = custoTotal * ((parseFloat(margemInput.value)||0) / 100); document.getElementById('res-custo-total').textContent = formatKz(custoTotal); document.getElementById('res-preco-venda').textContent = formatKz(custoTotal + lucro); localStorage.setItem('versatil_calc_state', JSON.stringify({loteValor: loteValor.value, loteQtd: loteQtd.value, freteTotal: freteTotalInput.value, marketingTotal: marketingTotalInput.value, custo: custoUnidade.value, embalagem: embalagemInput.value, freteUnit: freteUnitInput.value, marketingUnit: marketingUnitInput.value, margem: margemInput.value})); }
+        function calcularPrecificacao() { const custoTotal = (parseFloat(custoUnidade.value)||0) + (parseFloat(embalagemInput.value)||0) + (parseFloat(freteUnitInput.value)||0) + (parseFloat(marketingUnitInput.value)||0); const lucro = custoTotal * ((parseFloat(margemInput.value)||0) / 100); document.getElementById('res-custo-total').textContent = formatKz(custoTotal); document.getElementById('res-lucro').textContent = formatKz(lucro); document.getElementById('res-preco-venda').textContent = formatKz(custoTotal + lucro); localStorage.setItem('versatil_calc_state', JSON.stringify({loteValor: loteValor.value, loteQtd: loteQtd.value, freteTotal: freteTotalInput.value, marketingTotal: marketingTotalInput.value, custo: custoUnidade.value, embalagem: embalagemInput.value, freteUnit: freteUnitInput.value, marketingUnit: marketingUnitInput.value, margem: margemInput.value})); }
         [loteValor, loteQtd, freteTotalInput, marketingTotalInput].forEach(el => el.addEventListener('input', calcularLoteRateio)); calcInputs.forEach(input => input.addEventListener('input', calcularPrecificacao));
 
         document.getElementById('cofre-form').addEventListener('submit', async(e) => { e.preventDefault(); if(!userId) return; const t = document.querySelector('input[name="cofre-type"]:checked').value, a = parseFloat(document.getElementById('cofre-amount').value), c = document.getElementById('cofre-dizimo-check').checked && t==='entrada'; await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), { type:t, amount:a, desc:document.getElementById('cofre-desc').value.trim(), applyTithe:c, titheValue: c?(a*0.1):0, createdAt:Date.now() }); e.target.reset(); });
-        window.deleteCofreRecord=async(id)=>{await deleteDoc(doc(db,'artifacts',appId,'users',userId,'cofre',id));}; function renderCofre(){ document.getElementById('cofre-list').innerHTML=cofreRecords.map(r=>`<div class="flex justify-between items-center p-4 bg-white border rounded-xl shadow-sm"><div><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.type==='entrada'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.type}</span><p class="font-bold text-sm">${r.desc}</p></div><div class="flex gap-3"><span class="font-bold ${r.type==='entrada'?'text-emerald-600':'text-rose-600'}">${formatKz(r.amount)}</span><button onclick="deleteCofreRecord('${r.id}')" class="text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
+        window.deleteCofreRecord=async(id)=>{await deleteDoc(doc(db,'artifacts',appId,'users',userId,'cofre',id));}; function renderCofre(){ document.getElementById('cofre-list').innerHTML=cofreRecords.map(r=>`<div class="flex justify-between items-center p-4 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl shadow-sm"><div><span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.type==='entrada'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.type}</span><p class="font-bold text-sm dark:text-white">${r.desc}</p></div><div class="flex gap-3"><span class="font-bold ${r.type==='entrada'?'text-emerald-600':'text-rose-600'}">${formatKz(r.amount)}</span><button onclick="deleteCofreRecord('${r.id}')" class="text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
 
         function getDynamicAmount(rec){ let ca=rec.amount; if(!rec.isPaid && rec.endDate && rec.type==='receber' && rec.category!=='amigo'){ let end=new Date(rec.endDate.split('-').join('/')), today=new Date(); today.setHours(0,0,0,0); if(today>end){let w=Math.floor(Math.floor((today.getTime()-end.getTime())/86400000)/7); if(w>=1) ca+=ca*(0.05*w);} } return ca; }
         function updateFinanceDashboard(){ let ce=0, cs=0, td=0; cofreRecords.forEach(r=>{if(r.type==='entrada'){ce+=r.amount;if(r.applyTithe)td+=r.titheValue;}else cs+=r.amount;}); let tr=0, tp=0; records.forEach(rec=>{if(!rec.isPaid){if(rec.type==='receber')tr+=getDynamicAmount(rec);else tp+=rec.amount;}}); document.getElementById('cofre-saldo-real').textContent=formatKz(ce-cs-td); document.getElementById('cofre-dizimo').textContent=formatKz(td); document.getElementById('cofre-saldo-contabilistico').textContent=formatKz((ce-cs-td)+tr-tp); document.getElementById('dash-receber').textContent=formatKz(tr); document.getElementById('dash-pagar').textContent=formatKz(tp); renderDebtsList(); }
@@ -343,18 +355,18 @@
         const calcEnd=()=>{if(startInput.value&&durInput.value){endInput.value=new Date(new Date(startInput.value).getTime()+(parseInt(durInput.value)*7*86400000)).toISOString().split('T')[0];updatePrev();}}; const updatePrev=()=>{const a=parseFloat(document.getElementById('amount').value)||0, i=parseFloat(document.getElementById('interest').value)||0, w=parseInt(durInput.value)||1; document.getElementById('final-amount-preview').textContent=formatKz(a+(a*(i/100)*w));}; startInput.addEventListener('change',calcEnd); durInput.addEventListener('input',calcEnd); document.getElementById('amount').addEventListener('input',updatePrev); document.getElementById('interest').addEventListener('input',updatePrev);
         document.getElementById('record-form').addEventListener('submit', async(e)=>{ e.preventDefault(); const a=parseFloat(document.getElementById('amount').value), i=parseFloat(document.getElementById('interest').value)||0, w=parseInt(durInput.value)||1; await addDoc(collection(db,'artifacts',appId,'users',userId,'debts'), { type:document.querySelector('input[name="type"]:checked').value, category:document.querySelector('input[name="debt-category"]:checked').value, name:document.getElementById('personName').value, baseAmount:a, amount:a+(a*(i/100)*w), duration:w, startDate:startInput.value, endDate:endInput.value, isPaid:false, createdAt:Date.now() }); e.target.reset(); });
         window.togglePaid=async(id,s)=>{await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:!s});}; window.deleteRecord=async(id)=>{await deleteDoc(doc(db,'artifacts',appId,'users',userId,'debts',id));}; document.getElementById('filter-status').addEventListener('change',updateFinanceDashboard);
-        function renderDebtsList(){ const filter=document.getElementById('filter-status').value, filtered=records.filter(r=>filter==='active'?!r.isPaid:r.isPaid); document.getElementById('records-list').innerHTML=filtered.map(rec=> `<div class="bg-white border rounded-xl p-4 flex justify-between gap-4"><div class="flex gap-3"><button onclick="togglePaid('${rec.id}',${rec.isPaid})" class="mt-1 w-6 h-6 rounded border-2 ${rec.isPaid?'bg-emerald-500 border-emerald-500':'text-transparent'}"></button><div><h4 class="font-bold text-sm ${rec.isPaid?'line-through':''}">${rec.name}</h4><p class="text-[10px] text-slate-500">${formatDate(rec.startDate)} a ${formatDate(rec.endDate)}</p></div></div><div class="text-right"><span class="font-bold block ${rec.type==='receber'?'text-emerald-600':'text-rose-600'}">${formatKz(getDynamicAmount(rec))}</span><button onclick="deleteRecord('${rec.id}')" class="text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
+        function renderDebtsList(){ const filter=document.getElementById('filter-status').value, filtered=records.filter(r=>filter==='active'?!r.isPaid:r.isPaid); document.getElementById('records-list').innerHTML=filtered.map(rec=> `<div class="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl p-4 flex justify-between gap-4"><div class="flex gap-3"><button onclick="togglePaid('${rec.id}',${rec.isPaid})" class="mt-1 w-6 h-6 rounded border-2 ${rec.isPaid?'bg-emerald-500 border-emerald-500':'text-transparent'}"></button><div><h4 class="font-bold text-sm dark:text-white ${rec.isPaid?'line-through':''}">${rec.name}</h4><p class="text-[10px] text-slate-500">${formatDate(rec.startDate)} a ${formatDate(rec.endDate)}</p></div></div><div class="text-right"><span class="font-bold block ${rec.type==='receber'?'text-emerald-600':'text-rose-600'}">${formatKz(getDynamicAmount(rec))}</span><button onclick="deleteRecord('${rec.id}')" class="text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
 
         window.addGoal=async(e,o)=>{ e.preventDefault(); const t=document.getElementById(`goal-input-${o}`).value; if(t){ await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'),{ owner:o, text:t, date:document.getElementById('goal-date-filter').value, completed:false, postponements:0, createdAt:Date.now() }); e.target.reset(); } };
         window.toggleGoal=async(id,c)=>{ await updateDoc(doc(db,'artifacts',appId,'users',userId,'goals',id),{completed:!c}); }; window.deleteGoal=async(id)=>{ await deleteDoc(doc(db,'artifacts',appId,'users',userId,'goals',id)); }; window.saveAsFavorite = async (owner, text) => { if(favoriteGoals.some(f => f.owner === owner && f.text === text)) return; await addDoc(collection(db,'artifacts',appId,'users',userId,'favorites'), {owner, text, createdAt:Date.now()}); showToast("Meta Fixada ⭐"); };
         window.loadFavorites = async (owner) => { const targetDate = document.getElementById('goal-date-filter').value; const favs = favoriteGoals.filter(f => f.owner === owner); for(let f of favs) { if(!goals.some(g => g.owner === owner && g.date === targetDate && g.text === f.text)) await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {owner, text:f.text, date:targetDate, completed:false, postponements:0, createdAt:Date.now()}); } };
         window.postponeGoal = async (id, currentDateStr, postponements) => { const currentP = postponements || 0; if(currentP >= 2) return; const [y, m, d] = currentDateStr.split('-'); const dateObj = new Date(y, m-1, d); dateObj.setDate(dateObj.getDate() + 1); await updateDoc(doc(db,'artifacts',appId,'users',userId,'goals',id), { date: dateObj.toISOString().split('T')[0], postponements: currentP + 1 }); };
         document.getElementById('goal-date-filter').addEventListener('change',()=>renderGoals());
-        function renderGoals(){ const d=document.getElementById('goal-date-filter').value; const r=(o)=>document.getElementById(`goals-list-${o}`).innerHTML=goals.filter(g=>g.owner===o&&g.date===d).map(g=>`<div class="flex items-center justify-between p-3 bg-white rounded-xl border"><div class="flex items-center gap-3"><button onclick="toggleGoal('${g.id}',${g.completed})" class="w-6 h-6 rounded-md border-2 shrink-0 ${g.completed?'bg-emerald-500 border-emerald-500':''}"></button><span class="text-sm ${g.completed?'line-through':''}">${g.text}</span></div><div class="flex items-center gap-2"><button onclick="saveAsFavorite('${g.owner}', '${g.text.replace(/'/g, "\\'")}')" class="text-amber-500 text-lg"><i class="ph-fill ph-star"></i></button>${!g.completed && (g.postponements||0) < 2 ? `<button onclick="postponeGoal('${g.id}', '${g.date}', ${g.postponements||0})" class="text-blue-500 text-lg"><i class="ph-bold ph-arrow-right"></i></button>` : ''}<button onclick="deleteGoal('${g.id}')" class="text-rose-500 text-lg"><i class="ph-bold ph-trash"></i></button></div></div>`).join(''); r('josemar'); r('kiriana'); }
+        function renderGoals(){ const d=document.getElementById('goal-date-filter').value; const r=(o)=>document.getElementById(`goals-list-${o}`).innerHTML=goals.filter(g=>g.owner===o&&g.date===d).map(g=>`<div class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-xl border dark:border-slate-700"><div class="flex items-center gap-3"><button onclick="toggleGoal('${g.id}',${g.completed})" class="w-6 h-6 rounded-md border-2 shrink-0 ${g.completed?'bg-emerald-500 border-emerald-500':''}"></button><span class="text-sm dark:text-slate-200 ${g.completed?'line-through':''}">${g.text}</span></div><div class="flex items-center gap-2"><button onclick="saveAsFavorite('${g.owner}', '${g.text.replace(/'/g, "\\'")}')" class="text-amber-500 text-lg"><i class="ph-fill ph-star"></i></button>${!g.completed && (g.postponements||0) < 2 ? `<button onclick="postponeGoal('${g.id}', '${g.date}', ${g.postponements||0})" class="text-blue-500 text-lg"><i class="ph-bold ph-arrow-right"></i></button>` : ''}<button onclick="deleteGoal('${g.id}')" class="text-rose-500 text-lg"><i class="ph-bold ph-trash"></i></button></div></div>`).join(''); r('josemar'); r('kiriana'); }
 
         document.getElementById('post-form').addEventListener('submit', async(e)=>{ e.preventDefault(); await addDoc(collection(db,'artifacts',appId,'users',userId,'posts'), { text: document.getElementById('post-input').value, status: 'ideia', createdAt: Date.now() }); e.target.reset(); });
         window.deletePost = async(id) => { await deleteDoc(doc(db,'artifacts',appId,'users',userId,'posts',id)); };
-        function renderPosts() { document.getElementById('posts-list').innerHTML = posts.map(p => `<div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border"><span class="text-sm">${p.text}</span><button onclick="deletePost('${p.id}')" class="text-rose-500"><i class="ph-fill ph-trash text-lg"></i></button></div>`).join(''); }
+        function renderPosts() { document.getElementById('posts-list').innerHTML = posts.map(p => `<div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border dark:border-slate-700"><span class="text-sm dark:text-slate-200">${p.text}</span><button onclick="deletePost('${p.id}')" class="text-rose-500"><i class="ph-fill ph-trash text-lg"></i></button></div>`).join(''); }
 
         /* ======== SISTEMA DE TUTORIAL ONBOARDING ======== */
         const tutorialSteps = [
@@ -363,43 +375,49 @@
             { target: 'tut-nova-mov', title: 'Movimentações', text: 'Adiciona entradas ou saídas de dinheiro. Podes marcar logo se queres separar 10%.' },
             { target: 'btn-backup', title: 'Backup de Segurança', text: 'A qualquer momento, clica na nuvem para descarregares os teus dados em segurança.' }
         ];
-        let currentTutorialStep = 0;
-        window.isTutorialRunning = false;
+        let currentTutorialStep = 0; window.isTutorialRunning = false;
         
         window.checkTutorial = () => { if (!localStorage.getItem('versatil_tutorial_done')) startTutorial(); };
         window.startTutorial = () => { currentTutorialStep = 0; window.isTutorialRunning = true; document.getElementById('tutorial-modal').classList.remove('hidden'); document.getElementById('tutorial-modal').classList.add('flex'); showTutorialStep(); };
         window.skipTutorial = () => { localStorage.setItem('versatil_tutorial_done', 'true'); window.isTutorialRunning = false; document.getElementById('tutorial-modal').classList.add('hidden'); document.getElementById('tutorial-modal').classList.remove('flex'); removeHighlights(); showToast("Tutorial concluído!", "info"); };
         
-        window.nextTutorialStep = () => {
-            currentTutorialStep++;
-            if (currentTutorialStep >= tutorialSteps.length) { skipTutorial(); return; }
-            showTutorialStep();
-        };
+        window.nextTutorialStep = () => { currentTutorialStep++; if (currentTutorialStep >= tutorialSteps.length) { skipTutorial(); return; } showTutorialStep(); };
         
         function showTutorialStep() {
             removeHighlights();
             const step = tutorialSteps[currentTutorialStep];
-            document.getElementById('tutorial-title').textContent = step.title;
-            document.getElementById('tutorial-text').textContent = step.text;
-            document.getElementById('tutorial-next-btn').innerHTML = currentTutorialStep === tutorialSteps.length - 1 ? 'Concluir <i class="ph-bold ph-check ml-1"></i>' : 'Próximo <i class="ph-bold ph-arrow-right ml-1"></i>';
-            
+            document.getElementById('tutorial-title').textContent = step.title; document.getElementById('tutorial-text').textContent = step.text; document.getElementById('tutorial-next-btn').innerHTML = currentTutorialStep === tutorialSteps.length - 1 ? 'Concluir <i class="ph-bold ph-check ml-1"></i>' : 'Próximo <i class="ph-bold ph-arrow-right ml-1"></i>';
             const targetEl = document.getElementById(step.target);
-            if(targetEl) {
-                targetEl.classList.add('tutorial-highlight');
-                if(step.target === 'tut-nova-mov') switchTab('tab-cofre');
-                setTimeout(() => centerTutorialOnTarget(), 100);
-            }
+            if(targetEl) { targetEl.classList.add('tutorial-highlight'); if(step.target === 'tut-nova-mov') switchTab('tab-cofre'); setTimeout(() => centerTutorialOnTarget(), 100); }
         }
         
-        window.centerTutorialOnTarget = () => {
-            if(!window.isTutorialRunning) return;
-            const targetEl = document.getElementById(tutorialSteps[currentTutorialStep].target);
-            if(targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        };
-        
+        window.centerTutorialOnTarget = () => { if(!window.isTutorialRunning) return; const targetEl = document.getElementById(tutorialSteps[currentTutorialStep].target); if(targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
         function removeHighlights() { document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight')); }
         
         initApp();
+    </script>
+
+    <!-- SISTEMA DE AUTO-REFRESH -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').then(reg => {
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showToast("Nova atualização detetada! A recarregar...", "info");
+                            setTimeout(() => window.location.reload(), 1500);
+                        }
+                    });
+                });
+            });
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (refreshing) return;
+                refreshing = true;
+                window.location.reload();
+            });
+        }
     </script>
 </body>
 </html>
