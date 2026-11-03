@@ -195,7 +195,7 @@
                 </section>
             </div>
 
-            <!-- METAS DIÁRIAS (Cores e Botões Corrigidos) -->
+            <!-- METAS DIÁRIAS -->
             <div id="tab-metas" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 w-full">
                     <div><h3 class="font-bold text-lg dark:text-white">Calendário de Metas</h3></div>
@@ -234,7 +234,7 @@
                 </div>
             </div>
 
-            <!-- FASE 3: MARKETING (Cores Corrigidas) -->
+            <!-- FASE 3: MARKETING -->
             <div id="tab-redes" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-pink-500 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden"><h2 class="text-2xl font-bold relative z-10">Marketing</h2></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -256,7 +256,7 @@
                 </div>
             </div>
 
-            <!-- CALCULADORA RESTAURADA (Cores e Lucro Corrigidos) -->
+            <!-- CALCULADORA -->
             <div id="tab-precificacao" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg"><h2 class="text-2xl font-bold">Calculadora</h2></div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -319,7 +319,7 @@
         async function initApp() {
             app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
             onAuthStateChanged(auth,(user)=>{
-                if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); document.getElementById('auth-status').innerHTML='<span class="text-emerald-500"><i class="ph-fill ph-check-circle"></i> Conectado</span>'; loadData(); setTimeout(checkTutorial, 1000); }
+                if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); loadData(); setTimeout(checkTutorial, 1000); }
                 else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); }
             }); loadCalcState();
         }
@@ -327,6 +327,7 @@
         document.getElementById('login-form').addEventListener('submit',async(e)=>{e.preventDefault();try{await signInWithEmailAndPassword(auth,document.getElementById('login-email').value,document.getElementById('login-password').value);showToast("Bem-vindo!");}catch(e){showToast("Erro login","error");}}); window.logoutApp=async()=>{await signOut(auth);showToast("Sessão terminada");};
 
         function loadData() {
+            // CORRIGIDO: Ativação correta dos listeners do Firebase para Dívidas, Cofre, Metas, Pedidos, Posts e Favoritos
             unsubDebts = onSnapshot(collection(db,'artifacts',appId,'users',userId,'debts'),(s)=>{records=s.docs.map(d=>({id:d.id,...d.data()}));updateFinanceDashboard();});
             unsubCofre = onSnapshot(collection(db,'artifacts',appId,'users',userId,'cofre'),(s)=>{cofreRecords=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);updateFinanceDashboard();renderCofre();});
             document.getElementById('goal-date-filter').value=new Date().toISOString().split('T')[0];
