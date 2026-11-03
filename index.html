@@ -2,7 +2,7 @@
 <html lang="pt-PT" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Versátil Trade App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -16,27 +16,33 @@
         tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        details > summary::-webkit-details-marker { display: none; }
-        @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
-        .toast-exit { animation: fadeOut 0.3s ease-out forwards; }
-        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"], input[type="date"] { -moz-appearance: textfield; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
-    </style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    details > summary::-webkit-details-marker { display: none; }
+    @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
+    .toast-exit { animation: fadeOut 0.3s ease-out forwards; }
+    input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"], input[type="date"] { -moz-appearance: textfield; }
+    
+    /* Novas regras para App Nativo */
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
+    
+    /* Esconder barra de rolagem no Carrossel de Abas */
+    .scroll-hide::-webkit-scrollbar { display: none; }
+    .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+     </style>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4a90e2">
     <link rel="icon" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
 </head>
-<body class="text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 antialiased min-h-screen flex flex-col transition-colors duration-300">
+<body class="text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 antialiased h-[100dvh] w-screen overflow-hidden flex flex-col transition-colors duration-300">
 
     <!-- Ecrã de Login -->
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
@@ -60,7 +66,7 @@
     </div>
 
     <!-- App Container -->
-    <div id="app-container" class="hidden flex-col min-h-screen w-full">
+    <div id="app-container" class="hidden flex-col h-full w-full overflow-hidden relative">
         <!-- Navbar com Botão de Backup Adicionado -->
         <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -84,29 +90,35 @@
             </div>
         </nav>
 
-        <main class="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+        <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar pb-24">
             
-            <!-- Tab Navigation (Abas atualizadas com Redes) -->
-            <div class="flex space-x-2 p-1.5 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto mx-auto max-w-fit shadow-inner custom-scrollbar">
-                <button onclick="switchTab('tab-cofre')" id="btn-tab-cofre" class="tab-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm flex items-center gap-2 shrink-0">
+            <!-- Tab Navigation (Carrossel Mobile) -->
+        <div class="w-full flex-shrink-0 relative">
+            <!-- Sombra para indicar que há mais abas à direita -->
+            <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-900 pointer-events-none rounded-r-2xl z-10"></div>
+            
+            <div class="flex gap-2 p-1.5 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto w-full snap-x snap-mandatory scroll-hide scroll-smooth">
+                <button onclick="switchTab('tab-cofre')" id="btn-tab-cofre" class="tab-btn active px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm flex items-center justify-center gap-2 shrink-0 snap-center whitespace-nowrap">
                     <i class="ph-bold ph-vault"></i> Cofre
                 </button>
-                <button onclick="switchTab('tab-pedidos')" id="btn-tab-pedidos" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 flex items-center gap-2">
+                <button onclick="switchTab('tab-pedidos')" id="btn-tab-pedidos" class="tab-btn px-6 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2">
                     <i class="ph-bold ph-package"></i> Pedidos
                 </button>
-                <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 flex items-center gap-2">
+                <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn px-6 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2">
                     <i class="ph-bold ph-hand-coins"></i> Dívidas
                 </button>
-                <button onclick="switchTab('tab-metas')" id="btn-tab-metas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 flex items-center gap-2">
+                <button onclick="switchTab('tab-metas')" id="btn-tab-metas" class="tab-btn px-6 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2">
                     <i class="ph-bold ph-target"></i> Metas
                 </button>
-                <button onclick="switchTab('tab-redes')" id="btn-tab-redes" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-pink-600 shrink-0 flex items-center gap-2">
+                <button onclick="switchTab('tab-redes')" id="btn-tab-redes" class="tab-btn px-6 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-pink-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2">
                     <i class="ph-bold ph-instagram-logo"></i> Marketing
                 </button>
-                <button onclick="switchTab('tab-precificacao')" id="btn-tab-precificacao" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 flex items-center gap-2 hidden sm:flex">
+                <!-- A Calculadora perdeu o hidden sm:flex e agora está visível -->
+                <button onclick="switchTab('tab-precificacao')" id="btn-tab-precificacao" class="tab-btn px-6 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2">
                     <i class="ph-bold ph-calculator"></i> Calc
                 </button>
             </div>
+        </div>
 
             <!-- FASE 1: COFRE (Mantido perfeitamente) -->
             <div id="tab-cofre" class="tab-content flex flex-col gap-8 animate-[fadeIn_0.3s_ease-in-out]">
