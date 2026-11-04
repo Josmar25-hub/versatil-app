@@ -203,6 +203,13 @@
                                 <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data Final</label><input type="date" id="endDate" required class="w-full px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-slate-400" readonly></div>
                                 <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Juros a.s (%)</label><input type="number" id="interest" min="0" step="0.1" value="0" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
                             </div>
+                            <div id="penalty-container" class="mt-1">
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Multa Atraso a.s (%)</label>
+                                <div class="flex gap-2">
+                                    <input type="number" id="penaltyRate" min="0" step="0.1" value="5" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white">
+                                    <button type="button" onclick="pinPenalty()" class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 w-[46px] flex items-center justify-center rounded-xl hover:bg-amber-200 transition-colors shrink-0" title="Fixar taxa de multa como padrão"><i class="ph-fill ph-push-pin text-xl"></i></button>
+                                </div>
+                            </div>
                             <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center"><span class="text-sm font-medium text-indigo-800 dark:text-indigo-300">Retorno:</span><span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span></div>
                             <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-3.5 rounded-xl shadow-md w-full">Registrar Dívida</button>
                         </form>
@@ -212,6 +219,7 @@
                             <h3 class="text-lg font-bold text-slate-800 dark:text-white">Histórico Detalhado</h3>
                             <select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm outline-none dark:text-white">
                                 <option value="active">Pendentes</option>
+                                <option value="ontime">No Prazo</option>
                                 <option value="late">Atrasados</option>
                                 <option value="amigo">Amigos (Sem Juros)</option>
                                 <option value="paid">Liquidados</option>
@@ -378,6 +386,12 @@
             if(document.getElementById('metas-title-1')) document.getElementById('metas-title-1').innerHTML = `<div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-200 dark:bg-indigo-800 flex items-center justify-center text-sm sm:text-base shrink-0">👨🏽‍💻</div>Metas do(a) ${n1}`;
             if(document.getElementById('metas-title-2')) document.getElementById('metas-title-2').innerHTML = `<div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-rose-200 dark:bg-rose-800 flex items-center justify-center text-sm sm:text-base shrink-0">👩🏾‍✈️</div>Metas do(a) ${n2}`;
         };
+        
+        window.pinPenalty = () => {
+            const val = document.getElementById('penaltyRate').value;
+            localStorage.setItem('versatil_default_penalty', val);
+            showToast(`Taxa de multa fixada em ${val}%!`, 'success');
+        };
 
         async function initApp() {
             app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
@@ -387,6 +401,12 @@
             });
             loadCalcState();
             updateNamesUI();
+            
+            const savedPenalty = localStorage.getItem('versatil_default_penalty');
+            if(savedPenalty) {
+                const penEl = document.getElementById('penaltyRate');
+                if(penEl) penEl.value = savedPenalty;
+            }
         }
 
         document.getElementById('login-form').addEventListener('submit',async(e)=>{e.preventDefault();try{await signInWithEmailAndPassword(auth,document.getElementById('login-email').value,document.getElementById('login-password').value);showToast("Bem-vindo!");}catch(e){showToast("Erro login","error");}}); 
@@ -402,7 +422,18 @@
             unsubFavs = onSnapshot(collection(db,'artifacts',appId,'users',userId,'favorites'),(s)=>{favoriteGoals=s.docs.map(d=>({id:d.id,...d.data()}));});
         }
 
-        window.toggleAmigo=(isAmigo)=>{ const interestInput = document.getElementById('interest'); if(isAmigo){ interestInput.value=0; interestInput.readOnly=true; interestInput.classList.add('bg-slate-200','dark:bg-slate-800','opacity-50'); } else { interestInput.readOnly=false; interestInput.classList.remove('bg-slate-200','dark:bg-slate-800','opacity-50'); } updatePrev(); };
+        window.toggleAmigo=(isAmigo)=>{ 
+            const interestInput = document.getElementById('interest'); 
+            const penaltyContainer = document.getElementById('penalty-container');
+            if(isAmigo){ 
+                interestInput.value=0; interestInput.readOnly=true; interestInput.classList.add('bg-slate-200','dark:bg-slate-800','opacity-50'); 
+                penaltyContainer.classList.add('hidden');
+            } else { 
+                interestInput.readOnly=false; interestInput.classList.remove('bg-slate-200','dark:bg-slate-800','opacity-50'); 
+                penaltyContainer.classList.remove('hidden');
+            } 
+            updatePrev(); 
+        };
         
         document.getElementById('pedido-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { cliente: document.getElementById('pedido-cliente').value, produto: document.getElementById('pedido-produto').value, status: 'pendente', createdAt: Date.now() }); e.target.reset(); showToast("Pedido Adicionado!"); } catch(er) {} }); 
         window.updatePedidoStatus = async(id, s) => { if(userId) await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), {status: s}); }; 
@@ -426,6 +457,7 @@
             let i = ca - b; 
             let p = 0; 
             let l = {isLate:false, w:0}; 
+            let pr = rec.penaltyRate !== undefined ? parseFloat(rec.penaltyRate) : 5; // Default de 5% se for um registo antigo
             
             if(!rec.isPaid && rec.endDate && rec.type==='receber' && rec.category!=='amigo'){ 
                 let end=new Date(rec.endDate.split('-').join('/')), today=new Date(); 
@@ -433,11 +465,11 @@
                 if(today>end){
                     let w=Math.floor(Math.floor((today.getTime()-end.getTime())/86400000)/7); 
                     if(w>=1){
-                        l.isLate=true; l.w=w; p = ca*(0.05*w); ca += p;
+                        l.isLate=true; l.w=w; p = ca*(pr/100)*w; ca += p;
                     }
                 } 
             } 
-            return {currentAmount:ca, base:b, totalInterest:i, penalty:p, lateInfo:l}; 
+            return {currentAmount:ca, base:b, totalInterest:i, penalty:p, lateInfo:l, penaltyRate: pr}; 
         }
         
         function updateFinanceDashboard(){ 
@@ -454,7 +486,37 @@
         const updatePrev=()=>{const a=parseFloat(document.getElementById('amount').value)||0, i=parseFloat(document.getElementById('interest').value)||0, w=parseInt(durInput.value)||1; document.getElementById('final-amount-preview').textContent=formatKz(a+(a*(i/100)*w));}; 
         startInput.addEventListener('change',calcEnd); durInput.addEventListener('input',calcEnd); document.getElementById('amount').addEventListener('input',updatePrev); document.getElementById('interest').addEventListener('input',updatePrev);
         
-        document.getElementById('record-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId)return; const a=parseFloat(document.getElementById('amount').value), i=parseFloat(document.getElementById('interest').value)||0, w=parseInt(durInput.value)||1; const category = document.querySelector('input[name="debt-category"]:checked').value; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'debts'), { type:document.querySelector('input[name="type"]:checked').value, category, name:document.getElementById('personName').value, baseAmount:a, interest:i, duration:w, startDate:startInput.value, endDate:endInput.value, amount:a+(a*(i/100)*w), isPaid:false, createdAt:Date.now() }); e.target.reset(); updatePrev(); showToast("Dívida Registada!"); }catch(er){} });
+        document.getElementById('record-form').addEventListener('submit', async(e)=>{ 
+            e.preventDefault(); if(!userId)return; 
+            const a=parseFloat(document.getElementById('amount').value); 
+            const i=parseFloat(document.getElementById('interest').value)||0; 
+            const w=parseInt(durInput.value)||1; 
+            const pr=parseFloat(document.getElementById('penaltyRate').value)||0;
+            const category = document.querySelector('input[name="debt-category"]:checked').value; 
+            try { 
+                await addDoc(collection(db,'artifacts',appId,'users',userId,'debts'), { 
+                    type:document.querySelector('input[name="type"]:checked').value, 
+                    category, 
+                    name:document.getElementById('personName').value, 
+                    baseAmount:a, 
+                    interest:i, 
+                    penaltyRate:pr,
+                    duration:w, 
+                    startDate:startInput.value, 
+                    endDate:endInput.value, 
+                    amount:a+(a*(i/100)*w), 
+                    isPaid:false, 
+                    createdAt:Date.now() 
+                }); 
+                e.target.reset(); 
+                updatePrev(); 
+                
+                const savedPenalty = localStorage.getItem('versatil_default_penalty');
+                if(savedPenalty) document.getElementById('penaltyRate').value = savedPenalty;
+                
+                showToast("Dívida Registada!"); 
+            }catch(er){} 
+        });
         window.togglePaid=async(id,s)=>{if(userId)await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:!s});}; window.deleteRecord=async(id)=>{if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'debts',id));};
         document.getElementById('filter-status').addEventListener('change',updateFinanceDashboard);
         
@@ -465,12 +527,13 @@
                     if(filter==='active') return !r.isPaid;
                     if(filter==='paid') return r.isPaid;
                     if(filter==='late') { const {lateInfo}=getDynamicAmount(r); return !r.isPaid && lateInfo.isLate; }
+                    if(filter==='ontime') { const {lateInfo}=getDynamicAmount(r); return !r.isPaid && !lateInfo.isLate && r.category !== 'amigo'; }
                     if(filter==='amigo') return r.category==='amigo';
                     return true;
                 });
                 
                 document.getElementById('records-list').innerHTML=filtered.map(rec=>{ 
-                    const {currentAmount,base,totalInterest,penalty,lateInfo}=getDynamicAmount(rec); 
+                    const {currentAmount,base,totalInterest,penalty,lateInfo,penaltyRate}=getDynamicAmount(rec); 
                     const isAmigo = rec.category === 'amigo';
                     
                     let breakdownInfo = '';
@@ -480,7 +543,7 @@
                             breakdownInfo = `<div class="mt-2.5 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] space-y-1.5 w-full border border-slate-100 dark:border-slate-800">
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor Emprestado:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor dos Juros${interestRateStr}:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(totalInterest)}</span></div>
-                                ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso (5%/semana):</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
+                                ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso (${penaltyRate}%/sem):</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
                                 <div class="flex justify-between items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-1.5 mt-1.5 font-bold ${rec.isPaid?'text-slate-500':'text-indigo-600 dark:text-indigo-400'}"><span>Total Final:</span><span class="whitespace-nowrap">${formatKz(rec.isPaid ? rec.amount : currentAmount)}</span></div>
                             </div>`;
                         } else {
@@ -496,17 +559,13 @@
 
                     const dateDisplay = rec.endDate ? `${formatDate(rec.startDate)} até ${formatDate(rec.endDate)}` : formatDate(rec.startDate);
 
-                    // AURA MÁGICA - A LÓGICA DE CORES:
-                    let auraClass = 'border-slate-200 dark:border-slate-700'; // Padrão se estiver pago
+                    let auraClass = 'border-slate-200 dark:border-slate-700';
                     if (!rec.isPaid) {
                         if (lateInfo.isLate) {
-                            // Vermelho para Atrasados
                             auraClass = 'border-rose-400 dark:border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.4)] ring-1 ring-rose-400 dark:ring-rose-500';
                         } else if (isAmigo) {
-                            // Azul para Amigos
                             auraClass = 'border-blue-400 dark:border-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.4)] ring-1 ring-blue-400 dark:ring-blue-500';
                         } else {
-                            // Verde para Negócios no prazo (nas normas)
                             auraClass = 'border-emerald-400 dark:border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.4)] ring-1 ring-emerald-400 dark:ring-emerald-500';
                         }
                     }
