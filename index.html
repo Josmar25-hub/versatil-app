@@ -33,7 +33,6 @@
         .scroll-hide::-webkit-scrollbar { display: none; }
         .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* CSS do Modo Tutorial */
         .tutorial-highlight {
             position: relative !important;
             z-index: 101 !important;
@@ -85,7 +84,7 @@
         <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl w-[90%] max-w-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center">
             <div class="mb-4"><img src="logo.png" alt="Logo Versátil" class="w-24 h-24 rounded-2xl shadow-lg object-cover bg-indigo-600"></div>
             <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-1">Versátil Trade</h2>
-            <p id="login-subtitle" class="text-xs text-slate-500 dark:text-slate-400 mb-8 font-medium uppercase tracking-wider">Josemar & Kiriana</p>
+            <p id="login-subtitle" class="text-xs text-slate-500 dark:text-slate-400 mb-8 font-medium uppercase tracking-wider text-center">Josemar & Kiriana</p>
             
             <form id="login-form" class="w-full space-y-4">
                 <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">E-mail</label><input type="email" id="login-email" required placeholder="versatiltrade@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white"></div>
@@ -97,32 +96,32 @@
 
     <!-- App Container -->
     <div id="app-container" class="hidden flex-col h-full w-full overflow-hidden relative">
-        <!-- Navbar -->
+        <!-- Navbar com espaçamentos otimizados para telemóvel -->
         <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shrink-0">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" alt="Luna" class="w-10 h-10 rounded-xl shadow-md object-cover bg-indigo-600">
-                    <div>
-                        <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500">Versátil Trade</h1>
-                        <p id="nav-subtitle" class="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider hidden sm:block">Josemar & Kiriana</p>
+            <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+                    <img src="logo.png" alt="Luna" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-md object-cover bg-indigo-600 shrink-0">
+                    <div class="truncate">
+                        <h1 class="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500 truncate">Versátil Trade</h1>
+                        <p id="nav-subtitle" class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider truncate">Josemar & Kiriana</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-1 sm:gap-2">
-                    <button onclick="startTutorial()" id="btn-tutorial" class="p-2 rounded-full text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all" title="Ver Tutorial"><i class="ph-bold ph-lifebuoy text-xl"></i></button>
-                    <button onclick="openSettings()" class="p-2 rounded-full text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all" title="Configurações Nomes"><i class="ph-bold ph-gear text-xl"></i></button>
-                    <button onclick="exportBackup()" id="btn-backup" class="p-2 rounded-full text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all" title="Fazer Backup"><i class="ph-bold ph-cloud-arrow-down text-xl"></i></button>
-                    <button onclick="toggleTheme()" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"><i id="theme-icon" class="ph ph-moon text-xl"></i></button>
-                    <button onclick="logoutApp()" class="p-2 rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20"><i class="ph ph-sign-out text-xl"></i></button>
+                <div class="flex items-center gap-0.5 sm:gap-2 shrink-0">
+                    <button onclick="startTutorial()" id="btn-tutorial" class="p-1.5 sm:p-2 rounded-full text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-lifebuoy text-[1.15rem] sm:text-xl"></i></button>
+                    <button onclick="openSettings()" class="p-1.5 sm:p-2 rounded-full text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-gear text-[1.15rem] sm:text-xl"></i></button>
+                    <button onclick="exportBackup()" id="btn-backup" class="p-1.5 sm:p-2 rounded-full text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"><i class="ph-bold ph-cloud-arrow-down text-[1.15rem] sm:text-xl"></i></button>
+                    <button onclick="toggleTheme()" class="p-1.5 sm:p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"><i id="theme-icon" class="ph ph-moon text-[1.15rem] sm:text-xl"></i></button>
+                    <button onclick="logoutApp()" class="p-1.5 sm:p-2 rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20"><i class="ph ph-sign-out text-[1.15rem] sm:text-xl"></i></button>
                 </div>
             </div>
         </nav>
 
         <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar pb-24">
             
-            <!-- Tab Navigation -->
+            <!-- Tab Navigation (Ajuste no padding da direita para não cortar no scroll) -->
             <div class="w-full flex-shrink-0 relative" id="tut-tabs">
                 <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-900 pointer-events-none rounded-r-2xl z-10"></div>
-                <div class="flex gap-2 p-1.5 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto w-full snap-x snap-mandatory scroll-hide scroll-smooth">
+                <div class="flex gap-2 p-1.5 pr-8 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto w-full snap-x snap-mandatory scroll-hide scroll-smooth">
                     <button onclick="switchTab('tab-cofre')" id="btn-tab-cofre" class="tab-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm flex items-center justify-center gap-2 shrink-0 snap-center whitespace-nowrap"><i class="ph-bold ph-vault"></i> Cofre</button>
                     <button onclick="switchTab('tab-pedidos')" id="btn-tab-pedidos" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-package"></i> Pedidos</button>
                     <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-hand-coins"></i> Dívidas</button>
@@ -136,7 +135,7 @@
             <div id="tab-cofre" class="tab-content flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <section class="grid grid-cols-1 md:grid-cols-3 gap-4" id="tut-saldo">
                     <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-5 shadow-lg shadow-indigo-500/20 text-white relative overflow-hidden"><div class="absolute top-0 right-0 p-4 opacity-10"><i class="ph-fill ph-vault text-6xl"></i></div><p class="text-sm font-medium text-indigo-100 mb-1">Saldo em Caixa (Real)</p><h2 id="cofre-saldo-real" class="text-2xl sm:text-3xl font-bold">0,00 Kz</h2><p class="text-xs text-indigo-200 mt-2"><i class="ph-bold ph-info"></i> Dinheiro disponível agora.</p></div>
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden"><div class="absolute top-0 right-0 p-4 opacity-5"><i class="ph-fill ph-bank text-6xl"></i></div><p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Saldo Contabilístico</p><h2 id="cofre-saldo-contabilistico" class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white">0,00 Kz</h2><p class="text-xs text-slate-400 mt-2"><i class="ph-bold ph-plus"></i> Inclui dinheiro na rua (dívidas).</p></div>
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden"><div class="absolute top-0 right-0 p-4 opacity-5"><i class="ph-fill ph-bank text-6xl"></i></div><p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Saldo Contabilístico</p><h2 id="cofre-saldo-contabilistico" class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white">0,00 Kz</h2><p class="text-xs text-slate-400 mt-2"><i class="ph-bold ph-plus"></i> Inclui dinheiro na rua.</p></div>
                     <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-5 shadow-sm border border-amber-100 dark:border-amber-800/50"><div class="flex items-center justify-between mb-1"><p class="text-sm font-bold text-amber-700 dark:text-amber-400">Dízimo Acumulado</p><i class="ph-fill ph-hands-praying text-amber-500 text-xl"></i></div><h2 id="cofre-dizimo" class="text-2xl font-bold text-amber-600 dark:text-amber-500">0,00 Kz</h2><p class="text-xs text-amber-600/70 dark:text-amber-500/70 mt-2">10% das entradas marcadas.</p></div>
                 </section>
                 <section class="flex flex-col lg:grid lg:grid-cols-3 gap-6 items-start">
@@ -319,7 +318,7 @@
         </main>
     </div>
 
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -331,7 +330,7 @@
         let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs;
         const appId = 'versatil-trade-app';
 
-        const formatKz = (v) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(v) + ' Kz';
+        const formatKz = (v) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(v||0) + ' Kz';
         const formatDate = (dStr) => { if(!dStr)return''; const[y,m,d]=dStr.split('-'); return `${d}/${m}/${y}`; };
         
         window.switchTab = (tabId) => {
@@ -341,8 +340,8 @@
             const active = document.getElementById(`btn-${tabId}`); active.classList.remove('text-slate-600'); active.classList.add('bg-white','dark:bg-slate-700','shadow-sm', tabId === 'tab-redes' ? 'text-pink-600' : 'text-indigo-600');
             if(window.isTutorialRunning) setTimeout(() => centerTutorialOnTarget(), 100);
         };
-        window.toggleTheme=()=>{document.documentElement.classList.toggle('dark'); document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-xl text-amber-500':'ph ph-moon text-xl';};
-        window.showToast=(msg,type='success')=>{const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast-enter ${type==='error'?'bg-rose-500':(type==='info'?'bg-blue-500':'bg-emerald-500')} text-white px-4 py-3 rounded-xl flex items-center gap-2 text-sm z-50 shadow-lg`;t.innerHTML=`<i class="ph-bold ${type==='error'?'ph-warning-circle':(type==='info'?'ph-info':'ph-check')} text-lg"></i> ${msg}`;c.appendChild(t);setTimeout(()=>{t.classList.replace('toast-enter','toast-exit');setTimeout(()=>t.remove(),300)},3000);};
+        window.toggleTheme=()=>{document.documentElement.classList.toggle('dark'); document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-[1.15rem] sm:text-xl text-amber-500':'ph ph-moon text-[1.15rem] sm:text-xl';};
+        window.showToast=(msg,type='success')=>{const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast-enter ${type==='error'?'bg-rose-500':(type==='info'?'bg-blue-500':'bg-emerald-500')} text-white px-4 py-3 rounded-xl flex items-center gap-2 text-sm shadow-lg pointer-events-auto`;t.innerHTML=`<i class="ph-bold ${type==='error'?'ph-warning-circle':(type==='info'?'ph-info':'ph-check')} text-lg"></i> ${msg}`;c.appendChild(t);setTimeout(()=>{t.classList.replace('toast-enter','toast-exit');setTimeout(()=>t.remove(),300)},3000);};
         window.toggleDizimoOption=(show)=>{document.getElementById('dizimo-checkbox-container').style.display=show?'flex':'none';};
         window.exportBackup = () => { if(records.length===0 && cofreRecords.length===0 && goals.length===0) { showToast("Sem dados para exportar", "info"); return; } const data = { dataAtual: new Date().toISOString(), caixa: cofreRecords, dividas: records, metas: goals, pedidos: pedidos, marketing: posts }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Versatil_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); showToast("Backup transferido!"); };
 
@@ -371,14 +370,14 @@
             
             if(document.getElementById('login-subtitle')) document.getElementById('login-subtitle').textContent = dualName;
             if(document.getElementById('nav-subtitle')) document.getElementById('nav-subtitle').textContent = dualName;
-            if(document.getElementById('metas-title-1')) document.getElementById('metas-title-1').innerHTML = `<div class="w-9 h-9 rounded-full bg-indigo-200 dark:bg-indigo-800 flex items-center justify-center text-base">👨🏽‍💻</div>Metas do(a) ${n1}`;
-            if(document.getElementById('metas-title-2')) document.getElementById('metas-title-2').innerHTML = `<div class="w-9 h-9 rounded-full bg-rose-200 dark:bg-rose-800 flex items-center justify-center text-base">👩🏾‍✈️</div>Metas do(a) ${n2}`;
+            if(document.getElementById('metas-title-1')) document.getElementById('metas-title-1').innerHTML = `<div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-200 dark:bg-indigo-800 flex items-center justify-center text-sm sm:text-base shrink-0">👨🏽‍💻</div>Metas do(a) ${n1}`;
+            if(document.getElementById('metas-title-2')) document.getElementById('metas-title-2').innerHTML = `<div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-rose-200 dark:bg-rose-800 flex items-center justify-center text-sm sm:text-base shrink-0">👩🏾‍✈️</div>Metas do(a) ${n2}`;
         };
 
         async function initApp() {
             app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
             onAuthStateChanged(auth,(user)=>{
-                if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); document.getElementById('auth-status').innerHTML='<span class="text-emerald-500"><i class="ph-fill ph-check-circle"></i> Conectado</span>'; loadData(); setTimeout(checkTutorial, 1000); }
+                if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); loadData(); setTimeout(checkTutorial, 1000); }
                 else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); }
             });
             loadCalcState();
@@ -419,8 +418,35 @@
         window.deleteCofreRecord=async(id)=>{if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'cofre',id));}; 
         function renderCofre(){ if(cofreRecords.length===0){document.getElementById('cofre-list').innerHTML='';document.getElementById('cofre-empty').classList.remove('hidden');return;} document.getElementById('cofre-empty').classList.add('hidden'); document.getElementById('cofre-list').innerHTML=cofreRecords.map(r=>`<div class="flex justify-between items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><div><div class="flex gap-2 mb-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${r.type==='entrada'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.type}</span><span class="text-xs text-slate-400">${new Date(r.createdAt).toLocaleDateString()}</span></div><p class="font-bold text-sm dark:text-white">${r.desc}</p>${r.applyTithe?`<p class="text-[10px] text-amber-500 font-medium mt-1"><i class="ph-fill ph-hands-praying"></i> Dízimo: ${formatKz(r.titheValue)}</p>`:''}</div><div class="flex items-center gap-3"><span class="font-bold ${r.type==='entrada'?'text-emerald-600':'text-rose-600'}">${r.type==='entrada'?'+':'-'}${formatKz(r.amount)}</span><button onclick="deleteCofreRecord('${r.id}')" class="text-slate-300 hover:text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
 
-        function getDynamicAmount(rec){ let ca=rec.amount, b=rec.baseAmount, i=rec.amount-rec.baseAmount, p=0; let l={isLate:false,w:0}; if(!rec.isPaid && rec.endDate && rec.type==='receber' && rec.category!=='amigo'){ let end=new Date(rec.endDate.split('-').join('/')), today=new Date(); today.setHours(0,0,0,0); if(today>end){let w=Math.floor(Math.floor((today.getTime()-end.getTime())/86400000)/7); if(w>=1){l.isLate=true; l.w=w; p=ca*(0.05*w); ca+=p;}} } return {currentAmount:ca, base:b, totalInterest:i, penalty:p, lateInfo:l}; }
-        function updateFinanceDashboard(){ let ce=0, cs=0, td=0; cofreRecords.forEach(r=>{if(r.type==='entrada'){ce+=r.amount;if(r.applyTithe)td+=r.titheValue;}else cs+=r.amount;}); let tr=0, tp=0; records.forEach(rec=>{if(!rec.isPaid){const {currentAmount}=getDynamicAmount(rec); if(rec.type==='receber')tr+=currentAmount;else tp+=rec.amount;}}); document.getElementById('cofre-saldo-real').textContent=formatKz(ce-cs-td); document.getElementById('cofre-dizimo').textContent=formatKz(td); document.getElementById('cofre-saldo-contabilistico').textContent=formatKz((ce-cs-td)+tr-tp); document.getElementById('dash-receber').textContent=formatKz(tr); document.getElementById('dash-pagar').textContent=formatKz(tp); renderDebtsList(); }
+        function getDynamicAmount(rec){ 
+            // A SALVAÇÃO DE COMPATIBILIDADE: Se for dívida antiga sem "baseAmount", usa o "amount" normal.
+            let ca = rec.amount || 0;
+            let b = rec.baseAmount !== undefined ? rec.baseAmount : ca; 
+            let i = ca - b; 
+            let p = 0; 
+            let l = {isLate:false, w:0}; 
+            
+            if(!rec.isPaid && rec.endDate && rec.type==='receber' && rec.category!=='amigo'){ 
+                let end=new Date(rec.endDate.split('-').join('/')), today=new Date(); 
+                today.setHours(0,0,0,0); 
+                if(today>end){
+                    let w=Math.floor(Math.floor((today.getTime()-end.getTime())/86400000)/7); 
+                    if(w>=1){
+                        l.isLate=true; l.w=w; p = ca*(0.05*w); ca += p;
+                    }
+                } 
+            } 
+            return {currentAmount:ca, base:b, totalInterest:i, penalty:p, lateInfo:l}; 
+        }
+        
+        function updateFinanceDashboard(){ 
+            try {
+                let ce=0, cs=0, td=0; cofreRecords.forEach(r=>{if(r.type==='entrada'){ce+=r.amount;if(r.applyTithe)td+=r.titheValue;}else cs+=r.amount;}); 
+                let tr=0, tp=0; records.forEach(rec=>{if(!rec.isPaid){const {currentAmount}=getDynamicAmount(rec); if(rec.type==='receber')tr+=currentAmount;else tp+=rec.amount;}}); 
+                document.getElementById('cofre-saldo-real').textContent=formatKz(ce-cs-td); document.getElementById('cofre-dizimo').textContent=formatKz(td); document.getElementById('cofre-saldo-contabilistico').textContent=formatKz((ce-cs-td)+tr-tp); document.getElementById('dash-receber').textContent=formatKz(tr); document.getElementById('dash-pagar').textContent=formatKz(tp); 
+                renderDebtsList(); 
+            } catch(e) { console.error("Erro painel div:", e); }
+        }
         
         const startInput=document.getElementById('startDate'), endInput=document.getElementById('endDate'), durInput=document.getElementById('duration');
         const calcEnd=()=>{if(startInput.value&&durInput.value){endInput.value=new Date(new Date(startInput.value).getTime()+(parseInt(durInput.value)*7*86400000)).toISOString().split('T')[0];updatePrev();}}; 
@@ -432,47 +458,48 @@
         document.getElementById('filter-status').addEventListener('change',updateFinanceDashboard);
         
         function renderDebtsList(){ 
-            const filter=document.getElementById('filter-status').value, filtered=records.filter(r=>filter==='active'?!r.isPaid:r.isPaid); 
-            document.getElementById('records-list').innerHTML=filtered.map(rec=>{ 
-                const {currentAmount,base,totalInterest,penalty,lateInfo}=getDynamicAmount(rec); 
-                
-                // O DETALHE PEDIDO PELA KIRIANA
-                let breakdownInfo = '';
-                if(rec.type === 'receber') {
-                    if(rec.category === 'negocio') {
-                        breakdownInfo = `<div class="mt-3 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[11px] space-y-1.5 w-full border border-slate-100 dark:border-slate-800">
-                            <div class="flex justify-between items-center"><span class="text-slate-500">Valor Emprestado:</span><span class="font-medium dark:text-slate-300">${formatKz(base)}</span></div>
-                            <div class="flex justify-between items-center"><span class="text-slate-500">Valor dos Juros:</span><span class="font-medium dark:text-slate-300">${formatKz(rec.amount - base)}</span></div>
-                            ${penalty > 0 ? `<div class="flex justify-between items-center text-rose-500"><span class="font-bold">Multa Atraso:</span><span class="font-bold">+${formatKz(penalty)}</span></div>` : ''}
-                            <div class="flex justify-between items-center border-t border-slate-200 dark:border-slate-700 pt-1.5 mt-1.5 font-bold ${rec.isPaid?'text-slate-500':'text-indigo-600 dark:text-indigo-400'}"><span>Total Final:</span><span>${formatKz(rec.isPaid ? rec.amount : currentAmount)}</span></div>
-                        </div>`;
-                    } else {
-                        breakdownInfo = `<div class="mt-3 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[11px] w-full border border-slate-100 dark:border-slate-800">
-                            <div class="flex justify-between items-center"><span class="text-slate-500">Emprestado (Amigo):</span><span class="font-bold dark:text-slate-300">${formatKz(base)}</span></div>
-                        </div>`;
+            try {
+                const filter=document.getElementById('filter-status').value, filtered=records.filter(r=>filter==='active'?!r.isPaid:r.isPaid); 
+                document.getElementById('records-list').innerHTML=filtered.map(rec=>{ 
+                    const {currentAmount,base,totalInterest,penalty,lateInfo}=getDynamicAmount(rec); 
+                    
+                    let breakdownInfo = '';
+                    if(rec.type === 'receber') {
+                        if(rec.category === 'negocio') {
+                            breakdownInfo = `<div class="mt-2.5 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] space-y-1.5 w-full border border-slate-100 dark:border-slate-800">
+                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor Emprestado:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
+                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor dos Juros:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(rec.amount - base)}</span></div>
+                                ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso:</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
+                                <div class="flex justify-between items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-1.5 mt-1.5 font-bold ${rec.isPaid?'text-slate-500':'text-indigo-600 dark:text-indigo-400'}"><span>Total Final:</span><span class="whitespace-nowrap">${formatKz(rec.isPaid ? rec.amount : currentAmount)}</span></div>
+                            </div>`;
+                        } else {
+                            breakdownInfo = `<div class="mt-2.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] w-full border border-slate-100 dark:border-slate-800">
+                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Emprestado (Amigo):</span><span class="font-bold dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
+                            </div>`;
+                        }
                     }
-                }
 
-                return `
-                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${rec.isPaid?'opacity-60':(lateInfo.isLate?'border-rose-300':'')} rounded-xl p-4 flex flex-col gap-2 relative group">
-                    <div class="flex justify-between items-start gap-4">
-                        <div class="flex items-center gap-3">
-                            <button onclick="togglePaid('${rec.id}',${rec.isPaid})" class="w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 ${rec.isPaid?'bg-emerald-500 border-emerald-500 text-white':'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-transparent'}">
-                                <i class="ph-bold ph-check text-sm"></i>
-                            </button>
-                            <div>
-                                <h4 class="font-bold text-sm dark:text-white ${rec.isPaid?'line-through text-slate-400':''}">${rec.name} <span class="text-[9px] px-1.5 py-0.5 rounded ml-1 ${rec.type==='receber'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${rec.type}</span> ${rec.category==='amigo'?`<span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded ml-1">🤝 Amigo</span>`:''}</h4>
-                                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5"><i class="ph-fill ph-calendar"></i> ${formatDate(rec.startDate)} até ${formatDate(rec.endDate)}</p>
+                    return `
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${rec.isPaid?'opacity-60':(lateInfo.isLate?'border-rose-300':'')} rounded-xl p-3 sm:p-4 flex flex-col gap-1 sm:gap-2 group">
+                        <div class="flex justify-between items-start gap-2">
+                            <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+                                <button onclick="togglePaid('${rec.id}',${rec.isPaid})" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 ${rec.isPaid?'bg-emerald-500 border-emerald-500 text-white':'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-transparent'}">
+                                    <i class="ph-bold ph-check text-xs sm:text-sm"></i>
+                                </button>
+                                <div class="truncate">
+                                    <h4 class="font-bold text-xs sm:text-sm dark:text-white ${rec.isPaid?'line-through text-slate-400':''} flex flex-wrap gap-1 items-center">${rec.name} <span class="text-[9px] px-1.5 py-0.5 rounded ${rec.type==='receber'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${rec.type}</span> ${rec.category==='amigo'?`<span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">🤝 Amigo</span>`:''}</h4>
+                                    <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate"><i class="ph-fill ph-calendar"></i> ${formatDate(rec.startDate)} até ${formatDate(rec.endDate)}</p>
+                                </div>
+                            </div>
+                            <div class="text-right shrink-0 flex flex-col items-end gap-1.5">
+                                <span class="font-bold block text-sm ${rec.isPaid?'text-slate-400':(rec.type==='receber'?'text-emerald-600 dark:text-emerald-400':'text-rose-600 dark:text-rose-400')} whitespace-nowrap">${rec.type==='receber'?'+':'-'}${formatKz(rec.isPaid?rec.amount:currentAmount)}</span>
+                                <button onclick="deleteRecord('${rec.id}')" class="text-slate-300 hover:text-rose-500 bg-slate-50 dark:bg-slate-700/50 p-1.5 rounded-lg"><i class="ph-fill ph-trash"></i></button>
                             </div>
                         </div>
-                        <div class="text-right shrink-0">
-                            <span class="font-bold block text-sm ${rec.isPaid?'text-slate-400':(rec.type==='receber'?'text-emerald-600 dark:text-emerald-400':'text-rose-600 dark:text-rose-400')}">${rec.type==='receber'?'+':'-'}${formatKz(rec.isPaid?rec.amount:currentAmount)}</span>
-                            <button onclick="deleteRecord('${rec.id}')" class="absolute top-2 right-2 text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-trash text-lg"></i></button>
-                        </div>
-                    </div>
-                    ${breakdownInfo}
-                </div>`; 
-            }).join('')||'<p class="text-center text-sm text-slate-400 py-4">Nenhum registo.</p>'; 
+                        ${breakdownInfo}
+                    </div>`; 
+                }).join('')||'<p class="text-center text-sm text-slate-400 py-4">Nenhum registo.</p>'; 
+            } catch(e) { console.error("Erro Listagem Dividas", e); }
         }
 
         // Metas 
@@ -483,7 +510,11 @@
         window.loadFavorites = async (owner) => { if(!userId) return; const targetDate = document.getElementById('goal-date-filter').value; const favs = favoriteGoals.filter(f => f.owner === owner); let added = 0; for(let f of favs) { if(!goals.some(g => g.owner === owner && g.date === targetDate && g.text === f.text)) { await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {owner, text:f.text, date:targetDate, completed:false, postponements:0, createdAt:Date.now()}); added++; } } if(added > 0) showToast(`${added} metas carregadas!`); else showToast("Todas as metas fixas já estão na lista de hoje.", "info"); };
         window.postponeGoal = async (id, currentDateStr, postponements) => { if(!userId) return; const currentP = postponements || 0; if(currentP >= 2) { showToast("Não podes adiar mais de 2 vezes!", "error"); return; } const [y, m, d] = currentDateStr.split('-'); const dateObj = new Date(y, m-1, d); dateObj.setDate(dateObj.getDate() + 1); const nextDateStr = dateObj.getFullYear() + '-' + String(dateObj.getMonth()+1).padStart(2,'0') + '-' + String(dateObj.getDate()).padStart(2,'0'); await updateDoc(doc(db,'artifacts',appId,'users',userId,'goals',id), { date: nextDateStr, postponements: currentP + 1 }); showToast("Meta adiada para amanhã ➡️", "info"); };
         document.getElementById('goal-date-filter').addEventListener('change',()=>renderGoals());
-        function renderGoals(){ const d=document.getElementById('goal-date-filter').value; const r=(o)=>document.getElementById(`goals-list-${o}`).innerHTML=goals.filter(g=>g.owner===o&&g.date===d).map(g=>`<div class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm ${g.completed?'opacity-60':''}"><div class="flex items-center gap-3"><button onclick="toggleGoal('${g.id}',${g.completed})" class="w-6 h-6 rounded-md border-2 flex items-center justify-center shrink-0 ${g.completed?'bg-emerald-500 border-emerald-500 text-white':'border-slate-300 dark:border-slate-600 text-transparent'}"><i class="ph-bold ph-check text-xs"></i></button><span class="text-sm font-medium ${g.completed?'line-through text-slate-500':'dark:text-slate-200'}">${g.text}</span></div><div class="flex items-center gap-2 ml-2"><button onclick="saveAsFavorite('${g.owner}', '${g.text.replace(/'/g, "\\'")}')" class="text-slate-300 hover:text-amber-500" title="Tornar Fixa Diária"><i class="ph-fill ph-star"></i></button>${(!g.completed && (g.postponements||0) < 2) ? `<button onclick="postponeGoal('${g.id}', '${g.date}', ${g.postponements||0})" class="text-slate-300 hover:text-blue-500" title="Adiar para amanhã"><i class="ph-bold ph-arrow-right"></i></button>` : ''}<button onclick="deleteGoal('${g.id}')" class="text-slate-300 hover:text-rose-500"><i class="ph-bold ph-trash"></i></button></div></div>`).join('')||'<p class="text-xs text-slate-400 text-center py-4">Nenhuma meta.</p>'; r('josemar'); r('kiriana'); }
+        function renderGoals(){ 
+            try {
+                const d=document.getElementById('goal-date-filter').value; const r=(o)=>document.getElementById(`goals-list-${o}`).innerHTML=goals.filter(g=>g.owner===o&&g.date===d).map(g=>`<div class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm ${g.completed?'opacity-60':''}"><div class="flex items-center gap-3"><button onclick="toggleGoal('${g.id}',${g.completed})" class="w-6 h-6 rounded-md border-2 flex items-center justify-center shrink-0 ${g.completed?'bg-emerald-500 border-emerald-500 text-white':'border-slate-300 dark:border-slate-600 text-transparent'}"><i class="ph-bold ph-check text-xs"></i></button><span class="text-sm font-medium ${g.completed?'line-through text-slate-500':'dark:text-slate-200'}">${g.text}</span></div><div class="flex items-center gap-2 ml-2"><button onclick="saveAsFavorite('${g.owner}', '${g.text.replace(/'/g, "\\'")}')" class="text-slate-300 hover:text-amber-500" title="Tornar Fixa Diária"><i class="ph-fill ph-star"></i></button>${(!g.completed && (g.postponements||0) < 2) ? `<button onclick="postponeGoal('${g.id}', '${g.date}', ${g.postponements||0})" class="text-slate-300 hover:text-blue-500" title="Adiar para amanhã"><i class="ph-bold ph-arrow-right"></i></button>` : ''}<button onclick="deleteGoal('${g.id}')" class="text-slate-300 hover:text-rose-500"><i class="ph-bold ph-trash"></i></button></div></div>`).join('')||'<p class="text-xs text-slate-400 text-center py-4">Nenhuma meta.</p>'; r('josemar'); r('kiriana'); 
+            } catch(e) { console.error("Erro Metas", e); }
+        }
 
         // Marketing & Redes
         document.getElementById('post-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'posts'), { text: document.getElementById('post-input').value, status: 'ideia', createdAt: Date.now() }); e.target.reset(); showToast("Ideia adicionada!"); } catch(er) {} });
