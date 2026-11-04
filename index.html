@@ -208,8 +208,16 @@
                         </form>
                     </div>
                     <div class="w-full lg:col-span-2">
-                        <div class="flex justify-between mb-4"><h3 class="text-lg font-bold text-slate-800 dark:text-white">Histórico Detalhado</h3><select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm outline-none dark:text-white"><option value="active">Pendentes</option><option value="paid">Liquidados</option></select></div>
-                        <div id="records-list" class="space-y-3 pb-10"></div>
+                        <div class="flex justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-white">Histórico Detalhado</h3>
+                            <select id="filter-status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm outline-none dark:text-white">
+                                <option value="active">Pendentes</option>
+                                <option value="late">Atrasados</option>
+                                <option value="amigo">Amigos (Sem Juros)</option>
+                                <option value="paid">Liquidados</option>
+                            </select>
+                        </div>
+                        <div id="records-list" class="space-y-4 pb-10"></div>
                     </div>
                 </section>
             </div>
@@ -452,14 +460,22 @@
         
         function renderDebtsList(){ 
             try {
-                const filter=document.getElementById('filter-status').value, filtered=records.filter(r=>filter==='active'?!r.isPaid:r.isPaid); 
+                const filter=document.getElementById('filter-status').value;
+                const filtered=records.filter(r=>{
+                    if(filter==='active') return !r.isPaid;
+                    if(filter==='paid') return r.isPaid;
+                    if(filter==='late') { const {lateInfo}=getDynamicAmount(r); return !r.isPaid && lateInfo.isLate; }
+                    if(filter==='amigo') return r.category==='amigo';
+                    return true;
+                });
+                
                 document.getElementById('records-list').innerHTML=filtered.map(rec=>{ 
                     const {currentAmount,base,totalInterest,penalty,lateInfo}=getDynamicAmount(rec); 
                     const isAmigo = rec.category === 'amigo';
                     
                     let breakdownInfo = '';
                     if(rec.type === 'receber') {
-                        if(!isAmigo) { // Negócio ou registos antigos não classificados
+                        if(!isAmigo) {
                             let interestRateStr = rec.interest !== undefined ? ` (${rec.interest}%)` : '';
                             breakdownInfo = `<div class="mt-2.5 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] space-y-1.5 w-full border border-slate-100 dark:border-slate-800">
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor Emprestado:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
@@ -467,22 +483,36 @@
                                 ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso (5%/semana):</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
                                 <div class="flex justify-between items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-1.5 mt-1.5 font-bold ${rec.isPaid?'text-slate-500':'text-indigo-600 dark:text-indigo-400'}"><span>Total Final:</span><span class="whitespace-nowrap">${formatKz(rec.isPaid ? rec.amount : currentAmount)}</span></div>
                             </div>`;
-                        } else { // Amigo
+                        } else {
                             breakdownInfo = `<div class="mt-2.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] w-full border border-slate-100 dark:border-slate-800">
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Emprestado (Amigo - Sem Juros):</span><span class="font-bold dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
                             </div>`;
                         }
-                    } else { // Pagar
+                    } else {
                         breakdownInfo = `<div class="mt-2.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] w-full border border-slate-100 dark:border-slate-800">
                             <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor a Pagar:</span><span class="font-bold dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
                         </div>`;
                     }
 
-                    // Correção da data quando a endDate não existe
                     const dateDisplay = rec.endDate ? `${formatDate(rec.startDate)} até ${formatDate(rec.endDate)}` : formatDate(rec.startDate);
 
+                    // AURA MÁGICA - A LÓGICA DE CORES:
+                    let auraClass = 'border-slate-200 dark:border-slate-700'; // Padrão se estiver pago
+                    if (!rec.isPaid) {
+                        if (lateInfo.isLate) {
+                            // Vermelho para Atrasados
+                            auraClass = 'border-rose-400 dark:border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.4)] ring-1 ring-rose-400 dark:ring-rose-500';
+                        } else if (isAmigo) {
+                            // Azul para Amigos
+                            auraClass = 'border-blue-400 dark:border-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.4)] ring-1 ring-blue-400 dark:ring-blue-500';
+                        } else {
+                            // Verde para Negócios no prazo (nas normas)
+                            auraClass = 'border-emerald-400 dark:border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.4)] ring-1 ring-emerald-400 dark:ring-emerald-500';
+                        }
+                    }
+
                     return `
-                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${rec.isPaid?'opacity-60':(lateInfo.isLate?'border-rose-300':'')} rounded-xl p-3 sm:p-4 flex flex-col gap-1 sm:gap-2 group">
+                    <div class="bg-white dark:bg-slate-800 border ${auraClass} ${rec.isPaid?'opacity-60':''} rounded-xl p-3 sm:p-4 flex flex-col gap-1 sm:gap-2 group transition-all duration-300">
                         <div class="flex justify-between items-start gap-2">
                             <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
                                 <button onclick="togglePaid('${rec.id}',${rec.isPaid})" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 ${rec.isPaid?'bg-emerald-500 border-emerald-500 text-white':'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-transparent'}">
