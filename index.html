@@ -96,7 +96,6 @@
 
     <!-- App Container -->
     <div id="app-container" class="hidden flex-col h-full w-full overflow-hidden relative">
-        <!-- Navbar com alinhamento de ícones centralizado perfeito -->
         <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shrink-0">
             <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
@@ -118,7 +117,6 @@
 
         <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar pb-24">
             
-            <!-- Tab Navigation -->
             <div class="w-full flex-shrink-0 relative" id="tut-tabs">
                 <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-900 pointer-events-none rounded-r-2xl z-10"></div>
                 <div class="flex gap-2 p-1.5 pr-8 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto w-full snap-x snap-mandatory scroll-hide scroll-smooth">
@@ -216,7 +214,7 @@
                 </section>
             </div>
 
-            <!-- METAS DIÁRIAS (Ajustado com alturas fixas para alinhamento perfeito) -->
+            <!-- METAS DIÁRIAS -->
             <div id="tab-metas" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 w-full">
                     <div><h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-calendar text-indigo-500"></i> Calendário de Metas</h3><p class="text-xs text-slate-500 dark:text-slate-400">Gerencia tarefas e adiciona metas diárias automáticas.</p></div>
@@ -345,7 +343,6 @@
         window.toggleDizimoOption=(show)=>{document.getElementById('dizimo-checkbox-container').style.display=show?'flex':'none';};
         window.exportBackup = () => { if(records.length===0 && cofreRecords.length===0 && goals.length===0) { showToast("Sem dados para exportar", "info"); return; } const data = { dataAtual: new Date().toISOString(), caixa: cofreRecords, dividas: records, metas: goals, pedidos: pedidos, marketing: posts }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Versatil_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); showToast("Backup transferido!"); };
 
-        // --- GESTÃO DE NOMES EDITÁVEIS ---
         window.openSettings = () => {
             document.getElementById('input-name1').value = localStorage.getItem('versatil_name1') || 'Josemar';
             document.getElementById('input-name2').value = localStorage.getItem('versatil_name2') || 'Kiriana';
@@ -399,13 +396,11 @@
 
         window.toggleAmigo=(isAmigo)=>{ const interestInput = document.getElementById('interest'); if(isAmigo){ interestInput.value=0; interestInput.readOnly=true; interestInput.classList.add('bg-slate-200','dark:bg-slate-800','opacity-50'); } else { interestInput.readOnly=false; interestInput.classList.remove('bg-slate-200','dark:bg-slate-800','opacity-50'); } updatePrev(); };
         
-        // Pedidos Kanban
         document.getElementById('pedido-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { cliente: document.getElementById('pedido-cliente').value, produto: document.getElementById('pedido-produto').value, status: 'pendente', createdAt: Date.now() }); e.target.reset(); showToast("Pedido Adicionado!"); } catch(er) {} }); 
         window.updatePedidoStatus = async(id, s) => { if(userId) await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), {status: s}); }; 
         window.deletePedido = async(id) => { if(userId) await deleteDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id)); }; 
         function renderPedidos() { const cols = { pendente: [], preparacao: [], entregue: [] }; pedidos.forEach(p => { if(cols[p.status]) cols[p.status].push(p); }); document.getElementById('count-pendente').textContent = cols.pendente.length; document.getElementById('count-preparacao').textContent = cols.preparacao.length; document.getElementById('count-entregue').textContent = cols.entregue.length; const mc = (p) => `<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-sm relative group"><p class="font-bold text-sm dark:text-white">${p.cliente}</p><p class="text-xs text-slate-500 mt-1"><i class="ph-fill ph-tag"></i> ${p.produto}</p><div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 dark:border-slate-700"><div class="flex gap-2">${p.status !== 'pendente' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='entregue'?'preparacao':'pendente'}')" class="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-slate-500"><i class="ph-bold ph-arrow-left"></i></button>` : '<div></div>'} ${p.status !== 'entregue' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='pendente'?'preparacao':'entregue'}')" class="text-xs bg-indigo-100 dark:bg-indigo-900/50 px-2 py-1 rounded text-indigo-600">Mover <i class="ph-bold ph-arrow-right"></i></button>` : ''}</div><button onclick="deletePedido('${p.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-trash"></i></button></div></div>`; document.getElementById('col-pendente').innerHTML = cols.pendente.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; document.getElementById('col-preparacao').innerHTML = cols.preparacao.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; document.getElementById('col-entregue').innerHTML = cols.entregue.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; }
         
-        // Calculadora
         const calcInputs = document.querySelectorAll('.calc-input'); const [loteValor, loteQtd, freteTotalInput, marketingTotalInput, custoUnidade, freteUnitInput, marketingUnitInput, embalagemInput, margemInput] = ['calc-lote-valor','calc-lote-qtd','calc-frete-total','calc-marketing-total','calc-custo','calc-frete','calc-outros','calc-embalagem','calc-margem'].map(id => document.getElementById(id));
         function loadCalcState() { const stateStr = localStorage.getItem('versatil_calc_state'); if (stateStr) { const s = JSON.parse(stateStr); loteValor.value = s.loteValor||''; loteQtd.value = s.loteQtd||''; freteTotalInput.value = s.freteTotal||''; marketingTotalInput.value = s.marketingTotal||''; custoUnidade.value = s.custo||''; embalagemInput.value = s.embalagem||''; freteUnitInput.value = s.freteUnit||''; marketingUnitInput.value = s.marketingUnit||''; margemInput.value = s.margem||''; calcularPrecificacao(); } }
         function calcularLoteRateio() { const val = parseFloat(loteValor.value)||0, qtd = parseInt(loteQtd.value)||0, frete = parseFloat(freteTotalInput.value)||0, mkt = parseFloat(marketingTotalInput.value)||0; if (qtd > 0) { if (val > 0) custoUnidade.value = (val / qtd).toFixed(2); freteUnitInput.value = frete > 0 ? (frete / qtd).toFixed(2) : '0'; marketingUnitInput.value = mkt > 0 ? (mkt / qtd).toFixed(2) : '0'; } calcularPrecificacao(); }
@@ -413,7 +408,6 @@
         [loteValor, loteQtd, freteTotalInput, marketingTotalInput].forEach(el => el.addEventListener('input', calcularLoteRateio)); calcInputs.forEach(input => input.addEventListener('input', calcularPrecificacao));
         window.clearCalculator = () => { calcInputs.forEach(input => input.value = ''); [loteValor, loteQtd, freteTotalInput, marketingTotalInput].forEach(el => el.value = ''); calcularPrecificacao(); localStorage.removeItem('versatil_calc_state'); showToast("Calculadora limpa!"); };
 
-        // Cofre e Dívidas
         document.getElementById('cofre-form').addEventListener('submit', async(e) => { e.preventDefault(); if(!userId) return; const t = document.querySelector('input[name="cofre-type"]:checked').value, a = parseFloat(document.getElementById('cofre-amount').value), c = document.getElementById('cofre-dizimo-check').checked && t==='entrada'; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), { type:t, amount:a, desc:document.getElementById('cofre-desc').value.trim(), applyTithe:c, titheValue: c?(a*0.1):0, createdAt:Date.now() }); e.target.reset(); showToast("Registado!"); }catch(er){} });
         window.deleteCofreRecord=async(id)=>{if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'cofre',id));}; 
         function renderCofre(){ if(cofreRecords.length===0){document.getElementById('cofre-list').innerHTML='';document.getElementById('cofre-empty').classList.remove('hidden');return;} document.getElementById('cofre-empty').classList.add('hidden'); document.getElementById('cofre-list').innerHTML=cofreRecords.map(r=>`<div class="flex justify-between items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><div><div class="flex gap-2 mb-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${r.type==='entrada'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.type}</span><span class="text-xs text-slate-400">${new Date(r.createdAt).toLocaleDateString()}</span></div><p class="font-bold text-sm dark:text-white">${r.desc}</p>${r.applyTithe?`<p class="text-[10px] text-amber-500 font-medium mt-1"><i class="ph-fill ph-hands-praying"></i> Dízimo: ${formatKz(r.titheValue)}</p>`:''}</div><div class="flex items-center gap-3"><span class="font-bold ${r.type==='entrada'?'text-emerald-600':'text-rose-600'}">${r.type==='entrada'?'+':'-'}${formatKz(r.amount)}</span><button onclick="deleteCofreRecord('${r.id}')" class="text-slate-300 hover:text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
@@ -461,22 +455,31 @@
                 const filter=document.getElementById('filter-status').value, filtered=records.filter(r=>filter==='active'?!r.isPaid:r.isPaid); 
                 document.getElementById('records-list').innerHTML=filtered.map(rec=>{ 
                     const {currentAmount,base,totalInterest,penalty,lateInfo}=getDynamicAmount(rec); 
+                    const isAmigo = rec.category === 'amigo';
                     
                     let breakdownInfo = '';
                     if(rec.type === 'receber') {
-                        if(rec.category === 'negocio') {
+                        if(!isAmigo) { // Negócio ou registos antigos não classificados
+                            let interestRateStr = rec.interest !== undefined ? ` (${rec.interest}%)` : '';
                             breakdownInfo = `<div class="mt-2.5 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] space-y-1.5 w-full border border-slate-100 dark:border-slate-800">
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor Emprestado:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
-                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor dos Juros (${rec.interest || 0}%):</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(totalInterest)}</span></div>
+                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor dos Juros${interestRateStr}:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(totalInterest)}</span></div>
                                 ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso (5%/semana):</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
                                 <div class="flex justify-between items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-1.5 mt-1.5 font-bold ${rec.isPaid?'text-slate-500':'text-indigo-600 dark:text-indigo-400'}"><span>Total Final:</span><span class="whitespace-nowrap">${formatKz(rec.isPaid ? rec.amount : currentAmount)}</span></div>
                             </div>`;
-                        } else {
+                        } else { // Amigo
                             breakdownInfo = `<div class="mt-2.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] w-full border border-slate-100 dark:border-slate-800">
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Emprestado (Amigo - Sem Juros):</span><span class="font-bold dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
                             </div>`;
                         }
+                    } else { // Pagar
+                        breakdownInfo = `<div class="mt-2.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] w-full border border-slate-100 dark:border-slate-800">
+                            <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor a Pagar:</span><span class="font-bold dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
+                        </div>`;
                     }
+
+                    // Correção da data quando a endDate não existe
+                    const dateDisplay = rec.endDate ? `${formatDate(rec.startDate)} até ${formatDate(rec.endDate)}` : formatDate(rec.startDate);
 
                     return `
                     <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${rec.isPaid?'opacity-60':(lateInfo.isLate?'border-rose-300':'')} rounded-xl p-3 sm:p-4 flex flex-col gap-1 sm:gap-2 group">
@@ -486,8 +489,8 @@
                                     <i class="ph-bold ph-check text-xs sm:text-sm"></i>
                                 </button>
                                 <div class="truncate">
-                                    <h4 class="font-bold text-xs sm:text-sm dark:text-white ${rec.isPaid?'line-through text-slate-400':''} flex flex-wrap gap-1 items-center">${rec.name} <span class="text-[9px] px-1.5 py-0.5 rounded ${rec.type==='receber'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${rec.type}</span> ${rec.category==='amigo'?`<span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">🤝 Amigo</span>`:''}</h4>
-                                    <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate"><i class="ph-fill ph-calendar"></i> ${formatDate(rec.startDate)} até ${formatDate(rec.endDate)}</p>
+                                    <h4 class="font-bold text-xs sm:text-sm dark:text-white ${rec.isPaid?'line-through text-slate-400':''} flex flex-wrap gap-1 items-center">${rec.name} <span class="text-[9px] px-1.5 py-0.5 rounded ${rec.type==='receber'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${rec.type}</span> ${isAmigo?`<span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">🤝 Amigo</span>`:''}</h4>
+                                    <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate"><i class="ph-fill ph-calendar"></i> ${dateDisplay}</p>
                                 </div>
                             </div>
                             <div class="text-right shrink-0 flex flex-col items-end gap-1.5">
@@ -501,7 +504,6 @@
             } catch(e) { console.error("Erro Listagem Dividas", e); }
         }
 
-        // Metas 
         window.addGoal=async(e,o)=>{ e.preventDefault(); const t=document.getElementById(`goal-input-${o}`).value; if(t&&userId){ await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'),{ owner:o, text:t, date:document.getElementById('goal-date-filter').value, completed:false, postponements:0, createdAt:Date.now() }); e.target.reset(); } };
         window.toggleGoal=async(id,c)=>{ if(userId)await updateDoc(doc(db,'artifacts',appId,'users',userId,'goals',id),{completed:!c}); }; 
         window.deleteGoal=async(id)=>{ if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'goals',id)); };
@@ -515,7 +517,6 @@
             } catch(e) { console.error("Erro Metas", e); }
         }
 
-        // Marketing & Redes
         document.getElementById('post-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'posts'), { text: document.getElementById('post-input').value, status: 'ideia', createdAt: Date.now() }); e.target.reset(); showToast("Ideia adicionada!"); } catch(er) {} });
         window.deletePost = async(id) => { if(userId) await deleteDoc(doc(db,'artifacts',appId,'users',userId,'posts',id)); };
         function renderPosts() { 
@@ -525,7 +526,6 @@
             listEl.innerHTML = posts.map(p => `<div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm group"><span class="text-sm dark:text-slate-200">${p.text}</span><button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-trash text-lg"></i></button></div>`).join(''); 
         }
 
-        /* ======== SISTEMA DE TUTORIAL ONBOARDING ======== */
         const tutorialSteps = [
             { target: 'tut-tabs', title: 'Navegação', text: 'Desliza aqui para alternares entre as abas da Versátil Trade.' },
             { target: 'tut-saldo', title: 'O teu Cofre', text: 'Vê rapidamente quanto tens em caixa real e o teu fundo de dízimo acumulado.' },
@@ -552,29 +552,6 @@
         function removeHighlights() { document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight')); }
 
         initApp();
-    </script>
-
-    <!-- SISTEMA DE AUTO-REFRESH -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                reg.addEventListener('updatefound', () => {
-                    const newWorker = reg.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            showToast("Nova atualização detetada! A recarregar...", "info");
-                            setTimeout(() => window.location.reload(), 1500);
-                        }
-                    });
-                });
-            });
-            let refreshing;
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (refreshing) return;
-                refreshing = true;
-                window.location.reload();
-            });
-        }
     </script>
 </body>
 </html>
