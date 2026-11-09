@@ -13,7 +13,7 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
-        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
+        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } }, colors: { gold: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706' } } } }
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <!-- Modal de Configurações (Nomes Editáveis) -->
+    <!-- Modal de Configurações -->
     <div id="settings-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl w-[90%] max-w-sm border border-slate-100 dark:border-slate-700">
             <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-gear text-indigo-500"></i> Configurações</h3>
@@ -124,6 +124,7 @@
                     <button onclick="switchTab('tab-pedidos')" id="btn-tab-pedidos" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-package"></i> Pedidos</button>
                     <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-hand-coins"></i> Dívidas</button>
                     <button onclick="switchTab('tab-metas')" id="btn-tab-metas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-target"></i> Metas</button>
+                    <button onclick="switchTab('tab-alambamento')" id="btn-tab-alambamento" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-gold-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-ring"></i> Alambamento</button>
                     <button onclick="switchTab('tab-redes')" id="btn-tab-redes" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-pink-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-instagram-logo"></i> Marketing</button>
                     <button onclick="switchTab('tab-precificacao')" id="btn-tab-precificacao" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-calculator"></i> Calc</button>
                 </div>
@@ -160,12 +161,15 @@
 
             <!-- FASE 2: PEDIDOS -->
             <div id="tab-pedidos" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
-                    <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes e acompanha a entrega.</p></div>
-                    <form id="pedido-form" class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full sm:w-48 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
-                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full sm:w-48 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
-                        <button type="submit" class="shrink-0 w-full sm:w-auto bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Criar</button>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col gap-4">
+                    <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes, valores e acompanha as entregas.</p></div>
+                    <form id="pedido-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 w-full">
+                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white lg:col-span-2">
+                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white lg:col-span-2">
+                        <input type="number" id="pedido-valor" min="0" step="0.01" placeholder="Valor (Kz)" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="date" id="pedido-data" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="text" id="pedido-local" placeholder="Local de Entrega" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white sm:col-span-2 lg:col-span-5">
+                        <button type="submit" class="w-full bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold whitespace-nowrap lg:col-span-1"><i class="ph-bold ph-plus"></i> Criar</button>
                     </form>
                 </div>
                 <div class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x">
@@ -194,7 +198,7 @@
                                 <label class="cursor-pointer w-full"><input type="radio" name="type" value="pagar" class="peer sr-only"><div class="text-center px-2 py-2.5 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 text-sm font-bold text-slate-500 w-full transition-all">A Pagar</div></label>
                             </div>
                             <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome</label><input type="text" id="personName" required class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
-                            <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor Base</label><input type="number" id="amount" required min="0.01" step="0.01" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
+                            <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor Base (Bruto)</label><input type="number" id="amount" required min="0.01" step="0.01" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data Início</label><input type="date" id="startDate" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none text-sm dark:text-white"></div>
                                 <div><label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Semanas</label><input type="number" id="duration" min="1" value="1" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white"></div>
@@ -206,15 +210,16 @@
                             <div id="penalty-container" class="mt-1">
                                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Multa Atraso a.s (%)</label>
                                 <input type="number" id="penaltyRate" min="0" step="0.1" value="5" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none dark:text-white">
+                                <p class="text-[10px] text-slate-400 mt-1">* A multa incide apenas sobre o Valor Base.</p>
                             </div>
                             
-                            <!-- Nova Caixa de Fixação ✅ -->
+                            <!-- Caixa de Fixação ✅ -->
                             <label class="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer w-full mt-2 transition-colors hover:bg-slate-200 dark:hover:bg-slate-800">
                                 <input type="checkbox" id="pinDefaults" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 bg-white dark:bg-slate-900 cursor-pointer accent-indigo-600">
                                 <span class="text-sm font-bold text-slate-700 dark:text-slate-300 select-none">✅ Fixar Semanas, Juros e Multa</span>
                             </label>
 
-                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center mt-2"><span class="text-sm font-medium text-indigo-800 dark:text-indigo-300">Retorno:</span><span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span></div>
+                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800 flex justify-between items-center mt-2"><span class="text-sm font-medium text-indigo-800 dark:text-indigo-300">Retorno Previsto:</span><span id="final-amount-preview" class="font-bold text-indigo-700 dark:text-indigo-400 text-lg">0,00 Kz</span></div>
                             <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-3.5 rounded-xl shadow-md w-full">Registrar Dívida</button>
                         </form>
                     </div>
@@ -266,6 +271,28 @@
                             <div id="goals-list-kiriana" class="space-y-3"></div>
                         </div>
                     </details>
+                </div>
+            </div>
+
+            <!-- FASE ESPECÍFICA: ALAMBAMENTO 💍 -->
+            <div id="tab-alambamento" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
+                <div class="bg-gradient-to-r from-amber-500 to-gold-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-5 -top-10 opacity-10"><i class="ph-fill ph-ring text-[15rem]"></i></div>
+                    <div class="relative z-10 max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2">O Nosso Alambamento 💍</h2>
+                        <p class="text-amber-100 text-sm sm:text-base mb-4">Acompanhem o progresso das compras para a lista da cerimónia.</p>
+                        
+                        <!-- Barra de Progresso -->
+                        <div class="flex justify-between text-xs font-bold mb-1"><span id="alamb-comprados">0 Comprados</span><span id="alamb-faltam">0 Faltam</span></div>
+                        <div class="w-full bg-black/20 rounded-full h-3 mb-1">
+                            <div id="alamb-progress-bar" class="bg-white h-3 rounded-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
+                        </div>
+                        <div class="text-right text-xs font-bold text-amber-100" id="alamb-percent">0%</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="alamb-container">
+                    <!-- Gerado dinamicamente via JS -->
                 </div>
             </div>
 
@@ -341,11 +368,11 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDq53wI-1fmNUk8uQ86rmZysRYL2Ul8TGk", authDomain: "versatil-trade-app.firebaseapp.com", projectId: "versatil-trade-app", storageBucket: "versatil-trade-app.firebasestorage.app", messagingSenderId: "853767169314", appId: "1:853767169314:web:727f6a5e2795478647717b" };
-        let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[];
-        let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs;
+        let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[], alambamentoChecked=[];
+        let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs, unsubAlambamento;
         const appId = 'versatil-trade-app';
 
         const formatKz = (v) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(v||0) + ' Kz';
@@ -353,9 +380,16 @@
         
         window.switchTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.classList.remove('bg-white','dark:bg-slate-700','text-indigo-600','text-pink-600','shadow-sm'); btn.classList.add('text-slate-600'); });
+            document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.classList.remove('bg-white','dark:bg-slate-700','text-indigo-600','text-pink-600','text-gold-600','shadow-sm'); btn.classList.add('text-slate-600'); });
             document.getElementById(tabId).classList.remove('hidden');
-            const active = document.getElementById(`btn-${tabId}`); active.classList.remove('text-slate-600'); active.classList.add('bg-white','dark:bg-slate-700','shadow-sm', tabId === 'tab-redes' ? 'text-pink-600' : 'text-indigo-600');
+            const active = document.getElementById(`btn-${tabId}`); 
+            active.classList.remove('text-slate-600'); 
+            
+            let highlightClass = 'text-indigo-600';
+            if(tabId === 'tab-redes') highlightClass = 'text-pink-600';
+            if(tabId === 'tab-alambamento') highlightClass = 'text-gold-600';
+            
+            active.classList.add('bg-white','dark:bg-slate-700','shadow-sm', highlightClass);
             if(window.isTutorialRunning) setTimeout(() => centerTutorialOnTarget(), 100);
         };
         window.toggleTheme=()=>{document.documentElement.classList.toggle('dark'); document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-[1.15rem] sm:text-xl text-amber-500':'ph ph-moon text-[1.15rem] sm:text-xl';};
@@ -395,12 +429,11 @@
             app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
             onAuthStateChanged(auth,(user)=>{
                 if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); loadData(); setTimeout(checkTutorial, 1000); }
-                else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); }
+                else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); if(unsubAlambamento)unsubAlambamento(); }
             });
             loadCalcState();
             updateNamesUI();
             
-            // Carregar Fixados
             const isPinned = localStorage.getItem('versatil_pin_defaults') === 'true';
             const pinCb = document.getElementById('pinDefaults');
             if(pinCb) {
@@ -409,12 +442,11 @@
                     if(localStorage.getItem('versatil_def_duration')) document.getElementById('duration').value = localStorage.getItem('versatil_def_duration');
                     if(localStorage.getItem('versatil_def_interest')) document.getElementById('interest').value = localStorage.getItem('versatil_def_interest');
                     if(localStorage.getItem('versatil_def_penalty')) document.getElementById('penaltyRate').value = localStorage.getItem('versatil_def_penalty');
-                    calcEnd(); // Atualiza data
+                    calcEnd();
                 }
             }
         }
         
-        // Listeners para a caixa de Fixação
         document.getElementById('pinDefaults').addEventListener('change', (e) => {
             localStorage.setItem('versatil_pin_defaults', e.target.checked);
             if(e.target.checked) {
@@ -444,7 +476,83 @@
             unsubPedidos = onSnapshot(collection(db,'artifacts',appId,'users',userId,'pedidos'),(s)=>{pedidos=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);renderPedidos();});
             unsubPosts = onSnapshot(collection(db,'artifacts',appId,'users',userId,'posts'),(s)=>{posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);renderPosts();});
             unsubFavs = onSnapshot(collection(db,'artifacts',appId,'users',userId,'favorites'),(s)=>{favoriteGoals=s.docs.map(d=>({id:d.id,...d.data()}));});
+            
+            // Dados Alambamento
+            unsubAlambamento = onSnapshot(doc(db,'artifacts',appId,'users',userId,'alambamento','status'),(d)=>{
+                if(d.exists()){ alambamentoChecked = d.data().checked || []; }
+                else { alambamentoChecked = []; }
+                renderAlambamento();
+            });
         }
+
+        /* --- ALAMBAMENTO --- */
+        const alambItens = [
+            { id: 'p1', cat: 'Família do Pai', nome: '2 fatos completos originais' },
+            { id: 'p2', cat: 'Família do Pai', nome: '2 pares de sapatos (tamanhos 42 e 43)' },
+            { id: 'p3', cat: 'Família do Pai', nome: '2 gravatas' },
+            { id: 'p4', cat: 'Família do Pai', nome: '2 cobertores de luxo' },
+            { id: 'b1', cat: 'Bebidas', nome: '10 grades de cerveja' },
+            { id: 'b2', cat: 'Bebidas', nome: '10 grades de gasosa' },
+            { id: 'b3', cat: 'Bebidas', nome: '2 garrafas de whisky' },
+            { id: 'b4', cat: 'Bebidas', nome: '2 garrafões de vinho' },
+            { id: 'b5', cat: 'Bebidas', nome: '10 litros de nsamba (Maruvu)' },
+            { id: 'b6', cat: 'Bebidas', nome: '1 copo de makasu (cola)' },
+            { id: 'm1', cat: 'Família da Mãe', nome: '2 panos do Congo (super wax)' },
+            { id: 'm2', cat: 'Família da Mãe', nome: '3 lenços de cabeça' },
+            { id: 'm3', cat: 'Família da Mãe', nome: '2 pares de chinelos (tamanhos 39 e 40)' },
+            { id: 'm4', cat: 'Família da Mãe', nome: '2 fios de ouro' },
+            { id: 'm5', cat: 'Família da Mãe', nome: '1 marmita grande' },
+            { id: 'm6', cat: 'Família da Mãe', nome: '4 sacos de açúcar' },
+            { id: 'm7', cat: 'Família da Mãe', nome: '1 saco de sal' },
+            { id: 'm8', cat: 'Família da Mãe', nome: '5 pct chá, café, fósforos e cigarros' },
+            { id: 'v1', cat: 'Dote e Valores', nome: '500 dólares (Dote)' },
+            { id: 'v2', cat: 'Dote e Valores', nome: '200.000 Kz (Valor do Alambamento)' }
+        ];
+
+        window.toggleAlambamento = async (itemId) => {
+            if(!userId) return;
+            let newChecked = [...alambamentoChecked];
+            if(newChecked.includes(itemId)) newChecked = newChecked.filter(i => i !== itemId);
+            else newChecked.push(itemId);
+            await setDoc(doc(db,'artifacts',appId,'users',userId,'alambamento','status'), {checked: newChecked}, {merge: true});
+        };
+
+        function renderAlambamento() {
+            const total = alambItens.length;
+            const comprados = alambamentoChecked.length;
+            const faltam = total - comprados;
+            const percent = Math.round((comprados / total) * 100) || 0;
+
+            document.getElementById('alamb-comprados').textContent = `${comprados} Comprados`;
+            document.getElementById('alamb-faltam').textContent = `${faltam} Faltam`;
+            document.getElementById('alamb-progress-bar').style.width = `${percent}%`;
+            document.getElementById('alamb-percent').textContent = `${percent}%`;
+
+            const categorias = ['Família do Pai', 'Família da Mãe', 'Bebidas', 'Dote e Valores'];
+            let html = '';
+
+            categorias.forEach(cat => {
+                const itensCat = alambItens.filter(i => i.cat === cat);
+                html += `
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+                    <h3 class="font-bold text-slate-800 dark:text-white p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">${cat}</h3>
+                    <div class="p-2 space-y-1">
+                        ${itensCat.map(item => {
+                            const isChecked = alambamentoChecked.includes(item.id);
+                            return `
+                            <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30 ${isChecked ? 'opacity-60' : ''}">
+                                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleAlambamento('${item.id}')" class="w-5 h-5 text-gold-500 rounded border-slate-300 focus:ring-gold-500 bg-slate-100 dark:bg-slate-900 cursor-pointer accent-gold-500 shrink-0">
+                                <span class="text-sm font-medium ${isChecked ? 'line-through text-slate-400' : 'text-slate-700 dark:text-slate-200'}">${item.nome}</span>
+                            </label>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>`;
+            });
+            document.getElementById('alamb-container').innerHTML = html;
+        }
+        /* --- FIM ALAMBAMENTO --- */
+
 
         window.toggleAmigo=(isAmigo)=>{ 
             const interestInput = document.getElementById('interest'); 
@@ -464,10 +572,87 @@
             updatePrev(); 
         };
         
-        document.getElementById('pedido-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { cliente: document.getElementById('pedido-cliente').value, produto: document.getElementById('pedido-produto').value, status: 'pendente', createdAt: Date.now() }); e.target.reset(); showToast("Pedido Adicionado!"); } catch(er) {} }); 
-        window.updatePedidoStatus = async(id, s) => { if(userId) await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), {status: s}); }; 
+        document.getElementById('pedido-form').addEventListener('submit', async(e)=>{ 
+            e.preventDefault(); 
+            if(!userId) return; 
+            try { 
+                await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { 
+                    cliente: document.getElementById('pedido-cliente').value, 
+                    produto: document.getElementById('pedido-produto').value, 
+                    valor: document.getElementById('pedido-valor').value || 0,
+                    dataEntrega: document.getElementById('pedido-data').value,
+                    local: document.getElementById('pedido-local').value,
+                    status: 'pendente', 
+                    faturado: false, // flag para saber se já foi pro cofre
+                    createdAt: Date.now() 
+                }); 
+                e.target.reset(); 
+                showToast("Pedido Adicionado!"); 
+            } catch(er) {} 
+        }); 
+
+        window.updatePedidoStatus = async(id, newStatus) => { 
+            if(!userId) return; 
+            const pedido = pedidos.find(p => p.id === id);
+            if(!pedido) return;
+
+            let updates = {status: newStatus};
+
+            // Se for movido para entregue E ainda não tiver sido faturado, lança no cofre!
+            if(newStatus === 'entregue' && !pedido.faturado && parseFloat(pedido.valor) > 0) {
+                updates.faturado = true;
+                const valor = parseFloat(pedido.valor);
+                
+                await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), {
+                    type: 'entrada',
+                    amount: valor,
+                    desc: `Venda: ${pedido.produto} (${pedido.cliente})`,
+                    applyTithe: true,
+                    titheValue: valor * 0.1, // Dízimo automático
+                    createdAt: Date.now()
+                });
+                showToast("Entregue! Valor creditado no Cofre c/ Dízimo.");
+            }
+
+            await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), updates); 
+        }; 
+
         window.deletePedido = async(id) => { if(userId) await deleteDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id)); }; 
-        function renderPedidos() { const cols = { pendente: [], preparacao: [], entregue: [] }; pedidos.forEach(p => { if(cols[p.status]) cols[p.status].push(p); }); document.getElementById('count-pendente').textContent = cols.pendente.length; document.getElementById('count-preparacao').textContent = cols.preparacao.length; document.getElementById('count-entregue').textContent = cols.entregue.length; const mc = (p) => `<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-sm relative group"><p class="font-bold text-sm dark:text-white">${p.cliente}</p><p class="text-xs text-slate-500 mt-1"><i class="ph-fill ph-tag"></i> ${p.produto}</p><div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 dark:border-slate-700"><div class="flex gap-2">${p.status !== 'pendente' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='entregue'?'preparacao':'pendente'}')" class="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-slate-500"><i class="ph-bold ph-arrow-left"></i></button>` : '<div></div>'} ${p.status !== 'entregue' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='pendente'?'preparacao':'entregue'}')" class="text-xs bg-indigo-100 dark:bg-indigo-900/50 px-2 py-1 rounded text-indigo-600">Mover <i class="ph-bold ph-arrow-right"></i></button>` : ''}</div><button onclick="deletePedido('${p.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-trash"></i></button></div></div>`; document.getElementById('col-pendente').innerHTML = cols.pendente.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; document.getElementById('col-preparacao').innerHTML = cols.preparacao.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; document.getElementById('col-entregue').innerHTML = cols.entregue.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; }
+        
+        function renderPedidos() { 
+            const cols = { pendente: [], preparacao: [], entregue: [] }; 
+            pedidos.forEach(p => { if(cols[p.status]) cols[p.status].push(p); }); 
+            document.getElementById('count-pendente').textContent = cols.pendente.length; 
+            document.getElementById('count-preparacao').textContent = cols.preparacao.length; 
+            document.getElementById('count-entregue').textContent = cols.entregue.length; 
+            
+            const mc = (p) => `
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-sm relative group">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="max-w-[70%]">
+                        <p class="font-bold text-sm dark:text-white truncate" title="${p.cliente}">${p.cliente}</p>
+                        <p class="text-xs text-slate-500 mt-0.5 truncate"><i class="ph-fill ph-tag"></i> ${p.produto}</p>
+                    </div>
+                    ${p.valor > 0 ? `<span class="font-bold text-indigo-600 dark:text-indigo-400 text-sm whitespace-nowrap">${formatKz(p.valor)}</span>` : ''}
+                </div>
+                ${(p.local || p.dataEntrega) ? `
+                <div class="flex flex-col gap-1 text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-lg border border-slate-100 dark:border-slate-700 mb-1">
+                    ${p.local ? `<p class="flex items-start gap-1"><i class="ph-bold ph-map-pin mt-0.5"></i> <span class="break-words">${p.local}</span></p>` : ''}
+                    ${p.dataEntrega ? `<p class="flex items-center gap-1"><i class="ph-bold ph-calendar"></i> ${formatDate(p.dataEntrega)}</p>` : ''}
+                </div>` : ''}
+                
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+                    <div class="flex gap-2">
+                        ${p.status !== 'pendente' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='entregue'?'preparacao':'pendente'}')" class="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600"><i class="ph-bold ph-arrow-left"></i></button>` : '<div></div>'} 
+                        ${p.status !== 'entregue' ? `<button onclick="updatePedidoStatus('${p.id}', '${p.status==='pendente'?'preparacao':'entregue'}')" class="text-xs bg-indigo-100 dark:bg-indigo-900/50 px-2 py-1 rounded text-indigo-600 hover:bg-indigo-200 dark:hover:bg-indigo-900">Mover <i class="ph-bold ph-arrow-right"></i></button>` : ''}
+                    </div>
+                    <button onclick="deletePedido('${p.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-trash text-lg"></i></button>
+                </div>
+            </div>`; 
+            document.getElementById('col-pendente').innerHTML = cols.pendente.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; 
+            document.getElementById('col-preparacao').innerHTML = cols.preparacao.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; 
+            document.getElementById('col-entregue').innerHTML = cols.entregue.map(mc).join('') || '<p class="text-xs text-slate-400 text-center py-4">Vazio</p>'; 
+        }
         
         const calcInputs = document.querySelectorAll('.calc-input'); const [loteValor, loteQtd, freteTotalInput, marketingTotalInput, custoUnidade, freteUnitInput, marketingUnitInput, embalagemInput, margemInput] = ['calc-lote-valor','calc-lote-qtd','calc-frete-total','calc-marketing-total','calc-custo','calc-frete','calc-outros','calc-embalagem','calc-margem'].map(id => document.getElementById(id));
         function loadCalcState() { const stateStr = localStorage.getItem('versatil_calc_state'); if (stateStr) { const s = JSON.parse(stateStr); loteValor.value = s.loteValor||''; loteQtd.value = s.loteQtd||''; freteTotalInput.value = s.freteTotal||''; marketingTotalInput.value = s.marketingTotal||''; custoUnidade.value = s.custo||''; embalagemInput.value = s.embalagem||''; freteUnitInput.value = s.freteUnit||''; marketingUnitInput.value = s.marketingUnit||''; margemInput.value = s.margem||''; calcularPrecificacao(); } }
@@ -481,9 +666,9 @@
         function renderCofre(){ if(cofreRecords.length===0){document.getElementById('cofre-list').innerHTML='';document.getElementById('cofre-empty').classList.remove('hidden');return;} document.getElementById('cofre-empty').classList.add('hidden'); document.getElementById('cofre-list').innerHTML=cofreRecords.map(r=>`<div class="flex justify-between items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><div><div class="flex gap-2 mb-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${r.type==='entrada'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.type}</span><span class="text-xs text-slate-400">${new Date(r.createdAt).toLocaleDateString()}</span></div><p class="font-bold text-sm dark:text-white">${r.desc}</p>${r.applyTithe?`<p class="text-[10px] text-amber-500 font-medium mt-1"><i class="ph-fill ph-hands-praying"></i> Dízimo: ${formatKz(r.titheValue)}</p>`:''}</div><div class="flex items-center gap-3"><span class="font-bold ${r.type==='entrada'?'text-emerald-600':'text-rose-600'}">${r.type==='entrada'?'+':'-'}${formatKz(r.amount)}</span><button onclick="deleteCofreRecord('${r.id}')" class="text-slate-300 hover:text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
 
         function getDynamicAmount(rec){ 
-            let ca = rec.amount || 0;
-            let b = rec.baseAmount !== undefined ? rec.baseAmount : ca; 
-            let i = ca - b; 
+            let base = rec.baseAmount !== undefined ? rec.baseAmount : (rec.amount || 0); 
+            let currentAmount = rec.amount || 0; // Já inclui o juro original
+            let totalInterest = currentAmount - base; 
             let p = 0; 
             let l = {isLate:false, w:0}; 
             let pr = rec.penaltyRate !== undefined ? parseFloat(rec.penaltyRate) : 5; 
@@ -495,18 +680,18 @@
                 today.setHours(0,0,0,0); 
                 
                 if(today > end){
-                    // Passou do limite: Logo no dia 1, é considerado atraso (1 semana de multa).
                     let daysLate = Math.round((today.getTime() - end.getTime()) / 86400000); 
                     if(daysLate > 0){
                         l.isLate = true; 
                         let w = Math.ceil(daysLate / 7); 
                         l.w = w; 
-                        p = ca * (pr/100) * w; 
-                        ca += p;
+                        // A MULTA AGORA INCIDE APENAS SOBRE A BASE (VALOR BRUTO)
+                        p = base * (pr/100) * w; 
+                        currentAmount += p;
                     }
                 } 
             } 
-            return {currentAmount:ca, base:b, totalInterest:i, penalty:p, lateInfo:l, penaltyRate: pr}; 
+            return {currentAmount, base, totalInterest, penalty:p, lateInfo:l, penaltyRate: pr}; 
         }
         
         function updateFinanceDashboard(){ 
@@ -581,9 +766,9 @@
                         if(!isAmigo) {
                             let interestRateStr = rec.interest !== undefined ? ` (${rec.interest}%)` : '';
                             breakdownInfo = `<div class="mt-2.5 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[10px] sm:text-[11px] space-y-1.5 w-full border border-slate-100 dark:border-slate-800">
-                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor Emprestado:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
+                                <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor Bruto:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(base)}</span></div>
                                 <div class="flex justify-between items-center gap-2"><span class="text-slate-500">Valor dos Juros${interestRateStr}:</span><span class="font-medium dark:text-slate-300 whitespace-nowrap">${formatKz(totalInterest)}</span></div>
-                                ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso (${penaltyRate}%/sem):</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
+                                ${penalty > 0 ? `<div class="flex justify-between items-center gap-2 text-rose-500"><span class="font-bold">Multa Atraso (${penaltyRate}%/sem s/ bruto):</span><span class="font-bold whitespace-nowrap">+${formatKz(penalty)}</span></div>` : ''}
                                 <div class="flex justify-between items-center gap-2 border-t border-slate-200 dark:border-slate-700 pt-1.5 mt-1.5 font-bold ${rec.isPaid?'text-slate-500':'text-indigo-600 dark:text-indigo-400'}"><span>Total Final:</span><span class="whitespace-nowrap">${formatKz(rec.isPaid ? rec.amount : currentAmount)}</span></div>
                             </div>`;
                         } else {
