@@ -124,6 +124,7 @@
                     <button onclick="switchTab('tab-pedidos')" id="btn-tab-pedidos" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-package"></i> Pedidos</button>
                     <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-hand-coins"></i> Dívidas</button>
                     <button onclick="switchTab('tab-metas')" id="btn-tab-metas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-target"></i> Metas</button>
+                    <button onclick="switchTab('tab-saude')" id="btn-tab-saude" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-emerald-500 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-heart-beat"></i> Saúde</button>
                     <button onclick="switchTab('tab-alambamento')" id="btn-tab-alambamento" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-gold-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-ring"></i> Alambamento</button>
                     <button onclick="switchTab('tab-redes')" id="btn-tab-redes" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-pink-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-instagram-logo"></i> Marketing</button>
                     <button onclick="switchTab('tab-precificacao')" id="btn-tab-precificacao" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-calculator"></i> Calc</button>
@@ -157,6 +158,72 @@
                         <div id="cofre-list" class="space-y-3"></div>
                     </div>
                 </section>
+            </div>
+
+            <!-- FASE SAÚDE E BEM ESTAR 🌿 -->
+            <div id="tab-saude" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-5 -top-10 opacity-10"><i class="ph-fill ph-heart-beat text-[15rem]"></i></div>
+                    <div class="relative z-10 max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2">Saúde & Bem-Estar 🌿</h2>
+                        <p class="text-emerald-100 text-sm sm:text-base mb-4">Cronograma de Skincare, Cabelo, Desafios Fitness e Inventário.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Cronogramas -->
+                    <div class="space-y-6">
+                        <!-- Skincare -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5">
+                            <h3 class="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-sparkle text-amber-500"></i> Rotina de Skincare</h3>
+                            <div class="flex gap-2 justify-between mb-4">
+                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Seg</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
+                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Ter</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
+                                <div class="flex flex-col items-center gap-1 scale-110"><span class="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">Qua</span><div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/30"><i class="ph-bold ph-check text-xs"></i></div></div>
+                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Qui</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
+                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Sex</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
+                                <div class="flex flex-col items-center gap-1 scale-110"><span class="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">Sáb</span><div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/30"><i class="ph-bold ph-check text-xs"></i></div></div>
+                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Dom</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 text-center bg-slate-50 dark:bg-slate-900/50 p-2 rounded-lg border border-slate-100 dark:border-slate-700">Foco especial de tratamento de pele às <strong>Quartas</strong> e <strong>Sábados</strong>.</p>
+                        </div>
+
+                        <!-- Cabelo & Fitness -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/30 p-5 flex flex-col items-center text-center gap-2">
+                                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-300 mb-1"><i class="ph-fill ph-scissors text-2xl"></i></div>
+                                <h4 class="font-bold text-sm text-indigo-900 dark:text-indigo-200">Rotina Cabelo</h4>
+                                <p class="text-[10px] text-indigo-600/70 dark:text-indigo-400/70 leading-tight">Hidratação e cuidados capilares agendados.</p>
+                            </div>
+                            <div class="bg-rose-50 dark:bg-rose-900/20 rounded-2xl border border-rose-100 dark:border-rose-800/30 p-5 flex flex-col items-center text-center gap-2 relative overflow-hidden">
+                                <div class="w-12 h-12 bg-rose-100 dark:bg-rose-800 rounded-full flex items-center justify-center text-rose-600 dark:text-rose-300 mb-1"><i class="ph-fill ph-barbell text-2xl"></i></div>
+                                <h4 class="font-bold text-sm text-rose-900 dark:text-rose-200">Desafio Fitness</h4>
+                                <button onclick="adicionarTreinoMeta()" class="mt-1 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-colors w-full">Criar Meta Hoje</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventário de Produtos -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col h-full">
+                        <h3 class="font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2"><i class="ph-fill ph-archive-box text-indigo-500"></i> Inventário de Cosméticos</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Adiciona os vossos produtos. O sistema avisa quando for preciso repor.</p>
+                        
+                        <form id="health-form" class="flex gap-2 mb-4 items-center w-full">
+                            <input type="text" id="health-nome" required placeholder="Ex: Creme Hidratante" class="flex-1 px-3 h-[42px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-sm dark:text-white w-full min-w-0">
+                            <select id="health-tipo" class="px-2 h-[42px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-xs font-medium dark:text-white shrink-0">
+                                <option value="Skincare">Skincare</option>
+                                <option value="Cabelo">Cabelo</option>
+                                <option value="Corpo">Corpo</option>
+                            </select>
+                            <input type="number" id="health-qtd" required placeholder="Qtd" min="0" class="w-14 px-2 h-[42px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-sm dark:text-white text-center shrink-0">
+                            <button type="submit" class="bg-indigo-600 text-white w-[42px] h-[42px] flex items-center justify-center rounded-xl shrink-0"><i class="ph-bold ph-plus text-lg"></i></button>
+                        </form>
+                        
+                        <div id="health-inventory-list" class="space-y-3 overflow-y-auto custom-scrollbar flex-1 max-h-[300px] pr-1">
+                            <!-- Gerado via JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- FASE 2: PEDIDOS -->
@@ -210,7 +277,6 @@
                                 <p class="text-[10px] text-slate-400 mt-1">* A multa incide apenas sobre o Valor Base.</p>
                             </div>
                             
-                            <!-- Caixa de Fixação ✅ -->
                             <label class="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer w-full mt-2 transition-colors hover:bg-slate-200 dark:hover:bg-slate-800">
                                 <input type="checkbox" id="pinDefaults" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 bg-white dark:bg-slate-900 cursor-pointer accent-indigo-600">
                                 <span class="text-sm font-bold text-slate-700 dark:text-slate-300 select-none">✅ Fixar Semanas, Juros e Multa</span>
@@ -367,8 +433,8 @@
         import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDq53wI-1fmNUk8uQ86rmZysRYL2Ul8TGk", authDomain: "versatil-trade-app.firebaseapp.com", projectId: "versatil-trade-app", storageBucket: "versatil-trade-app.firebasestorage.app", messagingSenderId: "853767169314", appId: "1:853767169314:web:727f6a5e2795478647717b" };
-        let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[], alambamentoQtd={};
-        let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs, unsubAlambamento;
+        let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[], alambamentoQtd={}, healthProducts=[];
+        let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs, unsubAlambamento, unsubHealth;
         const appId = 'versatil-trade-app';
 
         const formatKz = (v) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(v||0) + ' Kz';
@@ -376,7 +442,7 @@
         
         window.switchTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.classList.remove('bg-white','dark:bg-slate-700','text-indigo-600','text-pink-600','text-gold-600','shadow-sm'); btn.classList.add('text-slate-600'); });
+            document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.classList.remove('bg-white','dark:bg-slate-700','text-indigo-600','text-pink-600','text-gold-600','text-emerald-500','shadow-sm'); btn.classList.add('text-slate-600'); });
             document.getElementById(tabId).classList.remove('hidden');
             const active = document.getElementById(`btn-${tabId}`); 
             active.classList.remove('text-slate-600'); 
@@ -384,6 +450,7 @@
             let highlightClass = 'text-indigo-600';
             if(tabId === 'tab-redes') highlightClass = 'text-pink-600';
             if(tabId === 'tab-alambamento') highlightClass = 'text-gold-600';
+            if(tabId === 'tab-saude') highlightClass = 'text-emerald-500';
             
             active.classList.add('bg-white','dark:bg-slate-700','shadow-sm', highlightClass);
             if(window.isTutorialRunning) setTimeout(() => centerTutorialOnTarget(), 100);
@@ -391,7 +458,7 @@
         window.toggleTheme=()=>{document.documentElement.classList.toggle('dark'); document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-[1.15rem] sm:text-xl text-amber-500':'ph ph-moon text-[1.15rem] sm:text-xl';};
         window.showToast=(msg,type='success')=>{const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast-enter ${type==='error'?'bg-rose-500':(type==='info'?'bg-blue-500':'bg-emerald-500')} text-white px-4 py-3 rounded-xl flex items-center gap-2 text-sm shadow-lg pointer-events-auto`;t.innerHTML=`<i class="ph-bold ${type==='error'?'ph-warning-circle':(type==='info'?'ph-info':'ph-check')} text-lg"></i> ${msg}`;c.appendChild(t);setTimeout(()=>{t.classList.replace('toast-enter','toast-exit');setTimeout(()=>t.remove(),300)},3000);};
         window.toggleDizimoOption=(show)=>{document.getElementById('dizimo-checkbox-container').style.display=show?'flex':'none';};
-        window.exportBackup = () => { if(records.length===0 && cofreRecords.length===0 && goals.length===0) { showToast("Sem dados para exportar", "info"); return; } const data = { dataAtual: new Date().toISOString(), caixa: cofreRecords, dividas: records, metas: goals, pedidos: pedidos, marketing: posts }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Versatil_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); showToast("Backup transferido!"); };
+        window.exportBackup = () => { if(records.length===0 && cofreRecords.length===0 && goals.length===0) { showToast("Sem dados para exportar", "info"); return; } const data = { dataAtual: new Date().toISOString(), caixa: cofreRecords, dividas: records, metas: goals, pedidos: pedidos, marketing: posts, saude: healthProducts }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Versatil_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); showToast("Backup transferido!"); };
 
         window.openSettings = () => {
             document.getElementById('input-name1').value = localStorage.getItem('versatil_name1') || 'Josemar';
@@ -425,7 +492,7 @@
             app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
             onAuthStateChanged(auth,(user)=>{
                 if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); loadData(); setTimeout(checkTutorial, 1000); }
-                else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); if(unsubAlambamento)unsubAlambamento(); }
+                else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); if(unsubAlambamento)unsubAlambamento(); if(unsubHealth)unsubHealth(); }
             });
             loadCalcState();
             updateNamesUI();
@@ -473,36 +540,123 @@
             unsubPosts = onSnapshot(collection(db,'artifacts',appId,'users',userId,'posts'),(s)=>{posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);renderPosts();});
             unsubFavs = onSnapshot(collection(db,'artifacts',appId,'users',userId,'favorites'),(s)=>{favoriteGoals=s.docs.map(d=>({id:d.id,...d.data()}));});
             
-            // Dados Alambamento - Agora com quantidades
-            unsubAlambamento = onSnapshot(doc(db,'artifacts',appId,'users',userId,'alambamento','status'),(d)=>{
-                if(d.exists()){ alambamentoQtd = d.data().qtd || {}; }
-                else { alambamentoQtd = {}; }
-                renderAlambamento();
+            unsubAlambamento = onSnapshot(doc(db,'artifacts',appId,'users',userId,'alambamento','status'),(d)=>{ if(d.exists()){ alambamentoQtd = d.data().qtd || {}; } else { alambamentoQtd = {}; } renderAlambamento(); });
+            
+            // Dados da nova Aba Saúde
+            unsubHealth = onSnapshot(collection(db,'artifacts',appId,'users',userId,'health_inv'),(s)=>{
+                healthProducts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
+                renderHealthInventory();
             });
         }
 
-        /* --- ALAMBAMENTO: MODO NEGÓCIOS (QUANTIDADES) --- */
+        /* --- SAÚDE E BEM ESTAR --- */
+        window.adicionarTreinoMeta = async () => {
+            if(!userId) return;
+            const targetDate = document.getElementById('goal-date-filter').value;
+            const owner = 'kiriana'; // A Kiriana ou Josemar, definir padrão. Aqui adicionei para Kiriana já que ela é a boss.
+            
+            await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {
+                owner: owner,
+                text: '🏋🏾‍♀️ Desafio de Exercício Físico',
+                date: targetDate,
+                completed: false,
+                postponements: 0,
+                createdAt: Date.now()
+            });
+            showToast("Desafio adicionado às metas de hoje!");
+            switchTab('tab-metas');
+        };
+
+        document.getElementById('health-form').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            if(!userId) return;
+            try {
+                await addDoc(collection(db,'artifacts',appId,'users',userId,'health_inv'), {
+                    nome: document.getElementById('health-nome').value,
+                    tipo: document.getElementById('health-tipo').value,
+                    qtd: parseInt(document.getElementById('health-qtd').value) || 0,
+                    createdAt: Date.now()
+                });
+                e.target.reset();
+                showToast("Produto Adicionado!");
+            } catch(er){}
+        });
+
+        window.updateHealthQtd = async(id, delta) => {
+            if(!userId) return;
+            const prod = healthProducts.find(p => p.id === id);
+            if(!prod) return;
+            let newQtd = (prod.qtd || 0) + delta;
+            if(newQtd < 0) newQtd = 0;
+            await updateDoc(doc(db,'artifacts',appId,'users',userId,'health_inv',id), {qtd: newQtd});
+        };
+
+        window.deleteHealthProduct = async(id) => {
+            if(userId && confirm("Tem a certeza que deseja eliminar este produto do inventário?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'health_inv',id));
+            }
+        };
+
+        function renderHealthInventory() {
+            const listEl = document.getElementById('health-inventory-list');
+            if(!listEl) return;
+            if(healthProducts.length === 0) { listEl.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Nenhum produto adicionado.</p>`; return; }
+            
+            listEl.innerHTML = healthProducts.map(p => {
+                const isZero = p.qtd === 0;
+                let icon = 'ph-sparkle';
+                if(p.tipo === 'Cabelo') icon = 'ph-scissors';
+                if(p.tipo === 'Corpo') icon = 'ph-drop';
+
+                return `
+                <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl border ${isZero ? 'border-rose-300 dark:border-rose-800/50 bg-rose-50/50 dark:bg-rose-900/10' : 'border-slate-200 dark:border-slate-700'} shadow-sm group">
+                    <div class="flex flex-col min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                            <i class="ph-fill ${icon} ${isZero ? 'text-rose-400' : 'text-slate-400'} text-sm shrink-0"></i>
+                            <span class="text-sm font-bold dark:text-white truncate pr-2 ${isZero ? 'text-rose-700 dark:text-rose-300' : ''}">${p.nome}</span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[10px] uppercase font-bold text-slate-400">${p.tipo}</span>
+                            ${isZero ? `<span class="text-[9px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded font-bold uppercase animate-pulse">⚠️ Reposição</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 shrink-0 ml-2">
+                        <div class="flex items-center gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                            <button onclick="updateHealthQtd('${p.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><i class="ph-bold ph-minus"></i></button>
+                            <span class="w-6 text-center text-xs font-bold dark:text-white">${p.qtd}</span>
+                            <button onclick="updateHealthQtd('${p.id}', 1)" class="w-6 h-6 rounded flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><i class="ph-bold ph-plus"></i></button>
+                        </div>
+                        <button onclick="deleteHealthProduct('${p.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"><i class="ph-fill ph-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        /* --- FIM SAÚDE E BEM ESTAR --- */
+
+
+        /* --- ALAMBAMENTO --- */
         const alambItens = [
-            { id: 'p1', cat: 'Família do Pai', nome: 'Fatos completos originais', max: 2 },
-            { id: 'p2', cat: 'Família do Pai', nome: 'Pares de sapatos (42 e 43)', max: 2 },
+            { id: 'p1', cat: 'Família do Pai', nome: 'Fatos originais', max: 2 },
+            { id: 'p2', cat: 'Família do Pai', nome: 'Sapatos (42 e 43)', max: 2 },
             { id: 'p3', cat: 'Família do Pai', nome: 'Gravatas', max: 2 },
             { id: 'p4', cat: 'Família do Pai', nome: 'Cobertores de luxo', max: 2 },
-            { id: 'b1', cat: 'Bebidas', nome: 'Grades de cerveja', max: 10 },
-            { id: 'b2', cat: 'Bebidas', nome: 'Grades de gasosa', max: 10 },
-            { id: 'b3', cat: 'Bebidas', nome: 'Garrafas de whisky', max: 2 },
-            { id: 'b4', cat: 'Bebidas', nome: 'Garrafões de vinho', max: 2 },
-            { id: 'b5', cat: 'Bebidas', nome: 'Litros de nsamba (Maruvu)', max: 10 },
-            { id: 'b6', cat: 'Bebidas', nome: 'Copo de makasu (cola)', max: 1 },
-            { id: 'm1', cat: 'Família da Mãe', nome: 'Panos do Congo (super wax)', max: 2 },
-            { id: 'm2', cat: 'Família da Mãe', nome: 'Lenços de cabeça', max: 3 },
-            { id: 'm3', cat: 'Família da Mãe', nome: 'Pares de chinelos (39 e 40)', max: 2 },
+            { id: 'b1', cat: 'Bebidas', nome: 'Grades cerveja', max: 10 },
+            { id: 'b2', cat: 'Bebidas', nome: 'Grades gasosa', max: 10 },
+            { id: 'b3', cat: 'Bebidas', nome: 'Garrafas whisky', max: 2 },
+            { id: 'b4', cat: 'Bebidas', nome: 'Garrafões vinho', max: 2 },
+            { id: 'b5', cat: 'Bebidas', nome: 'Litros nsamba', max: 10 },
+            { id: 'b6', cat: 'Bebidas', nome: 'Copo makasu', max: 1 },
+            { id: 'm1', cat: 'Família da Mãe', nome: 'Panos do Congo', max: 2 },
+            { id: 'm2', cat: 'Família da Mãe', nome: 'Lenços cabeça', max: 3 },
+            { id: 'm3', cat: 'Família da Mãe', nome: 'Chinelos (39/40)', max: 2 },
             { id: 'm4', cat: 'Família da Mãe', nome: 'Fios de ouro', max: 2 },
             { id: 'm5', cat: 'Família da Mãe', nome: 'Marmita grande', max: 1 },
-            { id: 'm6', cat: 'Família da Mãe', nome: 'Sacos de açúcar', max: 4 },
-            { id: 'm7', cat: 'Família da Mãe', nome: 'Saco de sal', max: 1 },
-            { id: 'm8', cat: 'Família da Mãe', nome: 'Pct chá, café, fósforos...', max: 5 },
+            { id: 'm6', cat: 'Família da Mãe', nome: 'Sacos açúcar', max: 4 },
+            { id: 'm7', cat: 'Família da Mãe', nome: 'Saco sal', max: 1 },
+            { id: 'm8', cat: 'Família da Mãe', nome: 'Pct chá/café', max: 5 },
             { id: 'v1', cat: 'Dote e Valores', nome: 'Dólares (Dote)', max: 500, step: 50 },
-            { id: 'v2', cat: 'Dote e Valores', nome: 'Kz (Valor do Alambamento)', max: 200000, step: 10000 }
+            { id: 'v2', cat: 'Dote e Valores', nome: 'Kz (Valor)', max: 200000, step: 10000 }
         ];
 
         window.updateAlambamentoInput = async (id, val, max) => {
@@ -561,33 +715,12 @@
                 </div>`;
             });
 
-            // Ratio calculation avoids money skewing the progress (1 bottle = 50% of 2 bottles = same weight as 100k of 200k)
             const percent = Math.round((sumRatio / alambItens.length) * 100) || 0;
             document.getElementById('alamb-progress-bar').style.width = `${percent}%`;
             document.getElementById('alamb-percent').textContent = `${percent}%`;
             document.getElementById('alamb-container').innerHTML = html;
         }
-        /* --- FIM ALAMBAMENTO --- */
 
-
-        window.toggleAmigo=(isAmigo)=>{ 
-            const interestInput = document.getElementById('interest'); 
-            const penaltyInput = document.getElementById('penaltyRate');
-            if(isAmigo){ 
-                interestInput.value=0; interestInput.readOnly=true; interestInput.classList.add('bg-slate-200','dark:bg-slate-800','opacity-50'); 
-                penaltyInput.value=0; penaltyInput.readOnly=true; penaltyInput.classList.add('bg-slate-200','dark:bg-slate-800','opacity-50');
-            } else { 
-                interestInput.readOnly=false; interestInput.classList.remove('bg-slate-200','dark:bg-slate-800','opacity-50'); 
-                penaltyInput.readOnly=false; penaltyInput.classList.remove('bg-slate-200','dark:bg-slate-800','opacity-50');
-                
-                if(document.getElementById('pinDefaults').checked) {
-                    if(localStorage.getItem('versatil_def_interest')) interestInput.value = localStorage.getItem('versatil_def_interest');
-                    if(localStorage.getItem('versatil_def_penalty')) penaltyInput.value = localStorage.getItem('versatil_def_penalty');
-                }
-            } 
-            updatePrev(); 
-        };
-        
         document.getElementById('pedido-form').addEventListener('submit', async(e)=>{ 
             e.preventDefault(); 
             if(!userId) return; 
@@ -595,11 +728,11 @@
                 await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { 
                     cliente: document.getElementById('pedido-cliente').value, 
                     produto: document.getElementById('pedido-produto').value, 
-                    valor: document.getElementById('pedido-valor').value || 0,
-                    dataEntrega: document.getElementById('pedido-data').value,
-                    local: document.getElementById('pedido-local').value,
+                    valor: 0,
+                    dataEntrega: '',
+                    local: '',
                     status: 'pendente', 
-                    faturado: false, // flag para saber se já foi pro cofre
+                    faturado: false,
                     createdAt: Date.now() 
                 }); 
                 e.target.reset(); 
@@ -611,25 +744,20 @@
             if(!userId) return; 
             const pedido = pedidos.find(p => p.id === id);
             if(!pedido) return;
-
             let updates = {status: newStatus};
-
-            // Se for movido para entregue E ainda não tiver sido faturado, lança no cofre!
             if(newStatus === 'entregue' && !pedido.faturado && parseFloat(pedido.valor) > 0) {
                 updates.faturado = true;
                 const valor = parseFloat(pedido.valor);
-                
                 await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), {
                     type: 'entrada',
                     amount: valor,
                     desc: `Venda: ${pedido.produto} (${pedido.cliente})`,
                     applyTithe: true,
-                    titheValue: valor * 0.1, // Dízimo automático
+                    titheValue: valor * 0.1,
                     createdAt: Date.now()
                 });
                 showToast("Entregue! Valor creditado no Cofre c/ Dízimo.");
             }
-
             await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), updates); 
         }; 
 
@@ -693,7 +821,7 @@
 
         function getDynamicAmount(rec){ 
             let base = rec.baseAmount !== undefined ? rec.baseAmount : (rec.amount || 0); 
-            let currentAmount = rec.amount || 0; // Já inclui o juro original
+            let currentAmount = rec.amount || 0;
             let totalInterest = currentAmount - base; 
             let p = 0; 
             let l = {isLate:false, w:0}; 
@@ -711,7 +839,6 @@
                         l.isLate = true; 
                         let w = Math.ceil(daysLate / 7); 
                         l.w = w; 
-                        // A MULTA AGORA INCIDE APENAS SOBRE A BASE (VALOR BRUTO)
                         p = base * (pr/100) * w; 
                         currentAmount += p;
                     }
@@ -769,17 +896,14 @@
             }catch(er){} 
         });
 
-        // LIQUIDAÇÃO DE DÍVIDAS E COFRE MODO NEGÓCIOS
         window.togglePaid=async(id, isCurrentlyPaid)=>{
             if(!userId) return;
             const rec = records.find(r => r.id === id);
             if(!rec) return;
 
             if(!isCurrentlyPaid) {
-                // A dívida está ativa e vai ser marcada como paga
                 if(confirm("Deseja liquidar esta dívida e registar o valor final automaticamente no Cofre?")) {
                     const {currentAmount} = getDynamicAmount(rec);
-                    
                     await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), {
                         type: rec.type === 'receber' ? 'entrada' : 'saida',
                         amount: currentAmount,
@@ -788,13 +912,10 @@
                         titheValue: rec.type === 'receber' ? (currentAmount * 0.1) : 0,
                         createdAt: Date.now()
                     });
-                    
-                    // Salva o valor final pago na dívida
                     await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:true, amount: currentAmount});
                     showToast("Liquidação concluída e Cofre atualizado!");
                 }
             } else {
-                // Desfazer liquidação
                 if(confirm("Desfazer a liquidação desta dívida? (Nota: O registo no Cofre NÃO será apagado automaticamente)")) {
                     await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:false});
                     showToast("Dívida reaberta!");
