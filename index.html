@@ -13,8 +13,7 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
-        // A correção foi feita aqui: as "colors" entraram para dentro do "extend"
-        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { gold: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706' } } } } }
+        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { gold: { 100: '#FEF3C7', 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706', 900: '#78350F' } } } } }
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -162,15 +161,12 @@
 
             <!-- FASE 2: PEDIDOS -->
             <div id="tab-pedidos" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col gap-4">
-                    <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes, valores e acompanha as entregas.</p></div>
-                    <form id="pedido-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 w-full">
-                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white lg:col-span-2">
-                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white lg:col-span-2">
-                        <input type="number" id="pedido-valor" min="0" step="0.01" placeholder="Valor (Kz)" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
-                        <input type="date" id="pedido-data" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
-                        <input type="text" id="pedido-local" placeholder="Local de Entrega" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white sm:col-span-2 lg:col-span-5">
-                        <button type="submit" class="w-full bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold whitespace-nowrap lg:col-span-1"><i class="ph-bold ph-plus"></i> Criar</button>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
+                    <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes e acompanha a entrega.</p></div>
+                    <form id="pedido-form" class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full sm:w-48 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full sm:w-48 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <button type="submit" class="shrink-0 w-full sm:w-auto bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Criar</button>
                     </form>
                 </div>
                 <div class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x">
@@ -281,14 +277,13 @@
                     <div class="absolute -right-5 -top-10 opacity-10"><i class="ph-fill ph-ring text-[15rem]"></i></div>
                     <div class="relative z-10 max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl font-bold mb-2">O Nosso Alambamento 💍</h2>
-                        <p class="text-amber-100 text-sm sm:text-base mb-4">Acompanhem o progresso das compras para a lista da cerimónia.</p>
+                        <p class="text-amber-100 text-sm sm:text-base mb-4">Gerencia o inventário das compras incrementalmente.</p>
                         
-                        <!-- Barra de Progresso -->
-                        <div class="flex justify-between text-xs font-bold mb-1"><span id="alamb-comprados">0 Comprados</span><span id="alamb-faltam">0 Faltam</span></div>
+                        <!-- Barra de Progresso Geral -->
+                        <div class="flex justify-between text-xs font-bold mb-1"><span>Progresso Geral da Lista</span><span id="alamb-percent">0%</span></div>
                         <div class="w-full bg-black/20 rounded-full h-3 mb-1">
                             <div id="alamb-progress-bar" class="bg-white h-3 rounded-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
                         </div>
-                        <div class="text-right text-xs font-bold text-amber-100" id="alamb-percent">0%</div>
                     </div>
                 </div>
 
@@ -372,7 +367,7 @@
         import { getFirestore, doc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDq53wI-1fmNUk8uQ86rmZysRYL2Ul8TGk", authDomain: "versatil-trade-app.firebaseapp.com", projectId: "versatil-trade-app", storageBucket: "versatil-trade-app.firebasestorage.app", messagingSenderId: "853767169314", appId: "1:853767169314:web:727f6a5e2795478647717b" };
-        let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[], alambamentoChecked=[];
+        let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[], alambamentoQtd={};
         let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs, unsubAlambamento;
         const appId = 'versatil-trade-app';
 
@@ -478,57 +473,62 @@
             unsubPosts = onSnapshot(collection(db,'artifacts',appId,'users',userId,'posts'),(s)=>{posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);renderPosts();});
             unsubFavs = onSnapshot(collection(db,'artifacts',appId,'users',userId,'favorites'),(s)=>{favoriteGoals=s.docs.map(d=>({id:d.id,...d.data()}));});
             
-            // Dados Alambamento
+            // Dados Alambamento - Agora com quantidades
             unsubAlambamento = onSnapshot(doc(db,'artifacts',appId,'users',userId,'alambamento','status'),(d)=>{
-                if(d.exists()){ alambamentoChecked = d.data().checked || []; }
-                else { alambamentoChecked = []; }
+                if(d.exists()){ alambamentoQtd = d.data().qtd || {}; }
+                else { alambamentoQtd = {}; }
                 renderAlambamento();
             });
         }
 
-        /* --- ALAMBAMENTO --- */
+        /* --- ALAMBAMENTO: MODO NEGÓCIOS (QUANTIDADES) --- */
         const alambItens = [
-            { id: 'p1', cat: 'Família do Pai', nome: '2 fatos completos originais' },
-            { id: 'p2', cat: 'Família do Pai', nome: '2 pares de sapatos (tamanhos 42 e 43)' },
-            { id: 'p3', cat: 'Família do Pai', nome: '2 gravatas' },
-            { id: 'p4', cat: 'Família do Pai', nome: '2 cobertores de luxo' },
-            { id: 'b1', cat: 'Bebidas', nome: '10 grades de cerveja' },
-            { id: 'b2', cat: 'Bebidas', nome: '10 grades de gasosa' },
-            { id: 'b3', cat: 'Bebidas', nome: '2 garrafas de whisky' },
-            { id: 'b4', cat: 'Bebidas', nome: '2 garrafões de vinho' },
-            { id: 'b5', cat: 'Bebidas', nome: '10 litros de nsamba (Maruvu)' },
-            { id: 'b6', cat: 'Bebidas', nome: '1 copo de makasu (cola)' },
-            { id: 'm1', cat: 'Família da Mãe', nome: '2 panos do Congo (super wax)' },
-            { id: 'm2', cat: 'Família da Mãe', nome: '3 lenços de cabeça' },
-            { id: 'm3', cat: 'Família da Mãe', nome: '2 pares de chinelos (tamanhos 39 e 40)' },
-            { id: 'm4', cat: 'Família da Mãe', nome: '2 fios de ouro' },
-            { id: 'm5', cat: 'Família da Mãe', nome: '1 marmita grande' },
-            { id: 'm6', cat: 'Família da Mãe', nome: '4 sacos de açúcar' },
-            { id: 'm7', cat: 'Família da Mãe', nome: '1 saco de sal' },
-            { id: 'm8', cat: 'Família da Mãe', nome: '5 pct chá, café, fósforos e cigarros' },
-            { id: 'v1', cat: 'Dote e Valores', nome: '500 dólares (Dote)' },
-            { id: 'v2', cat: 'Dote e Valores', nome: '200.000 Kz (Valor do Alambamento)' }
+            { id: 'p1', cat: 'Família do Pai', nome: 'Fatos completos originais', max: 2 },
+            { id: 'p2', cat: 'Família do Pai', nome: 'Pares de sapatos (42 e 43)', max: 2 },
+            { id: 'p3', cat: 'Família do Pai', nome: 'Gravatas', max: 2 },
+            { id: 'p4', cat: 'Família do Pai', nome: 'Cobertores de luxo', max: 2 },
+            { id: 'b1', cat: 'Bebidas', nome: 'Grades de cerveja', max: 10 },
+            { id: 'b2', cat: 'Bebidas', nome: 'Grades de gasosa', max: 10 },
+            { id: 'b3', cat: 'Bebidas', nome: 'Garrafas de whisky', max: 2 },
+            { id: 'b4', cat: 'Bebidas', nome: 'Garrafões de vinho', max: 2 },
+            { id: 'b5', cat: 'Bebidas', nome: 'Litros de nsamba (Maruvu)', max: 10 },
+            { id: 'b6', cat: 'Bebidas', nome: 'Copo de makasu (cola)', max: 1 },
+            { id: 'm1', cat: 'Família da Mãe', nome: 'Panos do Congo (super wax)', max: 2 },
+            { id: 'm2', cat: 'Família da Mãe', nome: 'Lenços de cabeça', max: 3 },
+            { id: 'm3', cat: 'Família da Mãe', nome: 'Pares de chinelos (39 e 40)', max: 2 },
+            { id: 'm4', cat: 'Família da Mãe', nome: 'Fios de ouro', max: 2 },
+            { id: 'm5', cat: 'Família da Mãe', nome: 'Marmita grande', max: 1 },
+            { id: 'm6', cat: 'Família da Mãe', nome: 'Sacos de açúcar', max: 4 },
+            { id: 'm7', cat: 'Família da Mãe', nome: 'Saco de sal', max: 1 },
+            { id: 'm8', cat: 'Família da Mãe', nome: 'Pct chá, café, fósforos...', max: 5 },
+            { id: 'v1', cat: 'Dote e Valores', nome: 'Dólares (Dote)', max: 500, step: 50 },
+            { id: 'v2', cat: 'Dote e Valores', nome: 'Kz (Valor do Alambamento)', max: 200000, step: 10000 }
         ];
 
-        window.toggleAlambamento = async (itemId) => {
+        window.updateAlambamentoInput = async (id, val, max) => {
             if(!userId) return;
-            let newChecked = [...alambamentoChecked];
-            if(newChecked.includes(itemId)) newChecked = newChecked.filter(i => i !== itemId);
-            else newChecked.push(itemId);
-            await setDoc(doc(db,'artifacts',appId,'users',userId,'alambamento','status'), {checked: newChecked}, {merge: true});
+            let num = parseInt(val);
+            if(isNaN(num)) num = 0;
+            if(num < 0) num = 0;
+            if(num > max) num = max;
+            let newQtd = {...alambamentoQtd, [id]: num};
+            await setDoc(doc(db,'artifacts',appId,'users',userId,'alambamento','status'), {qtd: newQtd}, {merge: true});
+        };
+
+        window.updateAlambamentoBtn = async (id, delta, max) => {
+            if(!userId) return;
+            let current = parseInt(alambamentoQtd[id] || 0);
+            let num = current + delta;
+            if(num < 0) num = 0;
+            if(num > max) num = max;
+            if(num === current) return;
+            let newQtd = {...alambamentoQtd, [id]: num};
+            await setDoc(doc(db,'artifacts',appId,'users',userId,'alambamento','status'), {qtd: newQtd}, {merge: true});
         };
 
         function renderAlambamento() {
-            const total = alambItens.length;
-            const comprados = alambamentoChecked.length;
-            const faltam = total - comprados;
-            const percent = Math.round((comprados / total) * 100) || 0;
-
-            document.getElementById('alamb-comprados').textContent = `${comprados} Comprados`;
-            document.getElementById('alamb-faltam').textContent = `${faltam} Faltam`;
-            document.getElementById('alamb-progress-bar').style.width = `${percent}%`;
-            document.getElementById('alamb-percent').textContent = `${percent}%`;
-
+            let sumRatio = 0;
+            
             const categorias = ['Família do Pai', 'Família da Mãe', 'Bebidas', 'Dote e Valores'];
             let html = '';
 
@@ -537,19 +537,34 @@
                 html += `
                 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
                     <h3 class="font-bold text-slate-800 dark:text-white p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">${cat}</h3>
-                    <div class="p-2 space-y-1">
+                    <div class="p-4 space-y-4">
                         ${itensCat.map(item => {
-                            const isChecked = alambamentoChecked.includes(item.id);
+                            let curr = parseInt(alambamentoQtd[item.id] || 0);
+                            sumRatio += (curr / item.max);
+                            
                             return `
-                            <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30 ${isChecked ? 'opacity-60' : ''}">
-                                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleAlambamento('${item.id}')" class="w-5 h-5 text-gold-500 rounded border-slate-300 focus:ring-gold-500 bg-slate-100 dark:bg-slate-900 cursor-pointer accent-gold-500 shrink-0">
-                                <span class="text-sm font-medium ${isChecked ? 'line-through text-slate-400' : 'text-slate-700 dark:text-slate-200'}">${item.nome}</span>
-                            </label>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">${item.nome}</span>
+                                <div class="flex items-center justify-between w-full mt-1">
+                                    <span class="text-xs font-bold text-slate-400 w-16">${curr} / ${item.max}</span>
+                                    <div class="flex items-center gap-1 bg-slate-50 dark:bg-slate-900/50 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                                        <button onclick="updateAlambamentoBtn('${item.id}', -${item.step || 1}, ${item.max})" class="w-8 h-8 rounded-md bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200 dark:border-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-colors flex items-center justify-center shrink-0"><i class="ph-bold ph-minus"></i></button>
+                                        <input type="number" onchange="updateAlambamentoInput('${item.id}', this.value, ${item.max})" value="${curr}" min="0" max="${item.max}" class="w-16 text-center bg-transparent border-none text-sm font-bold p-0 outline-none text-slate-800 dark:text-white remove-arrow" />
+                                        <button onclick="updateAlambamentoBtn('${item.id}', ${item.step || 1}, ${item.max})" class="w-8 h-8 rounded-md bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-sm border border-slate-200 dark:border-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors flex items-center justify-center shrink-0"><i class="ph-bold ph-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-700/50 h-1.5 rounded-full mt-1"><div class="bg-gold-500 h-1.5 rounded-full transition-all duration-300" style="width: ${(curr/item.max)*100}%"></div></div>
+                            </div>
                             `;
                         }).join('')}
                     </div>
                 </div>`;
             });
+
+            // Ratio calculation avoids money skewing the progress (1 bottle = 50% of 2 bottles = same weight as 100k of 200k)
+            const percent = Math.round((sumRatio / alambItens.length) * 100) || 0;
+            document.getElementById('alamb-progress-bar').style.width = `${percent}%`;
+            document.getElementById('alamb-percent').textContent = `${percent}%`;
             document.getElementById('alamb-container').innerHTML = html;
         }
         /* --- FIM ALAMBAMENTO --- */
@@ -618,7 +633,11 @@
             await updateDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id), updates); 
         }; 
 
-        window.deletePedido = async(id) => { if(userId) await deleteDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id)); }; 
+        window.deletePedido = async(id) => { 
+            if(userId && confirm("Tem a certeza que deseja eliminar este pedido?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'pedidos',id)); 
+            }
+        }; 
         
         function renderPedidos() { 
             const cols = { pendente: [], preparacao: [], entregue: [] }; 
@@ -663,7 +682,13 @@
         window.clearCalculator = () => { calcInputs.forEach(input => input.value = ''); [loteValor, loteQtd, freteTotalInput, marketingTotalInput].forEach(el => el.value = ''); calcularPrecificacao(); localStorage.removeItem('versatil_calc_state'); showToast("Calculadora limpa!"); };
 
         document.getElementById('cofre-form').addEventListener('submit', async(e) => { e.preventDefault(); if(!userId) return; const t = document.querySelector('input[name="cofre-type"]:checked').value, a = parseFloat(document.getElementById('cofre-amount').value), c = document.getElementById('cofre-dizimo-check').checked && t==='entrada'; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), { type:t, amount:a, desc:document.getElementById('cofre-desc').value.trim(), applyTithe:c, titheValue: c?(a*0.1):0, createdAt:Date.now() }); e.target.reset(); showToast("Registado!"); }catch(er){} });
-        window.deleteCofreRecord=async(id)=>{if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'cofre',id));}; 
+        
+        window.deleteCofreRecord=async(id)=>{
+            if(userId && confirm("Tem a certeza que deseja eliminar esta movimentação do Cofre?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'cofre',id));
+            }
+        }; 
+        
         function renderCofre(){ if(cofreRecords.length===0){document.getElementById('cofre-list').innerHTML='';document.getElementById('cofre-empty').classList.remove('hidden');return;} document.getElementById('cofre-empty').classList.add('hidden'); document.getElementById('cofre-list').innerHTML=cofreRecords.map(r=>`<div class="flex justify-between items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><div><div class="flex gap-2 mb-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${r.type==='entrada'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.type}</span><span class="text-xs text-slate-400">${new Date(r.createdAt).toLocaleDateString()}</span></div><p class="font-bold text-sm dark:text-white">${r.desc}</p>${r.applyTithe?`<p class="text-[10px] text-amber-500 font-medium mt-1"><i class="ph-fill ph-hands-praying"></i> Dízimo: ${formatKz(r.titheValue)}</p>`:''}</div><div class="flex items-center gap-3"><span class="font-bold ${r.type==='entrada'?'text-emerald-600':'text-rose-600'}">${r.type==='entrada'?'+':'-'}${formatKz(r.amount)}</span><button onclick="deleteCofreRecord('${r.id}')" class="text-slate-300 hover:text-rose-500"><i class="ph-fill ph-trash"></i></button></div></div>`).join(''); }
 
         function getDynamicAmount(rec){ 
@@ -743,7 +768,46 @@
                 showToast("Dívida Registada!"); 
             }catch(er){} 
         });
-        window.togglePaid=async(id,s)=>{if(userId)await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:!s});}; window.deleteRecord=async(id)=>{if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'debts',id));};
+
+        // LIQUIDAÇÃO DE DÍVIDAS E COFRE MODO NEGÓCIOS
+        window.togglePaid=async(id, isCurrentlyPaid)=>{
+            if(!userId) return;
+            const rec = records.find(r => r.id === id);
+            if(!rec) return;
+
+            if(!isCurrentlyPaid) {
+                // A dívida está ativa e vai ser marcada como paga
+                if(confirm("Deseja liquidar esta dívida e registar o valor final automaticamente no Cofre?")) {
+                    const {currentAmount} = getDynamicAmount(rec);
+                    
+                    await addDoc(collection(db,'artifacts',appId,'users',userId,'cofre'), {
+                        type: rec.type === 'receber' ? 'entrada' : 'saida',
+                        amount: currentAmount,
+                        desc: `Liquidação Dívida: ${rec.name} (${rec.type === 'receber' ? 'Recebido' : 'Pago'})`,
+                        applyTithe: rec.type === 'receber', 
+                        titheValue: rec.type === 'receber' ? (currentAmount * 0.1) : 0,
+                        createdAt: Date.now()
+                    });
+                    
+                    // Salva o valor final pago na dívida
+                    await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:true, amount: currentAmount});
+                    showToast("Liquidação concluída e Cofre atualizado!");
+                }
+            } else {
+                // Desfazer liquidação
+                if(confirm("Desfazer a liquidação desta dívida? (Nota: O registo no Cofre NÃO será apagado automaticamente)")) {
+                    await updateDoc(doc(db,'artifacts',appId,'users',userId,'debts',id),{isPaid:false});
+                    showToast("Dívida reaberta!");
+                }
+            }
+        }; 
+
+        window.deleteRecord=async(id)=>{
+            if(userId && confirm("Tem a certeza que deseja eliminar esta dívida permanentemente?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'debts',id));
+            }
+        };
+
         document.getElementById('filter-status').addEventListener('change',updateFinanceDashboard);
         
         function renderDebtsList(){ 
@@ -821,7 +885,13 @@
 
         window.addGoal=async(e,o)=>{ e.preventDefault(); const t=document.getElementById(`goal-input-${o}`).value; if(t&&userId){ await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'),{ owner:o, text:t, date:document.getElementById('goal-date-filter').value, completed:false, postponements:0, createdAt:Date.now() }); e.target.reset(); } };
         window.toggleGoal=async(id,c)=>{ if(userId)await updateDoc(doc(db,'artifacts',appId,'users',userId,'goals',id),{completed:!c}); }; 
-        window.deleteGoal=async(id)=>{ if(userId)await deleteDoc(doc(db,'artifacts',appId,'users',userId,'goals',id)); };
+        
+        window.deleteGoal=async(id)=>{ 
+            if(userId && confirm("Tem a certeza que deseja eliminar esta meta?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'goals',id)); 
+            }
+        };
+        
         window.saveAsFavorite = async (owner, text) => { if(!userId) return; if(favoriteGoals.some(f => f.owner === owner && f.text === text)) { showToast("Esta meta já é fixa!", "info"); return; } await addDoc(collection(db,'artifacts',appId,'users',userId,'favorites'), {owner, text, createdAt:Date.now()}); showToast("Salva como Meta Fixa ⭐"); };
         window.loadFavorites = async (owner) => { if(!userId) return; const targetDate = document.getElementById('goal-date-filter').value; const favs = favoriteGoals.filter(f => f.owner === owner); let added = 0; for(let f of favs) { if(!goals.some(g => g.owner === owner && g.date === targetDate && g.text === f.text)) { await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {owner, text:f.text, date:targetDate, completed:false, postponements:0, createdAt:Date.now()}); added++; } } if(added > 0) showToast(`${added} metas carregadas!`); else showToast("Todas as metas fixas já estão na lista de hoje.", "info"); };
         window.postponeGoal = async (id, currentDateStr, postponements) => { if(!userId) return; const currentP = postponements || 0; if(currentP >= 2) { showToast("Não podes adiar mais de 2 vezes!", "error"); return; } const [y, m, d] = currentDateStr.split('-'); const dateObj = new Date(y, m-1, d); dateObj.setDate(dateObj.getDate() + 1); const nextDateStr = dateObj.getFullYear() + '-' + String(dateObj.getMonth()+1).padStart(2,'0') + '-' + String(dateObj.getDate()).padStart(2,'0'); await updateDoc(doc(db,'artifacts',appId,'users',userId,'goals',id), { date: nextDateStr, postponements: currentP + 1 }); showToast("Meta adiada para amanhã ➡️", "info"); };
@@ -833,7 +903,13 @@
         }
 
         document.getElementById('post-form').addEventListener('submit', async(e)=>{ e.preventDefault(); if(!userId) return; try { await addDoc(collection(db,'artifacts',appId,'users',userId,'posts'), { text: document.getElementById('post-input').value, status: 'ideia', createdAt: Date.now() }); e.target.reset(); showToast("Ideia adicionada!"); } catch(er) {} });
-        window.deletePost = async(id) => { if(userId) await deleteDoc(doc(db,'artifacts',appId,'users',userId,'posts',id)); };
+        
+        window.deletePost = async(id) => { 
+            if(userId && confirm("Tem a certeza que deseja eliminar este post?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'posts',id)); 
+            }
+        };
+        
         function renderPosts() { 
             const listEl = document.getElementById('posts-list');
             if(!listEl) return;
@@ -870,5 +946,3 @@
     </script>
 </body>
 </html>
-
-```
