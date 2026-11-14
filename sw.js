@@ -1,4 +1,4 @@
-const CACHE_NAME = 'versatil-cache-v3';
+const CACHE_NAME = 'versatil-cache-v4';
 const urlsToCache = ['./', './index.html', './manifest.json', './logo.png'];
 
 self.addEventListener('install', event => {
