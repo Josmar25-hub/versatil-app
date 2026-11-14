@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Versátil Trade App</title>
+    <title>Versátil Trade App - V4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Biblioteca html2pdf.js para Geração do Relatório Mensal em PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script>
         if (localStorage.getItem('versatil_theme') === 'dark' || (!('versatil_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -71,11 +73,69 @@
             <div class="space-y-4">
                 <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Nome Parceiro 1</label><input type="text" id="input-name1" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 outline-none dark:text-white" placeholder="Josemar"></div>
                 <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Nome Parceiro 2</label><input type="text" id="input-name2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 outline-none dark:text-white" placeholder="Kiriana"></div>
+                <div class="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/40 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-indigo-900 dark:text-indigo-200">Testar Som de Alarme</p>
+                        <p class="text-[10px] text-indigo-600 dark:text-indigo-400">Verifica o toque das notificações</p>
+                    </div>
+                    <button type="button" onclick="playAlarmSound(); showToast('Som de notificação testado! 🔔');" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-indigo-700"><i class="ph-fill ph-speaker-high"></i> Tocar</button>
+                </div>
                 <div class="flex gap-3 mt-6 pt-2">
                     <button onclick="closeSettings()" class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors">Cancelar</button>
                     <button onclick="saveSettings()" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 font-bold text-white shadow-md hover:bg-indigo-700 transition-colors">Salvar</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição do Dia de Skincare (60 Dias) -->
+    <div id="skincare-day-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl w-full max-w-md border border-slate-100 dark:border-slate-700 flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-sparkle text-emerald-500"></i> <span id="skincare-modal-title">Skincare do Dia</span></h3>
+                <button onclick="closeSkincareModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 hover:text-rose-500"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <p id="skincare-modal-badge" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-3"></p>
+            
+            <div class="space-y-4 overflow-y-auto custom-scrollbar pr-1 flex-1">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Selecionar Produtos do Inventário:</label>
+                    <div id="skincare-modal-products" class="space-y-2 max-h-44 overflow-y-auto custom-scrollbar p-1">
+                        <!-- Gerado via JS com os produtos do inventário -->
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Horário do Alarme de Skincare (Opcional)</label>
+                    <input type="time" id="skincare-modal-time" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Notas / Passo a Passo do Dia</label>
+                    <input type="text" id="skincare-modal-notes" placeholder="Ex: Esfoliação + Máscara de Argila..." class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                </div>
+                <label class="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800/40 cursor-pointer">
+                    <input type="checkbox" id="skincare-modal-done" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer">
+                    <span class="text-sm font-bold text-emerald-800 dark:text-emerald-300">✅ Marcar rotina deste dia como Concluída!</span>
+                </label>
+            </div>
+
+            <div class="flex gap-2 mt-5 pt-3 border-t border-slate-100 dark:border-slate-700">
+                <button onclick="clearSkincareDay()" class="px-3 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 font-bold text-xs hover:bg-rose-100 transition-colors">Limpar Dia</button>
+                <button onclick="closeSkincareModal()" class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold text-slate-600 dark:text-slate-300 text-sm">Cancelar</button>
+                <button onclick="saveSkincareDay()" class="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 font-bold text-white shadow-md text-sm">Guardar Dia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Alarme Sonoro Ativo -->
+    <div id="alarm-modal" class="fixed inset-0 z-[120] hidden items-center justify-center bg-slate-900/70 backdrop-blur-md p-4">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-2xl w-full max-w-sm border-2 border-amber-400 text-center flex flex-col items-center animate-bounce">
+            <div class="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 flex items-center justify-center text-3xl mb-3 shadow-inner">
+                <i class="ph-fill ph-bell-ringing"></i>
+            </div>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full mb-2">Despertador Versátil Trade</span>
+            <h3 id="alarm-modal-title" class="text-xl font-bold text-slate-800 dark:text-white mb-1">Hora da Atividade!</h3>
+            <p id="alarm-modal-desc" class="text-sm text-slate-600 dark:text-slate-300 mb-6"></p>
+            <button onclick="dismissAlarmModal()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold shadow-lg hover:from-amber-600 transition-all">Entendido, Vamos Lá! 🚀</button>
         </div>
     </div>
 
@@ -105,18 +165,35 @@
                         <p id="nav-subtitle" class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider truncate">Josemar & Kiriana</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-0.5 sm:gap-2 shrink-0">
-                    <button onclick="startTutorial()" id="btn-tutorial" class="w-9 h-9 flex items-center justify-center rounded-full text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-lifebuoy text-lg sm:text-xl"></i></button>
-                    <button onclick="openSettings()" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-gear text-lg sm:text-xl"></i></button>
-                    <button onclick="exportBackup()" id="btn-backup" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"><i class="ph-bold ph-cloud-arrow-down text-lg sm:text-xl"></i></button>
-                    <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-all"><i id="theme-icon" class="ph ph-moon text-lg sm:text-xl"></i></button>
-                    <button onclick="logoutApp()" class="w-9 h-9 flex items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"><i class="ph ph-sign-out text-lg sm:text-xl"></i></button>
+                <div class="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
+                    <button onclick="toggleSoundNotifications()" id="btn-sound-toggle" title="Ativar/Desativar Alarmes Sonoros" class="w-9 h-9 flex items-center justify-center rounded-full text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all"><i id="sound-icon" class="ph-fill ph-bell-ringing text-lg sm:text-xl"></i></button>
+                    <button onclick="generateMonthlyPDF()" id="btn-pdf-report" title="Baixar Relatório Mensal em PDF" class="w-9 h-9 flex items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"><i class="ph-bold ph-file-pdf text-lg sm:text-xl"></i></button>
+                    <button onclick="startTutorial()" id="btn-tutorial" title="Tutorial" class="w-9 h-9 flex items-center justify-center rounded-full text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-lifebuoy text-lg sm:text-xl"></i></button>
+                    <button onclick="openSettings()" title="Configurações" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-gear text-lg sm:text-xl"></i></button>
+                    <button onclick="exportBackup()" id="btn-backup" title="Backup JSON" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"><i class="ph-bold ph-cloud-arrow-down text-lg sm:text-xl"></i></button>
+                    <button onclick="toggleTheme()" title="Tema Claro/Escuro" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-all"><i id="theme-icon" class="ph ph-moon text-lg sm:text-xl"></i></button>
+                    <button onclick="logoutApp()" title="Sair" class="w-9 h-9 flex items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"><i class="ph ph-sign-out text-lg sm:text-xl"></i></button>
                 </div>
             </div>
         </nav>
 
         <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar pb-24">
             
+            <!-- Banner de Alerta Automático de Relatório Mensal (Final do Mês) -->
+            <div id="monthly-report-banner" class="hidden bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-600 rounded-2xl p-4 text-white shadow-lg items-center justify-between gap-4 animate-[fadeIn_0.4s_ease-in-out]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0"><i class="ph-fill ph-file-pdf text-2xl"></i></div>
+                    <div>
+                        <h4 class="font-bold text-sm sm:text-base">📊 O Relatório Geral Mensal já está disponível!</h4>
+                        <p class="text-xs text-indigo-100">Final do mês chegou! Baixa agora o PDF consolidado com Cofre, Vendas, Metas e Skincare.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="generateMonthlyPDF()" class="bg-white text-indigo-700 hover:bg-indigo-50 px-4 py-2 rounded-xl text-xs font-bold shadow-sm transition-all whitespace-nowrap">Baixar PDF Agora</button>
+                    <button onclick="document.getElementById('monthly-report-banner').classList.add('hidden')" class="p-1.5 text-white/70 hover:text-white"><i class="ph-bold ph-x"></i></button>
+                </div>
+            </div>
+
             <div class="w-full flex-shrink-0 relative" id="tut-tabs">
                 <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-900 pointer-events-none rounded-r-2xl z-10"></div>
                 <div class="flex gap-2 p-1.5 pr-8 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl overflow-x-auto w-full snap-x snap-mandatory scroll-hide scroll-smooth">
@@ -125,6 +202,7 @@
                     <button onclick="switchTab('tab-dividas')" id="btn-tab-dividas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-hand-coins"></i> Dívidas</button>
                     <button onclick="switchTab('tab-metas')" id="btn-tab-metas" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-target"></i> Metas</button>
                     <button onclick="switchTab('tab-saude')" id="btn-tab-saude" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-emerald-500 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-heart-beat"></i> Saúde</button>
+                    <button onclick="switchTab('tab-carinhos')" id="btn-tab-carinhos" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-rose-500 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-heart"></i> Carinhos & Lembretes</button>
                     <button onclick="switchTab('tab-alambamento')" id="btn-tab-alambamento" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-gold-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-ring"></i> Alambamento</button>
                     <button onclick="switchTab('tab-redes')" id="btn-tab-redes" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-pink-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-instagram-logo"></i> Marketing</button>
                     <button onclick="switchTab('tab-precificacao')" id="btn-tab-precificacao" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 shrink-0 snap-center whitespace-nowrap flex items-center justify-center gap-2"><i class="ph-bold ph-calculator"></i> Calc</button>
@@ -151,6 +229,9 @@
                             <div id="dizimo-checkbox-container" class="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800"><input type="checkbox" id="cofre-dizimo-check" checked class="w-4 h-4 text-amber-600 rounded border-amber-300 focus:ring-amber-500"><label for="cofre-dizimo-check" class="text-sm font-bold text-amber-700 dark:text-amber-400">Separar 10% para o Dízimo?</label></div>
                             <button type="submit" class="w-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold py-3.5 rounded-xl shadow-md">Registrar no Cofre</button>
                         </form>
+                        <button onclick="generateMonthlyPDF()" class="mt-4 w-full py-2.5 px-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 font-bold text-xs flex items-center justify-center gap-2 border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 transition-colors">
+                            <i class="ph-bold ph-file-pdf text-base"></i> Exportar Relatório Geral Mensal (PDF)
+                        </button>
                     </div>
                     <div class="w-full lg:col-span-2">
                         <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4"><i class="ph-fill ph-list-bullets text-indigo-500"></i> Extrato de Caixa</h3>
@@ -160,56 +241,47 @@
                 </section>
             </div>
 
-            <!-- FASE SAÚDE E BEM ESTAR 🌿 -->
+            <!-- FASE SAÚDE E BEM ESTAR 🌿 (UPGRADE V4 COMPLETO) -->
             <div id="tab-saude" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
                     <div class="absolute -right-5 -top-10 opacity-10"><i class="ph-fill ph-heart-beat text-[15rem]"></i></div>
                     <div class="relative z-10 max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl font-bold mb-2">Saúde & Bem-Estar 🌿</h2>
-                        <p class="text-emerald-100 text-sm sm:text-base mb-4">Cronograma de Skincare, Cabelo, Desafios Fitness e Inventário.</p>
+                        <p class="text-emerald-100 text-sm sm:text-base">Calendário de Skincare (60 dias editáveis), Treino Partilhado, Plano Alimentar & Inventário.</p>
                     </div>
                 </div>
 
+                <!-- LINHA 1: CALENDÁRIO SKINCARE 60 DIAS + INVENTÁRIO DE COSMÉTICOS -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Cronogramas -->
-                    <div class="space-y-6">
-                        <!-- Skincare -->
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5">
-                            <h3 class="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-sparkle text-amber-500"></i> Rotina de Skincare</h3>
-                            <div class="flex gap-2 justify-between mb-4">
-                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Seg</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
-                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Ter</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
-                                <div class="flex flex-col items-center gap-1 scale-110"><span class="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">Qua</span><div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/30"><i class="ph-bold ph-check text-xs"></i></div></div>
-                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Qui</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
-                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Sex</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
-                                <div class="flex flex-col items-center gap-1 scale-110"><span class="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">Sáb</span><div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/30"><i class="ph-bold ph-check text-xs"></i></div></div>
-                                <div class="flex flex-col items-center gap-1 opacity-50"><span class="text-[10px] font-bold uppercase text-slate-400">Dom</span><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700"></div></div>
+                    <!-- Calendário de Skincare (60 Dias Rotativos) -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 flex flex-col">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-sparkle text-amber-500"></i> Calendário de Skincare (60 Dias)</h3>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">Todos os dias são editáveis! Clica num dia para definir os produtos. Registos > 60 dias são limpos automaticamente.</p>
                             </div>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 text-center bg-slate-50 dark:bg-slate-900/50 p-2 rounded-lg border border-slate-100 dark:border-slate-700">Foco especial de tratamento de pele às <strong>Quartas</strong> e <strong>Sábados</strong>.</p>
+                            <span class="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-full">⭐ Foco: Qua & Sáb</span>
                         </div>
 
-                        <!-- Cabelo & Fitness -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/30 p-5 flex flex-col items-center text-center gap-2">
-                                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-300 mb-1"><i class="ph-fill ph-scissors text-2xl"></i></div>
-                                <h4 class="font-bold text-sm text-indigo-900 dark:text-indigo-200">Rotina Cabelo</h4>
-                                <p class="text-[10px] text-indigo-600/70 dark:text-indigo-400/70 leading-tight">Hidratação e cuidados capilares agendados.</p>
-                            </div>
-                            <div class="bg-rose-50 dark:bg-rose-900/20 rounded-2xl border border-rose-100 dark:border-rose-800/30 p-5 flex flex-col items-center text-center gap-2 relative overflow-hidden">
-                                <div class="w-12 h-12 bg-rose-100 dark:bg-rose-800 rounded-full flex items-center justify-center text-rose-600 dark:text-rose-300 mb-1"><i class="ph-fill ph-barbell text-2xl"></i></div>
-                                <h4 class="font-bold text-sm text-rose-900 dark:text-rose-200">Desafio Fitness</h4>
-                                <button onclick="adicionarTreinoMeta()" class="mt-1 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-colors w-full">Criar Meta Hoje</button>
-                            </div>
+                        <!-- Grelha de 60 Dias -->
+                        <div id="skincare-calendar-grid" class="grid grid-cols-5 sm:grid-cols-7 gap-2 max-h-[310px] overflow-y-auto custom-scrollbar p-1 border border-slate-100 dark:border-slate-700/60 rounded-xl bg-slate-50/50 dark:bg-slate-900/30">
+                            <!-- Gerado dinamicamente via JS -->
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-3 text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Quarta/Sábado (Foco)</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span> Produtos Definidos</span>
+                            <span class="flex items-center gap-1"><i class="ph-bold ph-check text-emerald-600"></i> Concluído</span>
                         </div>
                     </div>
 
                     <!-- Inventário de Produtos -->
                     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col h-full">
                         <h3 class="font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2"><i class="ph-fill ph-archive-box text-indigo-500"></i> Inventário de Cosméticos</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Adiciona os vossos produtos. O sistema avisa quando for preciso repor.</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Adiciona os vossos produtos para vinculá-los aos dias X e Y do calendário. O sistema avisa quando chegar a 0.</p>
                         
                         <form id="health-form" class="flex gap-2 mb-4 items-center w-full">
-                            <input type="text" id="health-nome" required placeholder="Ex: Creme Hidratante" class="flex-1 px-3 h-[42px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-sm dark:text-white w-full min-w-0">
+                            <input type="text" id="health-nome" required placeholder="Ex: Gel de Limpeza / Sérum" class="flex-1 px-3 h-[42px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-sm dark:text-white w-full min-w-0">
                             <select id="health-tipo" class="px-2 h-[42px] rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 outline-none text-xs font-medium dark:text-white shrink-0">
                                 <option value="Skincare">Skincare</option>
                                 <option value="Cabelo">Cabelo</option>
@@ -219,7 +291,179 @@
                             <button type="submit" class="bg-indigo-600 text-white w-[42px] h-[42px] flex items-center justify-center rounded-xl shrink-0"><i class="ph-bold ph-plus text-lg"></i></button>
                         </form>
                         
-                        <div id="health-inventory-list" class="space-y-3 overflow-y-auto custom-scrollbar flex-1 max-h-[300px] pr-1">
+                        <div id="health-inventory-list" class="space-y-3 overflow-y-auto custom-scrollbar flex-1 max-h-[280px] pr-1">
+                            <!-- Gerado via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LINHA 2: EXERCÍCIOS FÍSICOS PARTILHADOS (JOSEMAR & KIRIANA) + ROTINA DE CABELO -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-rose-50/70 dark:bg-rose-900/20 rounded-2xl border border-rose-200/70 dark:border-rose-800/40 p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-2">
+                                <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-barbell text-rose-600 text-xl"></i> Exercícios Físicos Partilhados</h3>
+                                <span class="text-[10px] font-bold uppercase bg-rose-600 text-white px-2.5 py-1 rounded-full">Vale para Josemar & Kiriana 💪</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mb-4">Especifica o exercício e o tempo de treino. Ao criar, a meta é adicionada simultaneamente para ambos e o alarme toca no horário definido!</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                            <div>
+                                <label class="block text-[11px] font-bold text-rose-800 dark:text-rose-300 mb-1">Exercício Específico</label>
+                                <input type="text" id="fitness-exercise-name" placeholder="Ex: Corda + Abdominal / Judô" value="Treino Funcional & Cardio" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-700/60 text-sm outline-none dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-rose-800 dark:text-rose-300 mb-1">Tempo de Treino (Min)</label>
+                                <input type="number" id="fitness-exercise-time" min="5" max="300" value="45" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-700/60 text-sm outline-none dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-rose-800 dark:text-rose-300 mb-1">Horário (Notificação 🔔)</label>
+                                <input type="time" id="fitness-alarm-time" value="18:30" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-700/60 text-sm outline-none dark:text-white">
+                            </div>
+                        </div>
+
+                        <button onclick="adicionarTreinoMeta()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold py-3 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2">
+                            <i class="ph-bold ph-users-three text-lg"></i> Lançar Meta de Treino para Ambos (Josemar & Kiriana)
+                        </button>
+                    </div>
+
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/30 p-6 flex flex-col items-center justify-center text-center gap-2">
+                        <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-800 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-300 mb-1 shadow-sm"><i class="ph-fill ph-scissors text-3xl"></i></div>
+                        <h4 class="font-bold text-base text-indigo-900 dark:text-indigo-200">Rotina de Cabelo & Corpo</h4>
+                        <p class="text-xs text-indigo-600/80 dark:text-indigo-400/80 leading-relaxed">Usa o Calendário de 60 dias acima para agendar também os dias de Hidratação, Nutrição e Reconstrução capilar com os produtos do inventário!</p>
+                    </div>
+                </div>
+
+                <!-- LINHA 3: PLANO ALIMENTAR (DIAS A SEGUIR + HORÁRIOS) & DICAS ONLINE AUTOMÁTICAS -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Planeador Alimentar -->
+                    <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 border-b border-slate-100 dark:border-slate-700">
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-bowl-food text-amber-500 text-xl"></i> Plano Alimentar & Horários</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Planeia o que vão comer hoje ou nos próximos dias. O app toca um alarme sonoro na hora de cada refeição!</p>
+                            </div>
+                            <input type="date" id="meal-plan-date" class="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-bold dark:text-white outline-none">
+                        </div>
+
+                        <form id="meal-plan-form" class="space-y-4">
+                            <!-- Matabicho -->
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-center bg-amber-50/50 dark:bg-amber-900/10 p-3 rounded-xl border border-amber-100 dark:border-amber-800/30">
+                                <div class="flex items-center gap-2 font-bold text-sm text-amber-800 dark:text-amber-300">
+                                    <i class="ph-fill ph-coffee text-lg"></i> Matabicho
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <input type="text" id="meal-matabicho-desc" placeholder="Ex: Ovos mexidos, fruta, aveia e chá..." class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                                </div>
+                                <div>
+                                    <input type="time" id="meal-matabicho-time" value="07:30" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold outline-none dark:text-white">
+                                </div>
+                            </div>
+
+                            <!-- Almoço -->
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-center bg-emerald-50/50 dark:bg-emerald-900/10 p-3 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
+                                <div class="flex items-center gap-2 font-bold text-sm text-emerald-800 dark:text-emerald-300">
+                                    <i class="ph-fill ph-sun text-lg"></i> Almoço
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <input type="text" id="meal-almoco-desc" placeholder="Ex: Frango grelhado, arroz, feijão e salada..." class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                                </div>
+                                <div>
+                                    <input type="time" id="meal-almoco-time" value="13:00" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold outline-none dark:text-white">
+                                </div>
+                            </div>
+
+                            <!-- Jantar -->
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-center bg-indigo-50/50 dark:bg-indigo-900/10 p-3 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
+                                <div class="flex items-center gap-2 font-bold text-sm text-indigo-800 dark:text-indigo-300">
+                                    <i class="ph-fill ph-moon-stars text-lg"></i> Jantar
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <input type="text" id="meal-jantar-desc" placeholder="Ex: Sopa leve ou peixe assado com legumes..." class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                                </div>
+                                <div>
+                                    <input type="time" id="meal-jantar-time" value="20:00" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold outline-none dark:text-white">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2">
+                                <i class="ph-bold ph-floppy-disk"></i> Guardar Plano Alimentar & Ativar Alarmes do Dia
+                            </button>
+                        </form>
+
+                        <!-- Lista dos Próximos Dias Planeados -->
+                        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
+                            <h4 class="text-xs font-bold uppercase text-slate-400 mb-3">Cardápios Planeados (Próximos Dias):</h4>
+                            <div id="upcoming-meals-list" class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                                <!-- Gerado via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dicas Alimentares Automáticas Vinculadas à Internet -->
+                    <div class="bg-gradient-to-br from-teal-500 to-emerald-700 rounded-2xl p-6 text-white shadow-md flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full flex items-center gap-1"><i class="ph-bold ph-globe"></i> Dicas Online</span>
+                                <button onclick="fetchOnlineNutritionTip()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors" title="Nova Dica da Internet"><i class="ph-bold ph-arrows-clockwise"></i></button>
+                            </div>
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="ph-fill ph-apple-podcasts-logo"></i> Nutrição & Energia</h3>
+                            <div id="nutrition-tip-box" class="bg-black/15 backdrop-blur-sm p-4 rounded-xl border border-white/10 text-sm leading-relaxed min-h-[120px] flex items-center">
+                                A carregar dica alimentar saudável da internet...
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/20 text-xs text-emerald-100 space-y-2">
+                            <p class="font-bold">💡 Regra de Ouro do Casal:</p>
+                            <p>Beber pelo menos 2.5L de água por dia melhora o resultado do vosso Skincare em até 40% e aumenta o foco nos estudos e negócios!</p>
+                            <button onclick="fetchOnlineNutritionTip()" class="mt-2 w-full py-2 rounded-xl bg-white text-emerald-800 font-bold text-xs shadow-sm hover:bg-emerald-50 transition-colors">Gerar Nova Dica Online 🌐</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOVA ABA: CARINHOS & LEMBRETES CURTOS ❤️📌 -->
+            <div id="tab-carinhos" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
+                <div class="bg-gradient-to-r from-rose-500 via-pink-500 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-5 -top-10 opacity-15"><i class="ph-fill ph-heart text-[15rem]"></i></div>
+                    <div class="relative z-10 max-w-2xl">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2">Mural de Carinhos & Lembretes ❤️</h2>
+                        <p class="text-rose-100 text-sm sm:text-base">Para nunca esquecermos as coisas importantes da rotina e, acima de tudo, lembrarmos todos os dias que nos amamos! 😉😏</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                    <!-- Formulário de Novo Post-it -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
+                        <h3 class="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-note-pencil text-rose-500"></i> Novo Bilhete / Lembrete</h3>
+                        <form id="carinho-form" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer"><input type="radio" name="carinho-cat" value="amor" class="peer sr-only" checked><div class="text-center py-2.5 px-2 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-900/20 peer-checked:border-rose-500 peer-checked:text-rose-600 text-xs font-bold text-slate-500 transition-all">❤️ Amor & Carinho</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="carinho-cat" value="importante" class="peer sr-only"><div class="text-center py-2.5 px-2 rounded-xl border-2 dark:border-slate-700 peer-checked:bg-amber-50 dark:peer-checked:bg-amber-900/20 peer-checked:border-amber-500 peer-checked:text-amber-600 text-xs font-bold text-slate-500 transition-all">📌 Importante</div></label>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">De quem?</label>
+                                <select id="carinho-author" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white font-medium">
+                                    <option value="Josemar 👨🏽‍💻">Josemar 👨🏽‍💻</option>
+                                    <option value="Kiriana 👑">Kiriana 👑</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Mensagem ou Lembrete Curto</label>
+                                <textarea id="carinho-text" required rows="3" placeholder="Ex: Orgulho enorme na mulher e sócia incrível que és! Amo-te mil milhões ❤️..." class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 text-white font-bold py-3 rounded-xl shadow-md transition-all">Colar no Mural 💌</button>
+                        </form>
+
+                        <button onclick="sendQuickLoveNote()" class="mt-3 w-full py-2.5 rounded-xl bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-300 font-bold text-xs border border-rose-200 dark:border-rose-800/40 hover:bg-rose-100 transition-colors">
+                            ✨ Enviar Surpresa Romântica Instantânea
+                        </button>
+                    </div>
+
+                    <!-- Mural de Post-its -->
+                    <div class="lg:col-span-2">
+                        <div id="carinhos-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- Gerado via JS -->
                         </div>
                     </div>
@@ -228,12 +472,15 @@
 
             <!-- FASE 2: PEDIDOS -->
             <div id="tab-pedidos" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
-                    <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes e acompanha a entrega.</p></div>
-                    <form id="pedido-form" class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="w-full sm:w-48 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
-                        <input type="text" id="pedido-produto" required placeholder="Produto" class="w-full sm:w-48 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
-                        <button type="submit" class="shrink-0 w-full sm:w-auto bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold whitespace-nowrap"><i class="ph-bold ph-plus"></i> Criar</button>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col gap-4">
+                    <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes, valor e entrega. Ao mover para "Entregues", credita automaticamente no Cofre com 10% de Dízimo.</p></div>
+                    <form id="pedido-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 w-full">
+                        <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="text" id="pedido-produto" required placeholder="Produto (Ex: Sandália Oran)" class="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="number" id="pedido-valor" min="0" step="0.01" placeholder="Valor (Kz)" class="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="date" id="pedido-data" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <input type="text" id="pedido-local" placeholder="Local de Entrega" class="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold whitespace-nowrap flex items-center justify-center gap-1"><i class="ph-bold ph-plus"></i> Criar</button>
                     </form>
                 </div>
                 <div class="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x">
@@ -425,6 +672,9 @@
         </main>
     </div>
 
+    <!-- Contentor Oculto para Renderização Limpa do Relatório PDF -->
+    <div id="pdf-render-wrapper" class="fixed -left-[9999px] top-0 w-[800px] bg-white text-slate-900 p-8"></div>
+
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script type="module">
@@ -434,15 +684,23 @@
 
         const firebaseConfig = { apiKey: "AIzaSyDq53wI-1fmNUk8uQ86rmZysRYL2Ul8TGk", authDomain: "versatil-trade-app.firebaseapp.com", projectId: "versatil-trade-app", storageBucket: "versatil-trade-app.firebasestorage.app", messagingSenderId: "853767169314", appId: "1:853767169314:web:727f6a5e2795478647717b" };
         let app, db, auth, userId, records=[], cofreRecords=[], goals=[], pedidos=[], posts=[], favoriteGoals=[], alambamentoQtd={}, healthProducts=[];
-        let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs, unsubAlambamento, unsubHealth;
+        let skincareSchedule={}, mealPlans={}, carinhosList=[];
+        let unsubDebts, unsubCofre, unsubGoals, unsubPedidos, unsubPosts, unsubFavs, unsubAlambamento, unsubHealth, unsubSkincare, unsubMeals, unsubCarinhos;
+        let selectedSkincareDate = null;
+        let soundNotificationsEnabled = localStorage.getItem('versatil_sound_enabled') !== 'false';
+        let triggeredAlarmsCache = {};
         const appId = 'versatil-trade-app';
 
         const formatKz = (v) => new Intl.NumberFormat('pt-AO', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(v||0) + ' Kz';
         const formatDate = (dStr) => { if(!dStr)return''; const[y,m,d]=dStr.split('-'); return `${d}/${m}/${y}`; };
+        const getTodayISO = () => {
+            const now = new Date();
+            return now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+        };
         
         window.switchTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.classList.remove('bg-white','dark:bg-slate-700','text-indigo-600','text-pink-600','text-gold-600','text-emerald-500','shadow-sm'); btn.classList.add('text-slate-600'); });
+            document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.classList.remove('bg-white','dark:bg-slate-700','text-indigo-600','text-pink-600','text-gold-600','text-emerald-500','text-rose-500','shadow-sm'); btn.classList.add('text-slate-600'); });
             document.getElementById(tabId).classList.remove('hidden');
             const active = document.getElementById(`btn-${tabId}`); 
             active.classList.remove('text-slate-600'); 
@@ -451,14 +709,28 @@
             if(tabId === 'tab-redes') highlightClass = 'text-pink-600';
             if(tabId === 'tab-alambamento') highlightClass = 'text-gold-600';
             if(tabId === 'tab-saude') highlightClass = 'text-emerald-500';
+            if(tabId === 'tab-carinhos') highlightClass = 'text-rose-500';
             
             active.classList.add('bg-white','dark:bg-slate-700','shadow-sm', highlightClass);
             if(window.isTutorialRunning) setTimeout(() => centerTutorialOnTarget(), 100);
         };
-        window.toggleTheme=()=>{document.documentElement.classList.toggle('dark'); document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-[1.15rem] sm:text-xl text-amber-500':'ph ph-moon text-[1.15rem] sm:text-xl';};
+        window.toggleTheme=()=>{
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('versatil_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-[1.15rem] sm:text-xl text-amber-500':'ph ph-moon text-[1.15rem] sm:text-xl';
+        };
         window.showToast=(msg,type='success')=>{const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast-enter ${type==='error'?'bg-rose-500':(type==='info'?'bg-blue-500':'bg-emerald-500')} text-white px-4 py-3 rounded-xl flex items-center gap-2 text-sm shadow-lg pointer-events-auto`;t.innerHTML=`<i class="ph-bold ${type==='error'?'ph-warning-circle':(type==='info'?'ph-info':'ph-check')} text-lg"></i> ${msg}`;c.appendChild(t);setTimeout(()=>{t.classList.replace('toast-enter','toast-exit');setTimeout(()=>t.remove(),300)},3000);};
         window.toggleDizimoOption=(show)=>{document.getElementById('dizimo-checkbox-container').style.display=show?'flex':'none';};
-        window.exportBackup = () => { if(records.length===0 && cofreRecords.length===0 && goals.length===0) { showToast("Sem dados para exportar", "info"); return; } const data = { dataAtual: new Date().toISOString(), caixa: cofreRecords, dividas: records, metas: goals, pedidos: pedidos, marketing: posts, saude: healthProducts }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Versatil_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); showToast("Backup transferido!"); };
+        window.toggleAmigo=(isAmigo)=>{
+            const penCont = document.getElementById('penalty-container');
+            if(penCont) penCont.style.display = isAmigo ? 'none' : 'block';
+            if(isAmigo) {
+                document.getElementById('interest').value = 0;
+                document.getElementById('penaltyRate').value = 0;
+                updatePrev();
+            }
+        };
+        window.exportBackup = () => { if(records.length===0 && cofreRecords.length===0 && goals.length===0) { showToast("Sem dados para exportar", "info"); return; } const data = { dataAtual: new Date().toISOString(), caixa: cofreRecords, dividas: records, metas: goals, pedidos: pedidos, marketing: posts, saude: healthProducts, skincare: skincareSchedule, planoAlimentar: mealPlans, carinhos: carinhosList }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Versatil_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); showToast("Backup transferido!"); };
 
         window.openSettings = () => {
             document.getElementById('input-name1').value = localStorage.getItem('versatil_name1') || 'Josemar';
@@ -491,11 +763,24 @@
         async function initApp() {
             app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
             onAuthStateChanged(auth,(user)=>{
-                if(user){ userId=user.uid; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); document.getElementById('app-container').classList.add('flex'); loadData(); setTimeout(checkTutorial, 1000); }
-                else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); if(unsubAlambamento)unsubAlambamento(); if(unsubHealth)unsubHealth(); }
+                if(user){
+                    userId=user.uid;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('flex');
+                    loadData();
+                    setTimeout(checkTutorial, 1000);
+                    checkMonthlyReportBanner();
+                    fetchOnlineNutritionTip();
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('hidden');
+                    if(unsubDebts)unsubDebts(); if(unsubCofre)unsubCofre(); if(unsubGoals)unsubGoals(); if(unsubPedidos)unsubPedidos(); if(unsubPosts)unsubPosts(); if(unsubFavs)unsubFavs(); if(unsubAlambamento)unsubAlambamento(); if(unsubHealth)unsubHealth(); if(unsubSkincare)unsubSkincare(); if(unsubMeals)unsubMeals(); if(unsubCarinhos)unsubCarinhos();
+                }
             });
             loadCalcState();
             updateNamesUI();
+            updateSoundToggleUI();
             
             const isPinned = localStorage.getItem('versatil_pin_defaults') === 'true';
             const pinCb = document.getElementById('pinDefaults');
@@ -508,6 +793,9 @@
                     calcEnd();
                 }
             }
+
+            // Inicia o motor de verificação de horários a cada 25 segundos
+            setInterval(checkActivityAlarms, 25000);
         }
         
         document.getElementById('pinDefaults').addEventListener('change', (e) => {
@@ -532,9 +820,12 @@
         window.logoutApp=async()=>{await signOut(auth);showToast("Sessão terminada");};
 
         function loadData() {
+            const todayStr = getTodayISO();
+            document.getElementById('goal-date-filter').value = todayStr;
+            document.getElementById('meal-plan-date').value = todayStr;
+
             unsubDebts = onSnapshot(collection(db,'artifacts',appId,'users',userId,'debts'),(s)=>{records=s.docs.map(d=>({id:d.id,...d.data()}));updateFinanceDashboard();});
             unsubCofre = onSnapshot(collection(db,'artifacts',appId,'users',userId,'cofre'),(s)=>{cofreRecords=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);updateFinanceDashboard();renderCofre();});
-            document.getElementById('goal-date-filter').value=new Date().toISOString().split('T')[0];
             unsubGoals = onSnapshot(collection(db,'artifacts',appId,'users',userId,'goals'),(s)=>{goals=s.docs.map(d=>({id:d.id,...d.data()}));renderGoals();});
             unsubPedidos = onSnapshot(collection(db,'artifacts',appId,'users',userId,'pedidos'),(s)=>{pedidos=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);renderPedidos();});
             unsubPosts = onSnapshot(collection(db,'artifacts',appId,'users',userId,'posts'),(s)=>{posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);renderPosts();});
@@ -542,31 +833,643 @@
             
             unsubAlambamento = onSnapshot(doc(db,'artifacts',appId,'users',userId,'alambamento','status'),(d)=>{ if(d.exists()){ alambamentoQtd = d.data().qtd || {}; } else { alambamentoQtd = {}; } renderAlambamento(); });
             
-            // Dados da nova Aba Saúde
+            // Inventário de Cosméticos
             unsubHealth = onSnapshot(collection(db,'artifacts',appId,'users',userId,'health_inv'),(s)=>{
                 healthProducts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
                 renderHealthInventory();
+                renderSkincareCalendar();
+            });
+
+            // Calendário de Skincare 60 Dias + Limpeza Automática (> 60 dias)
+            unsubSkincare = onSnapshot(collection(db,'artifacts',appId,'users',userId,'skincare_cal'),(s)=>{
+                skincareSchedule = {};
+                s.docs.forEach(d => { skincareSchedule[d.id] = d.data(); });
+                cleanupOldSkincare();
+                renderSkincareCalendar();
+            });
+
+            // Plano Alimentar
+            unsubMeals = onSnapshot(collection(db,'artifacts',appId,'users',userId,'meal_plans'),(s)=>{
+                mealPlans = {};
+                s.docs.forEach(d => { mealPlans[d.id] = d.data(); });
+                loadMealPlanForSelectedDate();
+                renderUpcomingMeals();
+            });
+
+            // Mural de Carinhos & Lembretes Curtos
+            unsubCarinhos = onSnapshot(collection(db,'artifacts',appId,'users',userId,'carinhos'),(s)=>{
+                carinhosList = s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
+                renderCarinhos();
             });
         }
 
-        /* --- SAÚDE E BEM ESTAR --- */
+        /* =========================================================================
+           1. CALENDÁRIO DE SKINCARE (60 DIAS EDITÁVEIS + AUTO-PRUNE > 60 DIAS)
+           ========================================================================= */
+        async function cleanupOldSkincare() {
+            if(!userId) return;
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - 60);
+            const cutoffStr = cutoff.toISOString().split('T')[0];
+
+            for(const dateKey of Object.keys(skincareSchedule)) {
+                if(dateKey < cutoffStr) {
+                    try {
+                        await deleteDoc(doc(db,'artifacts',appId,'users',userId,'skincare_cal',dateKey));
+                        delete skincareSchedule[dateKey];
+                    } catch(e) {}
+                }
+            }
+        }
+
+        function renderSkincareCalendar() {
+            const grid = document.getElementById('skincare-calendar-grid');
+            if(!grid) return;
+
+            const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const todayStr = getTodayISO();
+
+            // Janela de 60 dias: 15 dias passados + Hoje + 44 dias futuros = 60 dias
+            const start = new Date();
+            start.setDate(start.getDate() - 15);
+
+            let html = '';
+            for(let i = 0; i < 60; i++) {
+                const d = new Date(start);
+                d.setDate(start.getDate() + i);
+                const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+                const dow = d.getDay();
+                const isFocusDay = (dow === 3 || dow === 6); // Quarta (3) ou Sábado (6)
+                const isToday = (dateStr === todayStr);
+                const entry = skincareSchedule[dateStr];
+                const hasProducts = entry && ((entry.products && entry.products.length > 0) || entry.notes);
+                const isDone = entry && entry.completed;
+
+                let cardStyle = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200';
+                if(isFocusDay) {
+                    cardStyle = 'bg-emerald-50/80 dark:bg-emerald-900/25 border-emerald-400 dark:border-emerald-600 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-400/50';
+                }
+                if(hasProducts && !isDone) {
+                    cardStyle = 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-400 dark:border-indigo-500 text-indigo-900 dark:text-indigo-200';
+                }
+                if(isDone) {
+                    cardStyle = 'bg-emerald-500 text-white border-emerald-600 shadow-sm';
+                }
+
+                const prodsPreview = (entry && entry.products && entry.products.length > 0)
+                    ? `${entry.products.length} prod.`
+                    : (isFocusDay ? '⭐ Foco' : 'Editar');
+
+                html += `
+                <button type="button" onclick="openSkincareModal('${dateStr}')" class="p-2 rounded-xl border ${cardStyle} ${isToday ? 'ring-2 ring-amber-500 shadow-md scale-[1.03]' : ''} flex flex-col items-center justify-between text-center transition-all hover:scale-105 min-h-[68px] relative">
+                    <span class="text-[9px] font-bold uppercase opacity-75">${diasSemana[dow]} ${isToday ? '• Hoje' : ''}</span>
+                    <span class="text-xs font-extrabold my-0.5">${String(d.getDate()).padStart(2,'0')} ${meses[d.getMonth()]}</span>
+                    <span class="text-[9px] font-semibold truncate w-full px-0.5 opacity-90">${isDone ? '✓ Feito' : prodsPreview}</span>
+                </button>`;
+            }
+            grid.innerHTML = html;
+        }
+
+        window.openSkincareModal = (dateStr) => {
+            selectedSkincareDate = dateStr;
+            const [y,m,d] = dateStr.split('-');
+            const dateObj = new Date(y, m-1, d);
+            const dow = dateObj.getDay();
+            const isFocus = (dow === 3 || dow === 6);
+
+            document.getElementById('skincare-modal-title').textContent = `Rotina de ${formatDate(dateStr)}`;
+            document.getElementById('skincare-modal-badge').textContent = isFocus
+                ? '⭐ Quarta/Sábado: Dia de Foco Especial em Tratamento de Pele!'
+                : '📅 Dia Personalizável: Escolhe os produtos do inventário para este dia.';
+
+            const entry = skincareSchedule[dateStr] || { products: [], notes: '', time: '21:00', completed: false };
+            document.getElementById('skincare-modal-notes').value = entry.notes || '';
+            document.getElementById('skincare-modal-time').value = entry.time || '21:00';
+            document.getElementById('skincare-modal-done').checked = !!entry.completed;
+
+            const prodContainer = document.getElementById('skincare-modal-products');
+            if(healthProducts.length === 0) {
+                prodContainer.innerHTML = `<p class="text-xs text-slate-400 italic p-2">Nenhum cosmético no inventário ainda. Adiciona produtos ao lado para selecioná-los aqui!</p>`;
+            } else {
+                prodContainer.innerHTML = healthProducts.map(p => {
+                    const checked = (entry.products || []).includes(p.nome) ? 'checked' : '';
+                    return `
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-emerald-400">
+                        <div class="flex items-center gap-2.5">
+                            <input type="checkbox" value="${p.nome.replace(/"/g, '&quot;')}" ${checked} class="skincare-prod-cb w-4 h-4 accent-emerald-600 rounded">
+                            <span class="text-xs font-bold dark:text-white">${p.nome}</span>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded ${p.qtd > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-600'}">${p.tipo} • Stock: ${p.qtd}</span>
+                    </label>`;
+                }).join('');
+            }
+
+            document.getElementById('skincare-day-modal').classList.remove('hidden');
+            document.getElementById('skincare-day-modal').classList.add('flex');
+        };
+
+        window.closeSkincareModal = () => {
+            document.getElementById('skincare-day-modal').classList.add('hidden');
+            document.getElementById('skincare-day-modal').classList.remove('flex');
+        };
+
+        window.saveSkincareDay = async () => {
+            if(!userId || !selectedSkincareDate) return;
+            const selectedProds = Array.from(document.querySelectorAll('.skincare-prod-cb:checked')).map(cb => cb.value);
+            const notes = document.getElementById('skincare-modal-notes').value.trim();
+            const time = document.getElementById('skincare-modal-time').value || '21:00';
+            const completed = document.getElementById('skincare-modal-done').checked;
+
+            await setDoc(doc(db,'artifacts',appId,'users',userId,'skincare_cal',selectedSkincareDate), {
+                date: selectedSkincareDate,
+                products: selectedProds,
+                notes,
+                time,
+                completed,
+                updatedAt: Date.now()
+            });
+            closeSkincareModal();
+            showToast(`Skincare de ${formatDate(selectedSkincareDate)} guardado! ✨`);
+        };
+
+        window.clearSkincareDay = async () => {
+            if(!userId || !selectedSkincareDate) return;
+            if(confirm("Deseja limpar os produtos e registos deste dia do calendário?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'skincare_cal',selectedSkincareDate));
+                closeSkincareModal();
+                showToast("Registo do dia removido.", "info");
+            }
+        };
+
+        /* =========================================================================
+           2. EXERCÍCIOS FÍSICOS PARTILHADOS (JOSEMAR & KIRIANA)
+           ========================================================================= */
         window.adicionarTreinoMeta = async () => {
             if(!userId) return;
-            const targetDate = document.getElementById('goal-date-filter').value;
-            const owner = 'kiriana'; // A Kiriana ou Josemar, definir padrão. Aqui adicionei para Kiriana já que ela é a boss.
-            
-            await addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {
-                owner: owner,
-                text: '🏋🏾‍♀️ Desafio de Exercício Físico',
-                date: targetDate,
-                completed: false,
-                postponements: 0,
-                createdAt: Date.now()
-            });
-            showToast("Desafio adicionado às metas de hoje!");
+            const targetDate = document.getElementById('goal-date-filter').value || getTodayISO();
+            const exName = document.getElementById('fitness-exercise-name').value.trim() || 'Exercício Físico';
+            const exTime = parseInt(document.getElementById('fitness-exercise-time').value) || 45;
+            const alarmTime = document.getElementById('fitness-alarm-time').value || '18:30';
+
+            localStorage.setItem('versatil_fitness_alarm', JSON.stringify({
+                name: exName,
+                duration: exTime,
+                time: alarmTime
+            }));
+
+            const goalText = `🏋🏾 ${exName} (${exTime} min) às ${alarmTime}`;
+
+            // Adiciona simultaneamente para Josemar E para Kiriana
+            await Promise.all([
+                addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {
+                    owner: 'josemar',
+                    text: goalText,
+                    date: targetDate,
+                    completed: false,
+                    postponements: 0,
+                    createdAt: Date.now()
+                }),
+                addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {
+                    owner: 'kiriana',
+                    text: goalText,
+                    date: targetDate,
+                    completed: false,
+                    postponements: 0,
+                    createdAt: Date.now()
+                })
+            ]);
+
+            showToast(`Meta "${exName} (${exTime} min)" criada para Josemar & Kiriana! 💪🔥`);
             switchTab('tab-metas');
         };
 
+        /* =========================================================================
+           3. PLANO ALIMENTAR E DICAS ONLINE AUTOMÁTICAS
+           ========================================================================= */
+        function loadMealPlanForSelectedDate() {
+            const dateStr = document.getElementById('meal-plan-date').value || getTodayISO();
+            const plan = mealPlans[dateStr] || {};
+            document.getElementById('meal-matabicho-desc').value = plan.matabichoDesc || '';
+            document.getElementById('meal-matabicho-time').value = plan.matabichoTime || '07:30';
+            document.getElementById('meal-almoco-desc').value = plan.almocoDesc || '';
+            document.getElementById('meal-almoco-time').value = plan.almocoTime || '13:00';
+            document.getElementById('meal-jantar-desc').value = plan.jantarDesc || '';
+            document.getElementById('meal-jantar-time').value = plan.jantarTime || '20:00';
+        }
+
+        document.getElementById('meal-plan-date').addEventListener('change', loadMealPlanForSelectedDate);
+
+        document.getElementById('meal-plan-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!userId) return;
+            const dateStr = document.getElementById('meal-plan-date').value || getTodayISO();
+            await setDoc(doc(db,'artifacts',appId,'users',userId,'meal_plans',dateStr), {
+                date: dateStr,
+                matabichoDesc: document.getElementById('meal-matabicho-desc').value.trim(),
+                matabichoTime: document.getElementById('meal-matabicho-time').value || '07:30',
+                almocoDesc: document.getElementById('meal-almoco-desc').value.trim(),
+                almocoTime: document.getElementById('meal-almoco-time').value || '13:00',
+                jantarDesc: document.getElementById('meal-jantar-desc').value.trim(),
+                jantarTime: document.getElementById('meal-jantar-time').value || '20:00',
+                updatedAt: Date.now()
+            });
+            showToast(`Plano Alimentar de ${formatDate(dateStr)} guardado com alarmes! 🥗⏰`);
+        });
+
+        window.deleteMealPlan = async (dateStr) => {
+            if(userId && confirm(`Tem a certeza que deseja apagar o plano alimentar do dia ${formatDate(dateStr)}?`)) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'meal_plans',dateStr));
+                showToast("Plano alimentar removido.", "info");
+            }
+        };
+
+        function renderUpcomingMeals() {
+            const container = document.getElementById('upcoming-meals-list');
+            if(!container) return;
+            const sortedDates = Object.keys(mealPlans).sort();
+            if(sortedDates.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">Nenhum cardápio planeado ainda.</p>`;
+                return;
+            }
+            container.innerHTML = sortedDates.map(d => {
+                const m = mealPlans[d];
+                return `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+                    <div class="truncate pr-2">
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400 mr-2">${formatDate(d)}:</span>
+                        <span class="text-slate-600 dark:text-slate-300">☕ ${m.matabichoDesc || '-'} (${m.matabichoTime}) | 🍛 ${m.almocoDesc || '-'} (${m.almocoTime}) | 🌙 ${m.jantarDesc || '-'} (${m.jantarTime})</span>
+                    </div>
+                    <button onclick="deleteMealPlan('${d}')" class="text-slate-300 hover:text-rose-500 shrink-0"><i class="ph-fill ph-trash"></i></button>
+                </div>`;
+            }).join('');
+        }
+
+        const curatedNutritionTips = [
+            "🥑 Começar o Matabicho com proteínas (ovos, iogurte natural ou aveia) evita picos de insulina e mantém a energia alta durante todo o turno e estudos!",
+            "💧 Beber 1 copo de água morna ou natural 20 minutos antes do Almoço melhora a digestão e a absorção de vitaminas para a pele e cabelo.",
+            "🥦 Incluir vegetais verde-escuros e fontes de Ómega-3 no Almoço reduz a inflamação celular e dá brilho natural à pele (efeito Glow no Skincare!).",
+            "🌙 Fazer o Jantar pelo menos 2 horas antes de dormir garante um sono profundo reparador e melhora a queima calórica pós-treino.",
+            "🍌 Antes do Treino Partilhado (30 a 45 min antes), uma banana com aveia ou café preto dá explosão muscular sem pesar no estômago!",
+            "🍊 Alimentos ricos em Vitamina C (laranja, kiwi, pimento) estimulam a produção natural de colagénio, potencializando os cremes de Quarta e Sábado!"
+        ];
+
+        window.fetchOnlineNutritionTip = async () => {
+            const box = document.getElementById('nutrition-tip-box');
+            if(!box) return;
+            box.innerHTML = `<span class="animate-pulse">🌐 A procurar dica saudável online...</span>`;
+            try {
+                // Tenta buscar prato/ingrediente saudável na API pública TheMealDB para inspiração + dica nutricional
+                const resp = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
+                if(resp.ok) {
+                    const data = await resp.json();
+                    const meal = data.meals && data.meals[0];
+                    const randomTip = curatedNutritionTips[Math.floor(Math.random() * curatedNutritionTips.length)];
+                    if(meal) {
+                        box.innerHTML = `<div><p class="mb-2">${randomTip}</p><p class="text-[11px] bg-white/15 px-2.5 py-1 rounded-lg">🍽️ <strong>Inspiração Internacional do Dia:</strong> ${meal.strMeal} (${meal.strArea})</p></div>`;
+                        return;
+                    }
+                }
+            } catch(e) {}
+            const fallback = curatedNutritionTips[Math.floor(Math.random() * curatedNutritionTips.length)];
+            box.innerHTML = `<p>${fallback}</p>`;
+        };
+
+        /* =========================================================================
+           4. MURAL DE CARINHOS & LEMBRETES CURTOS ❤️📌
+           ========================================================================= */
+        document.getElementById('carinho-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!userId) return;
+            const cat = document.querySelector('input[name="carinho-cat"]:checked').value;
+            const author = document.getElementById('carinho-author').value;
+            const text = document.getElementById('carinho-text').value.trim();
+            if(!text) return;
+
+            await addDoc(collection(db,'artifacts',appId,'users',userId,'carinhos'), {
+                category: cat,
+                author,
+                text,
+                createdAt: Date.now()
+            });
+            document.getElementById('carinho-text').value = '';
+            showToast(cat === 'amor' ? "Carinho publicado no mural! ❤️" : "Lembrete importante fixado! 📌");
+        });
+
+        window.sendQuickLoveNote = async () => {
+            if(!userId) return;
+            const msgs = [
+                "Só passei aqui para te lembrar que és o amor da minha vida e a minha melhor parceira de negócios! Amo-te! ❤️👑",
+                "Não importa a distância ou a correria do dia, o meu coração está sempre contigo. Juntos até ao nosso Alambamento e além! 💍✨",
+                "Que orgulho construir a Versátil Trade ao teu lado. És incrível, meu amor! 😉😏❤️",
+                "Lembrete urgente do dia: Beber água, sorrir e lembrar que te amo cada segundo mais! 💜🐦"
+            ];
+            const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            const author = document.getElementById('carinho-author').value;
+            await addDoc(collection(db,'artifacts',appId,'users',userId,'carinhos'), {
+                category: 'amor',
+                author,
+                text: randomMsg,
+                createdAt: Date.now()
+            });
+            showToast("Surpresa romântica enviada! ❤️✨");
+        };
+
+        window.deleteCarinho = async (id) => {
+            if(userId && confirm("Tem a certeza que deseja apagar este bilhete do mural?")) {
+                await deleteDoc(doc(db,'artifacts',appId,'users',userId,'carinhos',id));
+            }
+        };
+
+        function renderCarinhos() {
+            const list = document.getElementById('carinhos-list');
+            if(!list) return;
+            if(carinhosList.length === 0) {
+                list.innerHTML = `<div class="col-span-full text-center p-10 border-2 border-dashed border-rose-200 dark:border-slate-700 rounded-2xl text-slate-400"><i class="ph-fill ph-heart text-4xl text-rose-400 mb-2"></i><p class="text-sm font-bold dark:text-white">O vosso mural ainda está vazio!</p><p class="text-xs">Deixa o primeiro carinho ou lembrete importante ao lado. 😉</p></div>`;
+                return;
+            }
+            list.innerHTML = carinhosList.map(c => {
+                const isAmor = c.category === 'amor';
+                const cardBg = isAmor
+                    ? 'bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/25 dark:to-pink-900/20 border-rose-200 dark:border-rose-800/50'
+                    : 'bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/25 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800/50';
+                return `
+                <div class="p-5 rounded-2xl border ${cardBg} shadow-sm flex flex-col justify-between gap-3 relative group transition-transform hover:-translate-y-0.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full ${isAmor ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white'}">${isAmor ? '❤️ Amor & Carinho' : '📌 Importante'}</span>
+                        <button onclick="deleteCarinho('${c.id}')" class="text-slate-400 hover:text-rose-600 transition-colors"><i class="ph-fill ph-trash"></i></button>
+                    </div>
+                    <p class="text-sm font-medium text-slate-800 dark:text-slate-100 leading-relaxed whitespace-pre-line">"${c.text}"</p>
+                    <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-black/5 dark:border-white/5">
+                        <span class="font-bold">${c.author || 'Parceiro(a)'}</span>
+                        <span>${new Date(c.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        /* =========================================================================
+           5. NOTIFICAÇÕES COM SOM (WEB AUDIO API SYNTHESIZER + ALARM ENGINE)
+           ========================================================================= */
+        window.playAlarmSound = () => {
+            if(!soundNotificationsEnabled) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioCtx();
+                const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50]; // Acorde Dó Maior harmonioso
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.18);
+                    gain.gain.setValueAtTime(0.22, ctx.currentTime + idx * 0.18);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (idx + 1) * 0.18);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.18);
+                    osc.stop(ctx.currentTime + (idx + 1) * 0.18);
+                });
+            } catch(e) { console.warn("Áudio bloqueado pelo navegador até interação.", e); }
+        };
+
+        window.toggleSoundNotifications = () => {
+            soundNotificationsEnabled = !soundNotificationsEnabled;
+            localStorage.setItem('versatil_sound_enabled', soundNotificationsEnabled ? 'true' : 'false');
+            updateSoundToggleUI();
+            if(soundNotificationsEnabled) {
+                if("Notification" in window && Notification.permission === "default") {
+                    Notification.requestPermission();
+                }
+                playAlarmSound();
+                showToast("Notificações com som ATIVADAS! 🔔🔊");
+            } else {
+                showToast("Notificações com som silenciadas. 🔕", "info");
+            }
+        };
+
+        function updateSoundToggleUI() {
+            const icon = document.getElementById('sound-icon');
+            const btn = document.getElementById('btn-sound-toggle');
+            if(!icon || !btn) return;
+            if(soundNotificationsEnabled) {
+                icon.className = 'ph-fill ph-bell-ringing text-lg sm:text-xl';
+                btn.classList.replace('text-slate-400', 'text-amber-500');
+            } else {
+                icon.className = 'ph ph-bell-slash text-lg sm:text-xl';
+                btn.classList.replace('text-amber-500', 'text-slate-400');
+            }
+        }
+
+        window.dismissAlarmModal = () => {
+            document.getElementById('alarm-modal').classList.add('hidden');
+            document.getElementById('alarm-modal').classList.remove('flex');
+        };
+
+        function triggerAlarmPopup(title, desc) {
+            playAlarmSound();
+            document.getElementById('alarm-modal-title').textContent = title;
+            document.getElementById('alarm-modal-desc').textContent = desc;
+            document.getElementById('alarm-modal').classList.remove('hidden');
+            document.getElementById('alarm-modal').classList.add('flex');
+
+            if("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: desc, icon: 'logo.png' });
+            }
+        }
+
+        function checkActivityAlarms() {
+            if(!soundNotificationsEnabled || !userId) return;
+            const now = new Date();
+            const todayStr = getTodayISO();
+            const currentHM = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+
+            // 1. Verifica Horários do Plano Alimentar de Hoje
+            const todayMeal = mealPlans[todayStr];
+            if(todayMeal) {
+                const mealsToCheck = [
+                    { key: 'matabicho', label: '☕ Hora do Matabicho!', time: todayMeal.matabichoTime, desc: todayMeal.matabichoDesc || 'Bom apetite, Josemar & Kiriana!' },
+                    { key: 'almoco', label: '🍛 Hora do Almoço!', time: todayMeal.almocoTime, desc: todayMeal.almocoDesc || 'Pausa para nutrir o corpo!' },
+                    { key: 'jantar', label: '🌙 Hora do Jantar!', time: todayMeal.jantarTime, desc: todayMeal.jantarDesc || 'Refeição leve e descanso!' }
+                ];
+                mealsToCheck.forEach(m => {
+                    const cacheKey = `${todayStr}_meal_${m.key}_${m.time}`;
+                    if(m.time === currentHM && !triggeredAlarmsCache[cacheKey]) {
+                        triggeredAlarmsCache[cacheKey] = true;
+                        triggerAlarmPopup(m.label, m.desc);
+                    }
+                });
+            }
+
+            // 2. Verifica Horário do Treino Físico
+            const fitStr = localStorage.getItem('versatil_fitness_alarm');
+            if(fitStr) {
+                try {
+                    const fit = JSON.parse(fitStr);
+                    const cacheKey = `${todayStr}_fit_${fit.time}`;
+                    if(fit.time === currentHM && !triggeredAlarmsCache[cacheKey]) {
+                        triggeredAlarmsCache[cacheKey] = true;
+                        triggerAlarmPopup('🏋🏾 Hora do Treino do Casal!', `${fit.name} (${fit.duration} min) — Vamos cumprir a meta de hoje!`);
+                    }
+                } catch(e) {}
+            }
+
+            // 3. Verifica Horário do Skincare de Hoje
+            const todaySkin = skincareSchedule[todayStr];
+            if(todaySkin && todaySkin.time && !todaySkin.completed) {
+                const cacheKey = `${todayStr}_skin_${todaySkin.time}`;
+                if(todaySkin.time === currentHM && !triggeredAlarmsCache[cacheKey]) {
+                    triggeredAlarmsCache[cacheKey] = true;
+                    const prods = (todaySkin.products && todaySkin.products.length > 0) ? todaySkin.products.join(', ') : 'Rotina de cuidados com a pele';
+                    triggerAlarmPopup('✨ Hora do Skincare!', `Produtos de hoje: ${prods}`);
+                }
+            }
+        }
+
+        /* =========================================================================
+           6. RELATÓRIO GERAL MENSAL EM PDF + ALERTA DE FIM DE MÊS
+           ========================================================================= */
+        function checkMonthlyReportBanner() {
+            const now = new Date();
+            const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            // Mostra o alerta automático nos últimos 5 dias de cada mês (ou dia 1)
+            if(now.getDate() >= (lastDayOfMonth - 4) || now.getDate() === 1) {
+                const banner = document.getElementById('monthly-report-banner');
+                if(banner) {
+                    banner.classList.remove('hidden');
+                    banner.classList.add('flex');
+                }
+            }
+        }
+
+        window.generateMonthlyPDF = async () => {
+            showToast("A gerar o Relatório Mensal em PDF... 📄", "info");
+            const now = new Date();
+            const mesAno = now.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+            const n1 = localStorage.getItem('versatil_name1') || 'Josemar';
+            const n2 = localStorage.getItem('versatil_name2') || 'Kiriana';
+
+            // Cálculos do Cofre
+            let totalEntradas = 0, totalSaidas = 0, totalDizimo = 0;
+            cofreRecords.forEach(r => {
+                if(r.type === 'entrada') {
+                    totalEntradas += r.amount;
+                    if(r.applyTithe) totalDizimo += r.titheValue;
+                } else {
+                    totalSaidas += r.amount;
+                }
+            });
+            const saldoCaixa = totalEntradas - totalSaidas - totalDizimo;
+
+            // Cálculos de Vendas / Pedidos
+            const pedidosEntregues = pedidos.filter(p => p.status === 'entregue');
+            const pedidosPendentes = pedidos.filter(p => p.status !== 'entregue');
+            const totalVendasPedidos = pedidosEntregues.reduce((acc, p) => acc + (parseFloat(p.valor) || 0), 0);
+
+            // Cálculos de Metas
+            const metasConcluidas = goals.filter(g => g.completed).length;
+            const metasTotal = goals.length;
+            const taxaMetas = metasTotal > 0 ? Math.round((metasConcluidas / metasTotal) * 100) : 0;
+
+            // Cálculos de Skincare
+            const diasSkincare = Object.values(skincareSchedule);
+            const skincareFeitos = diasSkincare.filter(s => s.completed).length;
+
+            const wrapper = document.getElementById('pdf-render-wrapper');
+            wrapper.innerHTML = `
+                <div style="font-family: 'Inter', sans-serif; color: #1e293b; padding: 20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 3px solid #4f46e5; padding-bottom: 16px; margin-bottom: 24px;">
+                        <div>
+                            <h1 style="font-size: 24px; font-weight: 800; color: #4f46e5; margin: 0;">VERSÁTIL TRADE — RELATÓRIO GERAL MENSAL</h1>
+                            <p style="font-size: 12px; color: #64748b; margin: 4px 0 0 0;">Gestão Executiva & Bem-Estar • Sócios: <strong>${n1} & ${n2}</strong></p>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="background:#eef2ff; color:#4338ca; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; text-transform:capitalize;">${mesAno}</span>
+                            <p style="font-size:10px; color:#94a3b8; margin-top:4px;">Emitido em ${now.toLocaleDateString('pt-PT')}</p>
+                        </div>
+                    </div>
+
+                    <!-- 1. Desempenho Financeiro & Cofre -->
+                    <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:10px;">1. Resumo de Desempenho Financeiro (Cofre & Dízimo)</h2>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:16px;">
+                        <div style="padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+                            <div style="font-size:10px; color:#64748b; font-weight:700;">ENTRADAS TOTAIS</div>
+                            <div style="font-size:15px; font-weight:800; color:#059669; margin-top:4px;">+${formatKz(totalEntradas)}</div>
+                        </div>
+                        <div style="padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+                            <div style="font-size:10px; color:#64748b; font-weight:700;">SAÍDAS TOTAIS</div>
+                            <div style="font-size:15px; font-weight:800; color:#e11d48; margin-top:4px;">-${formatKz(totalSaidas)}</div>
+                        </div>
+                        <div style="padding:12px; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;">
+                            <div style="font-size:10px; color:#b45309; font-weight:700;">DÍZIMO (10%)</div>
+                            <div style="font-size:15px; font-weight:800; color:#d97706; margin-top:4px;">${formatKz(totalDizimo)}</div>
+                        </div>
+                        <div style="padding:12px; background:#eef2ff; border:1px solid #c7d2fe; border-radius:10px;">
+                            <div style="font-size:10px; color:#4338ca; font-weight:700;">SALDO REAL EM CAIXA</div>
+                            <div style="font-size:15px; font-weight:800; color:#4f46e5; margin-top:4px;">${formatKz(saldoCaixa)}</div>
+                        </div>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:24px;">
+                        <thead>
+                            <tr style="background:#f1f5f9; text-align:left;">
+                                <th style="padding:8px; border:1px solid #cbd5e1;">Data</th>
+                                <th style="padding:8px; border:1px solid #cbd5e1;">Tipo</th>
+                                <th style="padding:8px; border:1px solid #cbd5e1;">Descrição da Movimentação</th>
+                                <th style="padding:8px; border:1px solid #cbd5e1; text-align:right;">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${cofreRecords.slice(0, 15).map(r => `
+                                <tr>
+                                    <td style="padding:6px 8px; border:1px solid #e2e8f0;">${new Date(r.createdAt).toLocaleDateString('pt-PT')}</td>
+                                    <td style="padding:6px 8px; border:1px solid #e2e8f0; font-weight:700; color:${r.type==='entrada'?'#059669':'#e11d48'}; text-transform:uppercase;">${r.type}</td>
+                                    <td style="padding:6px 8px; border:1px solid #e2e8f0;">${r.desc}</td>
+                                    <td style="padding:6px 8px; border:1px solid #e2e8f0; text-align:right; font-weight:700;">${r.type==='entrada'?'+':'-'}${formatKz(r.amount)}</td>
+                                </tr>
+                            `).join('') || `<tr><td colspan="4" style="padding:10px; text-align:center; color:#94a3b8;">Sem movimentações registadas.</td></tr>`}
+                        </tbody>
+                    </table>
+
+                    <!-- 2. Relatório de Vendas & Pedidos -->
+                    <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:8px;">2. Desempenho de Vendas & Pedidos</h2>
+                    <p style="font-size:11px; color:#475569; margin-bottom:16px;">
+                        Pedidos Entregues: <strong>${pedidosEntregues.length}</strong> (Total faturado: <strong>${formatKz(totalVendasPedidos)}</strong>) | Pedidos em Curso/Pendentes: <strong>${pedidosPendentes.length}</strong>
+                    </p>
+
+                    <!-- 3. Relatório de Metas & Produtividade -->
+                    <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:8px;">3. Desempenho de Metas (${n1} & ${n2})</h2>
+                    <p style="font-size:11px; color:#475569; margin-bottom:16px;">
+                        Metas Concluídas: <strong>${metasConcluidas} de ${metasTotal}</strong> (${taxaMetas}% de taxa de execução).
+                    </p>
+
+                    <!-- 4. Relatório de Skincare & Saúde -->
+                    <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:8px;">4. Rotina de Skincare (60 Dias) & Inventário de Cosméticos</h2>
+                    <p style="font-size:11px; color:#475569; margin-bottom:10px;">
+                        Sessões de Skincare Concluídas: <strong>${skincareFeitos}</strong> | Dias Planeados no Calendário: <strong>${diasSkincare.length}</strong> | Produtos em Inventário: <strong>${healthProducts.length}</strong> (Em falta/Reposição: <strong>${healthProducts.filter(p=>p.qtd===0).length}</strong>)
+                    </p>
+                </div>
+            `;
+
+            const opt = {
+                margin: 0.3,
+                filename: `Relatorio_Mensal_Versatil_Trade_${now.getFullYear()}_${String(now.getMonth()+1).padStart(2,'0')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            try {
+                await html2pdf().set(opt).from(wrapper).save();
+                showToast("Relatório PDF transferido com sucesso! 📊✅");
+            } catch(e) {
+                console.error("Erro ao gerar PDF:", e);
+                showToast("Erro ao gerar PDF.", "error");
+            }
+        };
+
+        /* =========================================================================
+           INVENTÁRIO DE SAÚDE EXISTENTE (MANTIDO 100% INTACTO)
+           ========================================================================= */
         document.getElementById('health-form').addEventListener('submit', async(e) => {
             e.preventDefault();
             if(!userId) return;
@@ -728,9 +1631,9 @@
                 await addDoc(collection(db,'artifacts',appId,'users',userId,'pedidos'), { 
                     cliente: document.getElementById('pedido-cliente').value, 
                     produto: document.getElementById('pedido-produto').value, 
-                    valor: 0,
-                    dataEntrega: '',
-                    local: '',
+                    valor: parseFloat(document.getElementById('pedido-valor').value) || 0,
+                    dataEntrega: document.getElementById('pedido-data').value || '',
+                    local: document.getElementById('pedido-local').value || '',
                     status: 'pendente', 
                     faturado: false,
                     createdAt: Date.now() 
@@ -1039,9 +1942,9 @@
         }
 
         const tutorialSteps = [
-            { target: 'tut-tabs', title: 'Navegação', text: 'Desliza aqui para alternares entre as abas da Versátil Trade.' },
+            { target: 'tut-tabs', title: 'Navegação V4', text: 'Desliza aqui para explorar as abas, incluindo Saúde 60 dias e o novo Mural de Carinhos ❤️.' },
             { target: 'tut-saldo', title: 'O teu Cofre', text: 'Vê rapidamente quanto tens em caixa real e o teu fundo de dízimo acumulado.' },
-            { target: 'tut-nova-mov', title: 'Movimentações', text: 'Adiciona entradas de dinheiro. Se quiseres, ele separa logo os 10%.' },
+            { target: 'tut-nova-mov', title: 'Movimentações & PDF', text: 'Adiciona entradas de dinheiro e exporta o Relatório Geral Mensal em PDF a qualquer momento.' },
             { target: 'btn-backup', title: 'Backup de Segurança', text: 'Clica na nuvem para descarregares todos os teus registos para o telemóvel.' }
         ];
         let currentTutorialStep = 0; window.isTutorialRunning = false;
