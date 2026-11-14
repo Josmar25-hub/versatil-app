@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Versátil Trade App - V4</title>
+    <title>Versátil Trade App - V4.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Biblioteca html2pdf.js para Geração do Relatório Mensal em PDF -->
@@ -38,12 +38,11 @@
         .tutorial-highlight {
             position: relative !important;
             z-index: 101 !important;
-            box-shadow: 0 0 0 4px #4f46e5, 0 0 0 9999px rgba(15, 23, 42, 0.8) !important;
-            border-radius: 0.75rem;
+            box-shadow: 0 0 0 4px #4f46e5, 0 0 0 9999px rgba(15, 23, 42, 0.82) !important;
+            border-radius: 1rem;
             pointer-events: none !important;
-            background: white;
+            transition: all 0.3s ease;
         }
-        .dark .tutorial-highlight { background: #1e293b; }
     </style>
     
     <link rel="manifest" href="manifest.json">
@@ -53,36 +52,121 @@
 </head>
 <body class="text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 antialiased h-[100dvh] w-screen overflow-hidden flex flex-col transition-colors duration-300">
 
-    <!-- Modal do Modo Tutorial -->
-    <div id="tutorial-modal" class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-2xl z-[105] hidden flex-col transition-all duration-300 border border-indigo-100 dark:border-indigo-900/50">
-        <div class="flex items-center gap-3 mb-2">
-            <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600"><i class="ph-fill ph-lightbulb text-lg"></i></div>
-            <h3 id="tutorial-title" class="text-lg font-bold text-slate-800 dark:text-white"></h3>
+    <!-- Modal do Modo Tutorial Competente (Tour Completo) -->
+    <div id="tutorial-modal" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-3xl shadow-2xl z-[110] hidden flex-col transition-all duration-300 border-2 border-indigo-500/40 dark:border-indigo-400/40">
+        <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0"><i class="ph-fill ph-lifebuoy text-xl"></i></div>
+                <div>
+                    <span id="tutorial-step-badge" class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">Passo 1 de 11</span>
+                    <h3 id="tutorial-title" class="text-base sm:text-lg font-bold text-slate-800 dark:text-white leading-tight"></h3>
+                </div>
+            </div>
+            <button onclick="skipTutorial(false)" title="Fechar agora" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 hover:text-rose-500 flex items-center justify-center"><i class="ph-bold ph-x"></i></button>
         </div>
-        <p id="tutorial-text" class="text-sm text-slate-600 dark:text-slate-300 mb-5 ml-11"></p>
-        <div class="flex justify-between items-center">
-            <button onclick="skipTutorial()" class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-2 py-1">Pular Tutorial</button>
-            <button onclick="nextTutorialStep()" id="tutorial-next-btn" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-indigo-700 transition-colors">Próximo <i class="ph-bold ph-arrow-right ml-1"></i></button>
+
+        <!-- Barra de Progresso do Tutorial -->
+        <div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full my-2 overflow-hidden">
+            <div id="tutorial-progress-bar" class="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style="width: 10%"></div>
+        </div>
+
+        <p id="tutorial-text" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 my-3 leading-relaxed"></p>
+
+        <div class="flex items-center justify-between gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+            <button onclick="disableTutorialForever()" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center gap-1 py-1 px-2 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Desativar tutorial de vez">
+                <i class="ph-bold ph-prohibit"></i> Desativar de vez
+            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="prevTutorialStep()" id="tutorial-prev-btn" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-200 transition-colors">
+                    <i class="ph-bold ph-arrow-left"></i>
+                </button>
+                <button onclick="nextTutorialStep()" id="tutorial-next-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:bg-indigo-700 transition-colors flex items-center gap-1">
+                    Próximo <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal de Configurações -->
-    <div id="settings-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity">
-        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl w-[90%] max-w-sm border border-slate-100 dark:border-slate-700">
-            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-gear text-indigo-500"></i> Configurações</h3>
-            <div class="space-y-4">
-                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Nome Parceiro 1</label><input type="text" id="input-name1" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 outline-none dark:text-white" placeholder="Josemar"></div>
-                <div><label class="block text-sm font-medium mb-1 dark:text-slate-300">Nome Parceiro 2</label><input type="text" id="input-name2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 outline-none dark:text-white" placeholder="Kiriana"></div>
-                <div class="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/40 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-indigo-900 dark:text-indigo-200">Testar Som de Alarme</p>
-                        <p class="text-[10px] text-indigo-600 dark:text-indigo-400">Verifica o toque das notificações</p>
+    <!-- Modal de Configurações (Central de Controlo Unificada) -->
+    <div id="settings-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100 dark:border-slate-700 flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-gear text-indigo-500 text-xl"></i> Central de Configurações</h3>
+                <button onclick="closeSettings()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 hover:text-rose-500"><i class="ph-bold ph-x"></i></button>
+            </div>
+
+            <div class="space-y-4 overflow-y-auto custom-scrollbar pr-1 flex-1">
+                <!-- Secção 1: Nomes dos Sócios -->
+                <div class="p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200/70 dark:border-slate-700 space-y-3">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">👫 Perfil dos Sócios</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium mb-1 dark:text-slate-300">Parceiro 1</label>
+                            <input type="text" id="input-name1" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-sm outline-none dark:text-white" placeholder="Josemar">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1 dark:text-slate-300">Parceiro 2</label>
+                            <input type="text" id="input-name2" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-sm outline-none dark:text-white" placeholder="Kiriana">
+                        </div>
                     </div>
-                    <button type="button" onclick="playAlarmSound(); showToast('Som de notificação testado! 🔔');" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-indigo-700"><i class="ph-fill ph-speaker-high"></i> Tocar</button>
+                    <button onclick="saveSettings()" class="w-full py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 font-bold text-white text-xs shadow-sm transition-colors">Guardar Nomes</button>
                 </div>
-                <div class="flex gap-3 mt-6 pt-2">
-                    <button onclick="closeSettings()" class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors">Cancelar</button>
-                    <button onclick="saveSettings()" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 font-bold text-white shadow-md hover:bg-indigo-700 transition-colors">Salvar</button>
+
+                <!-- Secção 2: Sininho de Notificações Sonoras -->
+                <div class="p-3.5 bg-amber-50/70 dark:bg-amber-900/15 rounded-2xl border border-amber-200/70 dark:border-amber-800/40 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center"><i id="sound-icon" class="ph-fill ph-bell-ringing text-lg"></i></div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-800 dark:text-white">Alarmes Sonoros de Atividades</p>
+                                <p id="sound-status-text" class="text-[10px] text-slate-500 dark:text-slate-400">Ativado para Refeições, Treino e Skincare</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleSoundNotifications()" id="btn-sound-toggle" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-sm transition-all">Ativo 🔔</button>
+                    </div>
+                    <button type="button" onclick="playAlarmSound(true); showToast('Som de alarme testado! 🔔🔊');" class="w-full py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800/50 text-amber-700 dark:text-amber-300 text-xs font-bold hover:bg-amber-100/50 transition-colors flex items-center justify-center gap-1.5">
+                        <i class="ph-fill ph-speaker-high"></i> Testar Toque do Alarme Agora
+                    </button>
+                </div>
+
+                <!-- Secção 3: Boia do Modo Tutorial (Iniciar ou Desativar de Vez) -->
+                <div class="p-3.5 bg-indigo-50/70 dark:bg-indigo-900/15 rounded-2xl border border-indigo-200/70 dark:border-indigo-800/40 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center"><i class="ph-fill ph-lifebuoy text-lg"></i></div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-800 dark:text-white">Modo Tutorial (Boia de Ajuda)</p>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-400">Apresenta todas as 9 abas passo a passo</p>
+                            </div>
+                        </div>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input type="checkbox" id="toggle-tutorial-forever" onchange="toggleTutorialSetting(this.checked)" class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                            <span class="text-[11px] font-bold text-indigo-700 dark:text-indigo-300">Ativo</span>
+                        </label>
+                    </div>
+                    <button type="button" onclick="closeSettings(); startTutorial();" class="w-full py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm transition-colors flex items-center justify-center gap-1.5">
+                        <i class="ph-bold ph-play-circle text-base"></i> Iniciar Tour Completo pelo Aplicativo (11 Passos)
+                    </button>
+                </div>
+
+                <!-- Secção 4: Documentos & Exportação (PDF Mensal + Backup JSON) -->
+                <div class="p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200/70 dark:border-slate-700 space-y-2.5">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">📂 Relatórios & Segurança de Dados</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button type="button" onclick="closeSettings(); generateMonthlyPDF();" class="p-3 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800/50 text-rose-600 dark:text-rose-300 hover:bg-rose-100 transition-colors flex items-center justify-center gap-2 font-bold text-xs">
+                            <i class="ph-fill ph-file-pdf text-lg"></i> Relatório Mensal PDF
+                        </button>
+                        <button type="button" onclick="exportBackup()" class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-100 transition-colors flex items-center justify-center gap-2 font-bold text-xs">
+                            <i class="ph-fill ph-cloud-arrow-down text-lg"></i> Backup JSON
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Secção 5: Sair da Conta -->
+                <div class="pt-2">
+                    <button type="button" onclick="closeSettings(); logoutApp();" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-sign-out text-base"></i> Terminar Sessão (Sair da Conta)
+                    </button>
                 </div>
             </div>
         </div>
@@ -156,23 +240,23 @@
 
     <!-- App Container -->
     <div id="app-container" class="hidden flex-col h-full w-full overflow-hidden relative">
+        <!-- TOPO MINIMALISTA: Apenas Modo Claro/Escuro e Configurações -->
         <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shrink-0">
-            <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
-                    <img src="logo.png" alt="Luna" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-md object-cover bg-indigo-600 shrink-0">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <img src="logo.png" alt="Luna" class="w-10 h-10 rounded-xl shadow-md object-cover bg-indigo-600 shrink-0">
                     <div class="truncate">
                         <h1 class="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500 truncate">Versátil Trade</h1>
-                        <p id="nav-subtitle" class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider truncate">Josemar & Kiriana</p>
+                        <p id="nav-subtitle" class="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider truncate">Josemar & Kiriana</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
-                    <button onclick="toggleSoundNotifications()" id="btn-sound-toggle" title="Ativar/Desativar Alarmes Sonoros" class="w-9 h-9 flex items-center justify-center rounded-full text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all"><i id="sound-icon" class="ph-fill ph-bell-ringing text-lg sm:text-xl"></i></button>
-                    <button onclick="generateMonthlyPDF()" id="btn-pdf-report" title="Baixar Relatório Mensal em PDF" class="w-9 h-9 flex items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"><i class="ph-bold ph-file-pdf text-lg sm:text-xl"></i></button>
-                    <button onclick="startTutorial()" id="btn-tutorial" title="Tutorial" class="w-9 h-9 flex items-center justify-center rounded-full text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-lifebuoy text-lg sm:text-xl"></i></button>
-                    <button onclick="openSettings()" title="Configurações" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"><i class="ph-bold ph-gear text-lg sm:text-xl"></i></button>
-                    <button onclick="exportBackup()" id="btn-backup" title="Backup JSON" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"><i class="ph-bold ph-cloud-arrow-down text-lg sm:text-xl"></i></button>
-                    <button onclick="toggleTheme()" title="Tema Claro/Escuro" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-all"><i id="theme-icon" class="ph ph-moon text-lg sm:text-xl"></i></button>
-                    <button onclick="logoutApp()" title="Sair" class="w-9 h-9 flex items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"><i class="ph ph-sign-out text-lg sm:text-xl"></i></button>
+                <div class="flex items-center gap-2 shrink-0" id="tut-top-actions">
+                    <button onclick="toggleTheme()" title="Alternar Modo Claro/Escuro" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                        <i id="theme-icon" class="ph ph-moon text-xl"></i>
+                    </button>
+                    <button onclick="openSettings()" id="btn-settings-top" title="Configurações, PDF, Sons, Tutorial e Sair" class="w-10 h-10 flex items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all">
+                        <i class="ph-bold ph-gear text-xl"></i>
+                    </button>
                 </div>
             </div>
         </nav>
@@ -229,9 +313,6 @@
                             <div id="dizimo-checkbox-container" class="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800"><input type="checkbox" id="cofre-dizimo-check" checked class="w-4 h-4 text-amber-600 rounded border-amber-300 focus:ring-amber-500"><label for="cofre-dizimo-check" class="text-sm font-bold text-amber-700 dark:text-amber-400">Separar 10% para o Dízimo?</label></div>
                             <button type="submit" class="w-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold py-3.5 rounded-xl shadow-md">Registrar no Cofre</button>
                         </form>
-                        <button onclick="generateMonthlyPDF()" class="mt-4 w-full py-2.5 px-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 font-bold text-xs flex items-center justify-center gap-2 border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 transition-colors">
-                            <i class="ph-bold ph-file-pdf text-base"></i> Exportar Relatório Geral Mensal (PDF)
-                        </button>
                     </div>
                     <div class="w-full lg:col-span-2">
                         <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4"><i class="ph-fill ph-list-bullets text-indigo-500"></i> Extrato de Caixa</h3>
@@ -241,7 +322,7 @@
                 </section>
             </div>
 
-            <!-- FASE SAÚDE E BEM ESTAR 🌿 (UPGRADE V4 COMPLETO) -->
+            <!-- FASE SAÚDE E BEM ESTAR 🌿 -->
             <div id="tab-saude" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
                     <div class="absolute -right-5 -top-10 opacity-10"><i class="ph-fill ph-heart-beat text-[15rem]"></i></div>
@@ -252,7 +333,7 @@
                 </div>
 
                 <!-- LINHA 1: CALENDÁRIO SKINCARE 60 DIAS + INVENTÁRIO DE COSMÉTICOS -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="tut-saude-main">
                     <!-- Calendário de Skincare (60 Dias Rotativos) -->
                     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 flex flex-col">
                         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -433,7 +514,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start" id="tut-carinhos-main">
                     <!-- Formulário de Novo Post-it -->
                     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
                         <h3 class="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-note-pencil text-rose-500"></i> Novo Bilhete / Lembrete</h3>
@@ -472,7 +553,7 @@
 
             <!-- FASE 2: PEDIDOS -->
             <div id="tab-pedidos" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col gap-4">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col gap-4" id="tut-pedidos-main">
                     <div><h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-package text-indigo-500"></i> Novo Pedido</h3><p class="text-xs text-slate-500">Adiciona clientes, valor e entrega. Ao mover para "Entregues", credita automaticamente no Cofre com 10% de Dízimo.</p></div>
                     <form id="pedido-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 w-full">
                         <input type="text" id="pedido-cliente" required placeholder="Nome do Cliente" class="px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm outline-none dark:text-white">
@@ -492,7 +573,7 @@
 
             <!-- FASE 1.5: DÍVIDAS -->
             <div id="tab-dividas" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-4" id="tut-dividas-main">
                     <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 shrink-0"><i class="ph-bold ph-arrow-down-left text-2xl"></i></div><div><p class="text-sm font-medium text-slate-500">Total na Rua (A Receber)</p><h2 id="dash-receber" class="text-2xl font-bold dark:text-white">0,00 Kz</h2></div></div>
                     <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 shrink-0"><i class="ph-bold ph-arrow-up-right text-2xl"></i></div><div><p class="text-sm font-medium text-slate-500">Dívidas (A Pagar)</p><h2 id="dash-pagar" class="text-2xl font-bold dark:text-white">0,00 Kz</h2></div></div>
                 </section>
@@ -551,7 +632,7 @@
 
             <!-- METAS DIÁRIAS -->
             <div id="tab-metas" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 w-full">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 w-full" id="tut-metas-main">
                     <div><h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2"><i class="ph-fill ph-calendar text-indigo-500"></i> Calendário de Metas</h3><p class="text-xs text-slate-500 dark:text-slate-400">Gerencia tarefas e adiciona metas diárias automáticas.</p></div>
                     <input type="date" id="goal-date-filter" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 dark:text-white font-medium outline-none">
                 </div>
@@ -586,7 +667,7 @@
 
             <!-- FASE ESPECÍFICA: ALAMBAMENTO 💍 -->
             <div id="tab-alambamento" class="tab-content hidden flex flex-col gap-6 animate-[fadeIn_0.3s_ease-in-out]">
-                <div class="bg-gradient-to-r from-amber-500 to-gold-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-500 to-gold-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden" id="tut-alambamento-main">
                     <div class="absolute -right-5 -top-10 opacity-10"><i class="ph-fill ph-ring text-[15rem]"></i></div>
                     <div class="relative z-10 max-w-2xl">
                         <h2 class="text-2xl sm:text-3xl font-bold mb-2">O Nosso Alambamento 💍</h2>
@@ -611,7 +692,7 @@
                     <div class="absolute -right-10 -top-10 opacity-10"><i class="ph-fill ph-instagram-logo text-[15rem]"></i></div>
                     <div class="relative z-10 max-w-2xl"><h2 class="text-2xl sm:text-3xl font-bold mb-2">Redes Sociais & Marketing</h2><p class="text-pink-100 text-sm sm:text-base">Organiza as ideias de posts, Reels e campanhas da Versátil Trade.</p></div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tut-redes-main">
                     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
                         <h3 class="font-bold mb-4 flex items-center gap-2 dark:text-white"><i class="ph-fill ph-lightbulb text-amber-500"></i> Ideias de Posts (Rascunhos)</h3>
                         <form id="post-form" class="flex gap-2 mb-4 w-full items-center">
@@ -638,7 +719,7 @@
                     <div class="absolute -right-10 -top-10 opacity-10"><i class="ph-fill ph-calculator text-[15rem]"></i></div>
                     <div class="relative z-10 max-w-2xl"><h2 class="text-2xl sm:text-3xl font-bold mb-2">Precificação de Produtos</h2><p class="text-indigo-100 text-sm sm:text-base">Insira os custos globais do lote (frete e marketing) para que o app divida automaticamente o custo por unidade.</p></div>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start" id="tut-calc-main">
                     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6 sm:p-8">
                         <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">Custos e Despesas</h3>
                         <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl mb-6 border border-slate-200 dark:border-slate-600"><h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2"><i class="ph-fill ph-package"></i> Dados do Lote (Atacado)</h4>
@@ -712,12 +793,13 @@
             if(tabId === 'tab-carinhos') highlightClass = 'text-rose-500';
             
             active.classList.add('bg-white','dark:bg-slate-700','shadow-sm', highlightClass);
-            if(window.isTutorialRunning) setTimeout(() => centerTutorialOnTarget(), 100);
+            active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         };
+
         window.toggleTheme=()=>{
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('versatil_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-            document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-[1.15rem] sm:text-xl text-amber-500':'ph ph-moon text-[1.15rem] sm:text-xl';
+            document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-xl text-amber-500':'ph ph-moon text-xl';
         };
         window.showToast=(msg,type='success')=>{const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast-enter ${type==='error'?'bg-rose-500':(type==='info'?'bg-blue-500':'bg-emerald-500')} text-white px-4 py-3 rounded-xl flex items-center gap-2 text-sm shadow-lg pointer-events-auto`;t.innerHTML=`<i class="ph-bold ${type==='error'?'ph-warning-circle':(type==='info'?'ph-info':'ph-check')} text-lg"></i> ${msg}`;c.appendChild(t);setTimeout(()=>{t.classList.replace('toast-enter','toast-exit');setTimeout(()=>t.remove(),300)},3000);};
         window.toggleDizimoOption=(show)=>{document.getElementById('dizimo-checkbox-container').style.display=show?'flex':'none';};
@@ -735,6 +817,10 @@
         window.openSettings = () => {
             document.getElementById('input-name1').value = localStorage.getItem('versatil_name1') || 'Josemar';
             document.getElementById('input-name2').value = localStorage.getItem('versatil_name2') || 'Kiriana';
+            const tutEnabled = localStorage.getItem('versatil_tutorial_disabled_forever') !== 'true';
+            const tutCb = document.getElementById('toggle-tutorial-forever');
+            if(tutCb) tutCb.checked = tutEnabled;
+            updateSoundToggleUI();
             document.getElementById('settings-modal').classList.remove('hidden');
             document.getElementById('settings-modal').classList.add('flex');
         };
@@ -746,8 +832,7 @@
             localStorage.setItem('versatil_name1', document.getElementById('input-name1').value.trim() || 'Josemar');
             localStorage.setItem('versatil_name2', document.getElementById('input-name2').value.trim() || 'Kiriana');
             updateNamesUI();
-            closeSettings();
-            showToast("Nomes atualizados com sucesso!");
+            showToast("Nomes dos sócios atualizados!");
         };
         window.updateNamesUI = () => {
             const n1 = localStorage.getItem('versatil_name1') || 'Josemar';
@@ -769,7 +854,7 @@
                     document.getElementById('app-container').classList.remove('hidden');
                     document.getElementById('app-container').classList.add('flex');
                     loadData();
-                    setTimeout(checkTutorial, 1000);
+                    setTimeout(checkTutorial, 900);
                     checkMonthlyReportBanner();
                     fetchOnlineNutritionTip();
                 } else {
@@ -781,6 +866,7 @@
             loadCalcState();
             updateNamesUI();
             updateSoundToggleUI();
+            document.getElementById('theme-icon').className=document.documentElement.classList.contains('dark')?'ph-fill ph-sun text-xl text-amber-500':'ph ph-moon text-xl';
             
             const isPinned = localStorage.getItem('versatil_pin_defaults') === 'true';
             const pinCb = document.getElementById('pinDefaults');
@@ -794,7 +880,6 @@
                 }
             }
 
-            // Inicia o motor de verificação de horários a cada 25 segundos
             setInterval(checkActivityAlarms, 25000);
         }
         
@@ -833,14 +918,12 @@
             
             unsubAlambamento = onSnapshot(doc(db,'artifacts',appId,'users',userId,'alambamento','status'),(d)=>{ if(d.exists()){ alambamentoQtd = d.data().qtd || {}; } else { alambamentoQtd = {}; } renderAlambamento(); });
             
-            // Inventário de Cosméticos
             unsubHealth = onSnapshot(collection(db,'artifacts',appId,'users',userId,'health_inv'),(s)=>{
                 healthProducts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
                 renderHealthInventory();
                 renderSkincareCalendar();
             });
 
-            // Calendário de Skincare 60 Dias + Limpeza Automática (> 60 dias)
             unsubSkincare = onSnapshot(collection(db,'artifacts',appId,'users',userId,'skincare_cal'),(s)=>{
                 skincareSchedule = {};
                 s.docs.forEach(d => { skincareSchedule[d.id] = d.data(); });
@@ -848,7 +931,6 @@
                 renderSkincareCalendar();
             });
 
-            // Plano Alimentar
             unsubMeals = onSnapshot(collection(db,'artifacts',appId,'users',userId,'meal_plans'),(s)=>{
                 mealPlans = {};
                 s.docs.forEach(d => { mealPlans[d.id] = d.data(); });
@@ -856,7 +938,6 @@
                 renderUpcomingMeals();
             });
 
-            // Mural de Carinhos & Lembretes Curtos
             unsubCarinhos = onSnapshot(collection(db,'artifacts',appId,'users',userId,'carinhos'),(s)=>{
                 carinhosList = s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
                 renderCarinhos();
@@ -890,7 +971,6 @@
             const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
             const todayStr = getTodayISO();
 
-            // Janela de 60 dias: 15 dias passados + Hoje + 44 dias futuros = 60 dias
             const start = new Date();
             start.setDate(start.getDate() - 15);
 
@@ -900,7 +980,7 @@
                 d.setDate(start.getDate() + i);
                 const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
                 const dow = d.getDay();
-                const isFocusDay = (dow === 3 || dow === 6); // Quarta (3) ou Sábado (6)
+                const isFocusDay = (dow === 3 || dow === 6);
                 const isToday = (dateStr === todayStr);
                 const entry = skincareSchedule[dateStr];
                 const hasProducts = entry && ((entry.products && entry.products.length > 0) || entry.notes);
@@ -1020,7 +1100,6 @@
 
             const goalText = `🏋🏾 ${exName} (${exTime} min) às ${alarmTime}`;
 
-            // Adiciona simultaneamente para Josemar E para Kiriana
             await Promise.all([
                 addDoc(collection(db,'artifacts',appId,'users',userId,'goals'), {
                     owner: 'josemar',
@@ -1119,7 +1198,6 @@
             if(!box) return;
             box.innerHTML = `<span class="animate-pulse">🌐 A procurar dica saudável online...</span>`;
             try {
-                // Tenta buscar prato/ingrediente saudável na API pública TheMealDB para inspiração + dica nutricional
                 const resp = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
                 if(resp.ok) {
                     const data = await resp.json();
@@ -1209,14 +1287,14 @@
         }
 
         /* =========================================================================
-           5. NOTIFICAÇÕES COM SOM (WEB AUDIO API SYNTHESIZER + ALARM ENGINE)
+           5. NOTIFICAÇÕES COM SOM (DENTRO DE CONFIGURAÇÕES)
            ========================================================================= */
-        window.playAlarmSound = () => {
-            if(!soundNotificationsEnabled) return;
+        window.playAlarmSound = (forcePlay = false) => {
+            if(!soundNotificationsEnabled && !forcePlay) return;
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 const ctx = new AudioCtx();
-                const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50]; // Acorde Dó Maior harmonioso
+                const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
                 notes.forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
@@ -1240,7 +1318,7 @@
                 if("Notification" in window && Notification.permission === "default") {
                     Notification.requestPermission();
                 }
-                playAlarmSound();
+                playAlarmSound(true);
                 showToast("Notificações com som ATIVADAS! 🔔🔊");
             } else {
                 showToast("Notificações com som silenciadas. 🔕", "info");
@@ -1250,13 +1328,18 @@
         function updateSoundToggleUI() {
             const icon = document.getElementById('sound-icon');
             const btn = document.getElementById('btn-sound-toggle');
+            const statusTxt = document.getElementById('sound-status-text');
             if(!icon || !btn) return;
             if(soundNotificationsEnabled) {
-                icon.className = 'ph-fill ph-bell-ringing text-lg sm:text-xl';
-                btn.classList.replace('text-slate-400', 'text-amber-500');
+                icon.className = 'ph-fill ph-bell-ringing text-lg';
+                btn.textContent = 'Ativo 🔔';
+                btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-sm transition-all';
+                if(statusTxt) statusTxt.textContent = 'Ativado para Refeições, Treino e Skincare';
             } else {
-                icon.className = 'ph ph-bell-slash text-lg sm:text-xl';
-                btn.classList.replace('text-amber-500', 'text-slate-400');
+                icon.className = 'ph ph-bell-slash text-lg';
+                btn.textContent = 'Silenciado 🔕';
+                btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all';
+                if(statusTxt) statusTxt.textContent = 'Os alarmes sonoros estão desativados';
             }
         }
 
@@ -1283,7 +1366,6 @@
             const todayStr = getTodayISO();
             const currentHM = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
 
-            // 1. Verifica Horários do Plano Alimentar de Hoje
             const todayMeal = mealPlans[todayStr];
             if(todayMeal) {
                 const mealsToCheck = [
@@ -1300,7 +1382,6 @@
                 });
             }
 
-            // 2. Verifica Horário do Treino Físico
             const fitStr = localStorage.getItem('versatil_fitness_alarm');
             if(fitStr) {
                 try {
@@ -1313,7 +1394,6 @@
                 } catch(e) {}
             }
 
-            // 3. Verifica Horário do Skincare de Hoje
             const todaySkin = skincareSchedule[todayStr];
             if(todaySkin && todaySkin.time && !todaySkin.completed) {
                 const cacheKey = `${todayStr}_skin_${todaySkin.time}`;
@@ -1331,7 +1411,6 @@
         function checkMonthlyReportBanner() {
             const now = new Date();
             const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-            // Mostra o alerta automático nos últimos 5 dias de cada mês (ou dia 1)
             if(now.getDate() >= (lastDayOfMonth - 4) || now.getDate() === 1) {
                 const banner = document.getElementById('monthly-report-banner');
                 if(banner) {
@@ -1348,7 +1427,6 @@
             const n1 = localStorage.getItem('versatil_name1') || 'Josemar';
             const n2 = localStorage.getItem('versatil_name2') || 'Kiriana';
 
-            // Cálculos do Cofre
             let totalEntradas = 0, totalSaidas = 0, totalDizimo = 0;
             cofreRecords.forEach(r => {
                 if(r.type === 'entrada') {
@@ -1360,17 +1438,14 @@
             });
             const saldoCaixa = totalEntradas - totalSaidas - totalDizimo;
 
-            // Cálculos de Vendas / Pedidos
             const pedidosEntregues = pedidos.filter(p => p.status === 'entregue');
             const pedidosPendentes = pedidos.filter(p => p.status !== 'entregue');
             const totalVendasPedidos = pedidosEntregues.reduce((acc, p) => acc + (parseFloat(p.valor) || 0), 0);
 
-            // Cálculos de Metas
             const metasConcluidas = goals.filter(g => g.completed).length;
             const metasTotal = goals.length;
             const taxaMetas = metasTotal > 0 ? Math.round((metasConcluidas / metasTotal) * 100) : 0;
 
-            // Cálculos de Skincare
             const diasSkincare = Object.values(skincareSchedule);
             const skincareFeitos = diasSkincare.filter(s => s.completed).length;
 
@@ -1388,7 +1463,6 @@
                         </div>
                     </div>
 
-                    <!-- 1. Desempenho Financeiro & Cofre -->
                     <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:10px;">1. Resumo de Desempenho Financeiro (Cofre & Dízimo)</h2>
                     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:16px;">
                         <div style="padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
@@ -1430,19 +1504,16 @@
                         </tbody>
                     </table>
 
-                    <!-- 2. Relatório de Vendas & Pedidos -->
                     <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:8px;">2. Desempenho de Vendas & Pedidos</h2>
                     <p style="font-size:11px; color:#475569; margin-bottom:16px;">
                         Pedidos Entregues: <strong>${pedidosEntregues.length}</strong> (Total faturado: <strong>${formatKz(totalVendasPedidos)}</strong>) | Pedidos em Curso/Pendentes: <strong>${pedidosPendentes.length}</strong>
                     </p>
 
-                    <!-- 3. Relatório de Metas & Produtividade -->
                     <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:8px;">3. Desempenho de Metas (${n1} & ${n2})</h2>
                     <p style="font-size:11px; color:#475569; margin-bottom:16px;">
                         Metas Concluídas: <strong>${metasConcluidas} de ${metasTotal}</strong> (${taxaMetas}% de taxa de execução).
                     </p>
 
-                    <!-- 4. Relatório de Skincare & Saúde -->
                     <h2 style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:8px;">4. Rotina de Skincare (60 Dias) & Inventário de Cosméticos</h2>
                     <p style="font-size:11px; color:#475569; margin-bottom:10px;">
                         Sessões de Skincare Concluídas: <strong>${skincareFeitos}</strong> | Dias Planeados no Calendário: <strong>${diasSkincare.length}</strong> | Produtos em Inventário: <strong>${healthProducts.length}</strong> (Em falta/Reposição: <strong>${healthProducts.filter(p=>p.qtd===0).length}</strong>)
@@ -1468,7 +1539,7 @@
         };
 
         /* =========================================================================
-           INVENTÁRIO DE SAÚDE EXISTENTE (MANTIDO 100% INTACTO)
+           INVENTÁRIO DE SAÚDE EXISTENTE
            ========================================================================= */
         document.getElementById('health-form').addEventListener('submit', async(e) => {
             e.preventDefault();
@@ -1535,8 +1606,6 @@
                 </div>`;
             }).join('');
         }
-        /* --- FIM SAÚDE E BEM ESTAR --- */
-
 
         /* --- ALAMBAMENTO --- */
         const alambItens = [
@@ -1941,30 +2010,122 @@
             listEl.innerHTML = posts.map(p => `<div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm group"><span class="text-sm dark:text-slate-200">${p.text}</span><button onclick="deletePost('${p.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-trash text-lg"></i></button></div>`).join(''); 
         }
 
+        /* =========================================================================
+           MODO TUTORIAL COMPETENTE (11 PASSOS POR TODO O APLICATIVO + DESATIVAR DE VEZ)
+           ========================================================================= */
         const tutorialSteps = [
-            { target: 'tut-tabs', title: 'Navegação V4', text: 'Desliza aqui para explorar as abas, incluindo Saúde 60 dias e o novo Mural de Carinhos ❤️.' },
-            { target: 'tut-saldo', title: 'O teu Cofre', text: 'Vê rapidamente quanto tens em caixa real e o teu fundo de dízimo acumulado.' },
-            { target: 'tut-nova-mov', title: 'Movimentações & PDF', text: 'Adiciona entradas de dinheiro e exporta o Relatório Geral Mensal em PDF a qualquer momento.' },
-            { target: 'btn-backup', title: 'Backup de Segurança', text: 'Clica na nuvem para descarregares todos os teus registos para o telemóvel.' }
+            { tab: 'tab-cofre', target: 'tut-tabs', title: '1. Bem-vindos à Versátil Trade V4!', text: 'Esta barra de navegação dá acesso rápido às 9 áreas do vosso ecossistema empresarial e pessoal. Vamos fazer um tour completo!' },
+            { tab: 'tab-cofre', target: 'tut-saldo', title: '2. Cofre & Dízimo Automático', text: 'Aqui acompanham o Saldo Real disponível em caixa, o Saldo Contabilístico (incluindo valores na rua) e os 10% sagrados do Dízimo.' },
+            { tab: 'tab-cofre', target: 'tut-nova-mov', title: '3. Registo de Caixa', text: 'Lança entradas e saídas em segundos. Nas entradas, podes marcar para separar automaticamente os 10% do Dízimo.' },
+            { tab: 'tab-pedidos', target: 'tut-pedidos-main', title: '4. Gestão de Pedidos & Clientes', text: 'Cria encomendas com valor, data e local. Quando moves um pedido para a coluna "Entregues", o valor entra sozinho no Cofre!' },
+            { tab: 'tab-dividas', target: 'tut-dividas-main', title: '5. Controlo de Empréstimos e Dívidas', text: 'Distingue empréstimos de Negócio (com juros e multa apenas sobre o valor bruto) de Amigos. Ao liquidar, atualiza o Cofre.' },
+            { tab: 'tab-metas', target: 'tut-metas-main', title: '6. Metas Diárias (Josemar & Kiriana)', text: 'Organiza as tarefas de cada sócio por data, guarda metas fixas com a estrela ⭐ e adia até 2 vezes quando necessário.' },
+            { tab: 'tab-saude', target: 'tut-saude-main', title: '7. Saúde, Skincare 60 Dias & Nutrição', text: 'Edita qualquer dia do calendário de 60 dias (foco nas Quartas e Sábados), cria metas de treino para ambos e planeia Matabicho, Almoço e Jantar com alarmes!' },
+            { tab: 'tab-carinhos', target: 'tut-carinhos-main', title: '8. Mural de Carinhos & Lembretes ❤️', text: 'O vosso espaço especial para colar post-its de tarefas importantes e mensagens românticas para celebrar o vosso amor todos os dias!' },
+            { tab: 'tab-alambamento', target: 'tut-alambamento-main', title: '9. O Nosso Alambamento 💍', text: 'Controla item por item as compras da cerimónia (Família do Pai, Mãe, Bebidas e Dote) com barra de progresso em tempo real.' },
+            { tab: 'tab-redes', target: 'tut-redes-main', title: '10. Marketing & Redes Sociais', text: 'Guarda ideias de Reels e campanhas e acede rapidamente ao Instagram, TikTok, Canva e WhatsApp Business.' },
+            { tab: 'tab-precificacao', target: 'tut-calc-main', title: '11. Calculadora & Central de Configurações ⚙️', text: 'Calcula o preço ideal de venda por lote! E lembra-te: lá em cima no botão ⚙️ Configurações encontras o PDF Mensal, Alarmes Sonoros, Backup, Sair e a Boia do Tutorial!' }
         ];
-        let currentTutorialStep = 0; window.isTutorialRunning = false;
+
+        let currentTutorialStep = 0;
+        window.isTutorialRunning = false;
         
-        window.checkTutorial = () => { if (!localStorage.getItem('versatil_tutorial_done')) startTutorial(); };
-        window.startTutorial = () => { currentTutorialStep = 0; window.isTutorialRunning = true; document.getElementById('tutorial-modal').classList.remove('hidden'); document.getElementById('tutorial-modal').classList.add('flex'); showTutorialStep(); };
-        window.skipTutorial = () => { localStorage.setItem('versatil_tutorial_done', 'true'); window.isTutorialRunning = false; document.getElementById('tutorial-modal').classList.add('hidden'); document.getElementById('tutorial-modal').classList.remove('flex'); removeHighlights(); showToast("Tutorial concluído!", "info"); };
+        window.checkTutorial = () => {
+            const disabledForever = localStorage.getItem('versatil_tutorial_disabled_forever') === 'true';
+            const alreadyDoneSession = localStorage.getItem('versatil_tutorial_done') === 'true';
+            if (!disabledForever && !alreadyDoneSession) {
+                startTutorial();
+            }
+        };
+
+        window.startTutorial = () => {
+            currentTutorialStep = 0;
+            window.isTutorialRunning = true;
+            document.getElementById('tutorial-modal').classList.remove('hidden');
+            document.getElementById('tutorial-modal').classList.add('flex');
+            showTutorialStep();
+        };
+
+        window.skipTutorial = (markDone = true) => {
+            if(markDone) localStorage.setItem('versatil_tutorial_done', 'true');
+            window.isTutorialRunning = false;
+            document.getElementById('tutorial-modal').classList.add('hidden');
+            document.getElementById('tutorial-modal').classList.remove('flex');
+            removeHighlights();
+        };
+
+        window.disableTutorialForever = () => {
+            localStorage.setItem('versatil_tutorial_disabled_forever', 'true');
+            localStorage.setItem('versatil_tutorial_done', 'true');
+            const tutCb = document.getElementById('toggle-tutorial-forever');
+            if(tutCb) tutCb.checked = false;
+            skipTutorial(true);
+            showToast("Tutorial desativado de vez! Podes reativá-lo nas Configurações ⚙️.", "info");
+        };
+
+        window.toggleTutorialSetting = (enabled) => {
+            if(enabled) {
+                localStorage.setItem('versatil_tutorial_disabled_forever', 'false');
+                localStorage.removeItem('versatil_tutorial_done');
+                showToast("Modo Tutorial reativado! 🛟");
+            } else {
+                localStorage.setItem('versatil_tutorial_disabled_forever', 'true');
+                showToast("Modo Tutorial desativado de vez. 🚫", "info");
+            }
+        };
         
-        window.nextTutorialStep = () => { currentTutorialStep++; if (currentTutorialStep >= tutorialSteps.length) { skipTutorial(); return; } showTutorialStep(); };
+        window.nextTutorialStep = () => {
+            currentTutorialStep++;
+            if (currentTutorialStep >= tutorialSteps.length) {
+                skipTutorial(true);
+                switchTab('tab-cofre');
+                showToast("Tour completo concluído com sucesso! 🚀🎉");
+                return;
+            }
+            showTutorialStep();
+        };
+
+        window.prevTutorialStep = () => {
+            if (currentTutorialStep > 0) {
+                currentTutorialStep--;
+                showTutorialStep();
+            }
+        };
         
         function showTutorialStep() {
             removeHighlights();
             const step = tutorialSteps[currentTutorialStep];
-            document.getElementById('tutorial-title').textContent = step.title; document.getElementById('tutorial-text').textContent = step.text; document.getElementById('tutorial-next-btn').innerHTML = currentTutorialStep === tutorialSteps.length - 1 ? 'Concluir <i class="ph-bold ph-check ml-1"></i>' : 'Próximo <i class="ph-bold ph-arrow-right ml-1"></i>';
-            const targetEl = document.getElementById(step.target);
-            if(targetEl) { targetEl.classList.add('tutorial-highlight'); if(step.target === 'tut-nova-mov') switchTab('tab-cofre'); setTimeout(() => centerTutorialOnTarget(), 100); }
+            const total = tutorialSteps.length;
+
+            // Muda automaticamente para a aba correspondente ao passo do tutorial
+            if(step.tab) {
+                switchTab(step.tab);
+            }
+
+            document.getElementById('tutorial-step-badge').textContent = `Passo ${currentTutorialStep + 1} de ${total}`;
+            document.getElementById('tutorial-progress-bar').style.width = `${Math.round(((currentTutorialStep + 1) / total) * 100)}%`;
+            document.getElementById('tutorial-title').textContent = step.title;
+            document.getElementById('tutorial-text').textContent = step.text;
+
+            const prevBtn = document.getElementById('tutorial-prev-btn');
+            if(prevBtn) prevBtn.style.visibility = currentTutorialStep === 0 ? 'hidden' : 'visible';
+
+            document.getElementById('tutorial-next-btn').innerHTML = currentTutorialStep === total - 1
+                ? 'Concluir Tour <i class="ph-bold ph-check ml-1"></i>'
+                : 'Próximo <i class="ph-bold ph-arrow-right ml-1"></i>';
+
+            setTimeout(() => {
+                const targetEl = document.getElementById(step.target);
+                if(targetEl) {
+                    targetEl.classList.add('tutorial-highlight');
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 120);
         }
         
-        window.centerTutorialOnTarget = () => { if(!window.isTutorialRunning) return; const targetEl = document.getElementById(tutorialSteps[currentTutorialStep].target); if(targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
-        function removeHighlights() { document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight')); }
+        function removeHighlights() {
+            document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+        }
 
         initApp();
     </script>
